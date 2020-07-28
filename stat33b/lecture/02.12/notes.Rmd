@@ -1,0 +1,415 @@
+---
+title: "Stat 33B - Lecture 4"
+date: February 12, 2020
+output: pdf_document
+---
+
+Announcements
+=============
+
+
+Working with Data
+=================
+
+We'll need the dogs data again:
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+```
+
+Taking Subsets
+--------------
+
+Taking subsets is a fundamental operation for working with data in R!
+
+Two primary operators for taking subsets in R:
+
+1.  `[[` to "extract" an element.
+
+    + Selects exactly one element.
+    + Drops the container.
+    + By position or name.
+
+2. `[` to "subset" an element.
+
+    + Selects any number of elements.
+    + Keeps the container.
+    + By position, name, or logical values.
+
+
+Let's test these out on a vector:
+```{r}
+x = c(7, -3, 1)
+```
+
+Subsetting by position (positions start at 1 in R):
+```{r}
+x[1]
+
+x[[1]]
+
+x[c(1, 2, 2)]
+
+x[[c(1, 2, 2)]]
+```
+
+Negative positions mean "everything except":
+```{r}
+x[-2]
+
+x[[-1]] # can't return multiple elements
+```
+
+
+Subsetting by name:
+```{r}
+x
+y = c(a = 7, b = -5, c = 1)
+y
+
+y["a"]
+
+x["a"] # no element named "a"
+
+y[["b"]]
+
+x[["b"]] # error
+
+y[c("a", "b", "a")]
+```
+
+
+Subsetting by logical value:
+```{r}
+y > 0
+
+which(y > 0)
+
+y[which(y > 0)] # subsetting by position
+
+y[y > 0]
+
+# One case where this breaks:
+y_withNA = c(7, -1, NA)
+
+y_withNA > 0
+
+y_withNA[y_withNA > 0]
+
+y_withNA[which(y_withNA > 0)] # drops the NAs
+```
+
+Using `which()` means an extra call, so extra time!
+
+```{r}
+x[[c(FALSE, FALSE, TRUE)]]
+```
+
+```{r}
+# If length of logical doesn't match, R recycles:
+x
+
+# FALSE TRUE FALSE TRUE FALSE TRUE ...
+x[c(FALSE, TRUE)]
+```
+
+`[[` drops the container, `[` does not.
+
+This is most apparent for lists:
+
+```{r}
+x = list(a = c(6, 5), b = "hi")
+x
+
+class(x[1])
+
+class(x[[1]])
+
+x
+
+x[1]
+
+x[[1]]
+
+x[[c(2, 2)]]
+
+x[[2]]
+
+x[[c(1, 2)]] # recursive subsetting: 1st element's 2nd element
+
+x[[1]][[2]] # equivalent to above line
+
+x[[1]]
+
+x[1][1][1][1] # keeps the container
+
+x[c(1, 1, 2)]
+```
+
+A visual representation of this idea:
+
+    https://twitter.com/hadleywickham/status/643381054758363136
+
+
+Data frames are lists, so:
+```{r}
+class(dogs[1])
+
+dogs[[1]]
+```
+
+We can also do multi-dimensional subsetting:
+```{r}
+head(dogs)
+
+dogs[1, 1] # drops the container
+
+# NOTE: Data frames with class "tbl" and "tbl_df" are called tibbles, and part
+# of a Tidyverse package called tibble.
+#
+# Notice that the dogs data frame is a tibble.
+#
+# In recent versions of the tibble package, using `[` to subset a single value
+# DOES NOT drop the data frame.
+#
+# So you may see different behavior above if you have a recent version of the
+# tibble package.
+#
+# If you want to see the behavior for ordinary data frames, try subsetting a
+# non-tibble data frame, such as R's built-in `iris` data frame:
+iris[1, 1]
+
+# Thanks to the student that pointed out the behavior of `[` is now different
+# for tibbles.
+#
+# You can also force R to drop the data frame with the `drop` parameter:
+dogs[1, 1, drop = TRUE]
+
+
+# The `[[` operator ALWAYS drops the container:
+dogs[[1, 1]]
+
+
+# If you select multiple elements, `[` always keeps the container:
+dogs[1, 1:3] # row 1, columns 1 through 3
+```
+
+Use a blank to mean "everything" along one dimension:
+```{r}
+
+dogs[1, ] # first row, all columns
+```
+
+
+Two more functions for taking subsets:
+
+1. `$` extracts an element by name. Tries to match partial names.
+2. `subset()` takes subsets of row in a data frame.
+
+Most useful in interactive programming!
+
+The `$` is similar to `[[`:
+```{r}
+x[["a"]]
+
+x$"a"
+```
+
+Use quotes with `$` when names contain characters that are R operators (such as
+`+`, `-`, `>`, ...):
+```{r}
+x$"+A"
+```
+
+Unlike `[[`, the `$` will try to match partial names:
+```{r}
+dogs$bree # breed
+```
+
+The `subset()` function is a shortcut to avoid typing the name of the data
+frame over and over when subsetting rows with a condition.
+
+For example:
+```{r}
+head(dogs)
+
+colnames(dogs)
+
+above = dogs$weight > mean(dogs$weight, na.rm = TRUE)
+
+# which() to eliminate NAs
+dogs[which(above), ]
+```
+
+Equivalent, using `subset()`:
+```{r}
+subset(dogs, weight > mean(weight, na.rm = TRUE))
+```
+With `subset()`, there's no need to use `$`, and the `NA`s are eliminated
+automatically.
+
+
+Transforming Data Frames
+------------------------
+
+A few more functions for working with data frames:
+
+* `rbind()` stacks two or more data frames on top of each other.
+* `cbind()` combines two or more data frames side-by-side.
+* `t()` transposes a data frame (or matrix).
+
+Examples:
+```{r}
+dogs[1:3, ]
+
+rbind(dogs[1:3, ], dogs[1:3, ])
+```
+
+These functions also work with matrices.
+
+
+Creating Visualizations
+=======================
+
+There are three main systems for creating visualizations in R:
+
+1. The base R functions, including `plot()`.
+
+2. The `lattice` package. The interface is similar to the base R
+   functions, but uses lists of parameters to control plot details.
+
+3. The `ggplot2` package. The interface is a "grammar of graphics"
+   where plots are assembled from layers.
+  
+Both `lattice` and `ggplot2` are based on R's low-level `grid`
+graphics system.
+
+It is usually easier to customize visualizations made with base R.
+
+Both `lattice` and `ggplot2` are better at handling grouped data and
+generally require less code to create a nice-looking visualization.
+
+We'll learn `ggplot2`.
+
+
+R Packages and CRAN
+-------------------
+
+The Comprehensive R Archive Network (CRAN) is a repository of
+user-contributed packages for R.
+
+You can install packages from CRAN with `install.packages()`.
+
+For example:
+```{r}
+install.packages("ggplot2")
+```
+
+For maintaining your packages, there are also functions:
+
+* `remove.packages()` to remove a package
+* `update.packages()` to update ALL packages
+* `installed.packages()` to list installed packages
+
+You can load an installed package into your R session with the
+`library()` function.
+```{r}
+library(ggplot2)
+```
+
+Install once, load with `library()` each time you restart R.
+
+
+The Tidyverse
+-------------
+
+The Tidyverse (<https://www.tidyverse.org/>) is collection of R
+packages for doing data science in R.
+
+They are made by many of the same people that make RStudio, and
+provide alternatives to R's built-in tools for:
+
+* Reading files (package `readr`)
+* Manipulating data frames (packages `dplyr`, `tidyr`, `tibble`)
+* Manipulating strings (package `stringr`)
+* Manipulating factors (package `forcats`)
+* Functional programming (package `purrr`)
+* Making visualizations (package `ggplot2`)
+
+The Tidyverse packages are popular but controversial, because some of
+them use a syntax different from base R.
+
+RStudio cheat sheets (mostly for Tidyverse packages):
+
+    https://rstudio.com/resources/cheatsheets/
+
+
+Making Graphics with ggplot2
+----------------------------
+
+The fundamental idea of `ggplot2` is that all graphics are composed
+of layers.
+
+
+Documentation:
+
+    https://ggplot2.tidyverse.org/
+
+
+As an example, let's create a simplifed version of the Best in Show
+visualization:
+
+    https://informationisbeautiful.net/visualizations/
+        best-in-show-whats-the-top-data-dog/
+
+
+Layer 1: Data -- the data frame to plot.
+
+Call the `ggplot()` function to set the data layer:
+```{r}
+library(ggplot2)
+
+ggplot(dogs)
+```
+
+Layer 2: GEOMetry -- shapes to represent data.
+
+Add a `geom_` function to set the geometry layer:
+```{r}
+ggplot(dogs) + geom_point()
+```
+
+Layer 3: AESthetic -- "wires" between geometry and data
+
+Call the `aes()` function in `ggplot()` or the `geom_` to set the
+mapping between the data layer and geometry layer:
+```{r}
+ggplot(dogs, aes(x = datadog, y = popularity)) + geom_point()
+
+# Alternative syntax:
+ggplot(dogs) + geom_point(aes(x = datadog, y = popularity))
+```
+
+Important layers in `ggplot2`:
+
+Layer       | Description
+----------  | -----------
+data        | A data frame to visualize
+aesthetics  | The map or "wires" between data and geometry
+geometry    | Geometry to represent the data visually
+statistics  | An alternative to geometry
+scales      | How numbers in data are converted to numbers on screen
+labels      | Titles and axis labels
+guides      | Legend settings
+annotations | Additional geoms that are not mapped to data
+coordinates | Coordinate systems (Cartesian, logarithmic, polar)
+facets      | Side-by-side panels
+
+
+Saving Your Plots
+-----------------
+
+Use `ggsave()` to save the last plot you created to a file:
+
+```{r}
+ggsave("myplot.png")
+```

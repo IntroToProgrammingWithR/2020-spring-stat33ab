@@ -1,0 +1,305 @@
+---
+title: "Stat 33B - Lecture 9"
+date: March 18, 2020
+output: pdf_document
+---
+
+
+Scope & Dynamic Lookup
+======================
+
+Scope
+-----
+
+The "scope" of a variable is the section of a program where that
+variable exists and can be accessed.
+
+
+In R:
+
+* Function definitions are the primary way to create a new scope.
+* If-statements and loops do not affect scope at all.
+
+
+You can test whether a variable is in scope with the `exists()`
+function:
+```{r}
+
+```
+
+
+Variables defined inside of a function are "local" to that function.
+
+Local variables are not visible outside the function:
+```{r}
+
+```
+
+Local variables reset each time the function is called:
+```{r}
+
+```
+
+
+A function can use variables defined outside (non-local), but only if
+those variables are in scope where the function was **defined**.
+
+This property is called "lexical scoping".
+
+For example:
+```{r}
+
+```
+
+Variables defined directly in the R console are "global" and
+available to any function.
+
+
+Local variables "mask" or hide non-local variables with the same name:
+```{r}
+
+```
+Locals get priority!
+
+
+EXCEPTION: R ignores non-functions when looking up the name of a
+called function.
+
+For example:
+```{r}
+
+```
+
+
+Besides function definitions, the `local()` function also creates a
+new scope:
+```{r}
+
+```
+
+
+In summary:
+
+* Function definitions (or `local()`) create a new scope.
+
+* Local variables get reset each time a function is called.
+
+* Where a function is **defined** determines which variables are in
+  scope.
+
+* Local variables mask non-local variables.
+
+* R ignores non-functions when looking up the name of a called
+  function.
+
+For a function, **where** a variable will be looked for depends only
+on where the function was defined (because of lexical scoping).
+
+
+Dynamic Lookup, Part 1: Functions
+---------------------------------
+
+Variables are only looked up **when** they are actually used.
+
+For a function, this means variables are only looked up **when** the
+function is called.
+
+This is called "dynamic lookup".
+
+For example:
+```{r}
+
+```
+
+Dynamic lookup can be counterintuitive:
+```{r}
+
+```
+
+
+Environments
+============
+
+The data structure that R uses to keep track of variables at run-time
+is called an "environment".
+
+Each environment has a "frame" that maps names to R objects (a hash
+table).
+
+Each environment also has a "parent environment" (with one exception
+we'll see later).
+
+
+Dynamic Lookup, Part 2: Environments
+------------------------------------
+
+At run-time, **each call** to a function creates a new environment:
+
+* Its frame contains the function's local variables.
+
+* Its parent environment is the environment where the function was
+  **defined**. This satisfies lexical scoping.
+
+When R looks up a variable, it checks the current environment first.
+If the variable isn't there, it checks the environment's parent, then
+the environment's parent's parent, and so on.
+
+
+The "global environment" corresponds to the R console.
+
+Use `globalenv()` to get the global environment:
+```{r}
+
+```
+
+
+Assignment in Environments
+--------------------------
+
+The `<-` and `=` assign a variable in the current environment.
+
+Use `<<-` to assign a variable in the parent environment:
+```{r}
+
+```
+This means you can write a function that has a "side effect" on the
+environment where it was defined.
+
+
+In the R community, side effects are generally frowned upon, because
+they make code harder to understand and predict.
+
+Some side effects are useful:
+
+* Making plots.
+* Writing data to a file.
+
+But side effects are not necessary for most functions, and you should
+avoid them when possible.
+
+
+Use `assign()` to assign a variable in a specific environment:
+```{r}
+
+```
+
+Most of R's functions for working with environments assume the
+current environment if you don't specify an environment.
+
+
+Unlike other R objects, environments **do not** follow the
+copy-on-write rule.
+
+They are reference objects:
+```{r}
+
+```
+
+
+Inspecting Environments
+-----------------------
+
+Use `ls()` to list the names (variables) in an environment:
+```{r}
+
+```
+
+By default, the `ls()` function ignores names that start with `.`
+
+Use `all.names = TRUE` to make the function print these names:
+```{r}
+
+```
+
+The `names()` function can also print out all names in an environment:
+```{r}
+
+```
+
+
+
+Use `exists()` to check whether a variable is in an environment:
+```{r}
+
+```
+
+Use `[[`, or `$`, `get()` to get a variable:
+```{r}
+
+```
+
+Use `parent.env()` to get the parent environment:
+```{r}
+
+```
+
+Dynamic Lookup, Part 3: The Search Path
+---------------------------------------
+
+The global environment is not the top-level environment.
+
+Besides your own code, R also uses environments to keep track of
+packages.
+
+When you load a package with `library()`, R creates a new environment:
+
+  * Its frame contains the package's local variables.
+
+  * Its parent environment is the envionment of the most recently
+    loaded package.
+
+  * The new environment becomes the parent of the global environment.
+
+So R remembers the order in which packages are loaded.
+
+This history of packages is called the "search path".
+
+Use `search()` to see the names of environments in the search path:
+```{r}
+
+```
+
+The "base environment", or `package:base`, is a special environment
+that R creates at startup.
+
+The parent of the base environment is another special environment
+called the "empty environment", which contains no variables and has
+no parent.
+
+Use `PACKAGE::NAME` to access a name in a specific package:
+```{r}
+
+```
+You do not have to load the package first to do this (but the package
+does have to be installed).
+
+
+
+Closures
+--------
+
+A "closure" is a function that keeps track of its environment.
+
+The idea of a closure is used in many languages, not just R.
+
+In R, every function is a closure.
+
+Functions keep track of the environment where they were defined.
+
+Use `environment()` to get the environment where a function was
+defined:
+```{r}
+
+```
+
+You can use the closure property to create functions that remember
+previous calls.
+
+For example, suppose we want to make a counter function that keeps
+track of how many times it's been called:
+```{r}
+
+```
+
+Use functions with "memory" sparingly. They make it harder for others
+to understand your code.

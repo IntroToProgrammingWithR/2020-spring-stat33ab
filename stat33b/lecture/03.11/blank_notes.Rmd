@@ -1,0 +1,321 @@
+---
+title: "Stat 33B - Lecture 8"
+date: March 11, 2020
+output: pdf_document
+---
+
+Review: If-statements
+=====================
+
+If you use `else`, you need to make sure it's on the same line as
+code from the `if` block:
+```{r}
+
+```
+This was a problem I ran into in the previous lecture.
+
+
+Loops
+=====
+
+Four ways to write loops in R:
+
+1. Vectorization (fast!)
+2. Apply functions: `lapply()`, `sapply()`, etc
+3. `for`, `while`, and `repeat` loops
+4. Recursion (slow)
+
+
+Apply Functions
+---------------
+
+Similar to "map" functions in other languages.
+
+Applies a function (FUN) to each element of a vector or list (X):
+```
+lapply(X, FUN, ...)
+```
+
+We saw:
+
+* `lapply()`: always returns a list ("l" for list)
+* `sapply()`: attempts to return a vector ("s" for simplify)
+* `vapply()`: always returns a vector ("v" for vector)
+
+
+`mapply()` applies a function to each element of multiple vectors or
+lists:
+```{r}
+
+```
+"m" for **multiple** vectors.
+
+
+### Flashback to Data Analysis
+
+The `split()` function splits a vector or data frame into groups
+based on some other vector.
+
+```{r}
+
+```
+
+The `split()` function is especially useful when combined with
+`lapply()` or `sapply`().
+
+```{r}
+
+```
+This is an R idiom!
+
+
+The `tapply()` function is equivalent to the `split()` and `sapply()`
+idiom:
+```{r}
+
+```
+"t" for **table**, because `tapply()` is a generalization of the
+frequency-counting function `table()`.
+
+
+The `split()` and `tapply()` functions are important for analyzing
+data in data frames.
+
+
+### Even More Apply Functions
+
+* `apply()` applies a function to rows, columns, or elements of a
+  matrix, and returns a matrix.
+* `eapply()` applies a function to the elements of an environment.
+  We'll learn about environments in a later lecture.
+* `rapply()` applies a function to all elements of a recursive list
+  (a list of lists).
+
+See this StackOverflow Post for a good summary:
+
+    https://stackoverflow.com/a/7141669
+
+The Tidyverse package purrr provides alternatives to R's apply
+functions.
+
+
+`for`, `while`, and `repeat`
+----------------------
+
+A for-loop runs a block of code once for each element of a vector or
+list.
+
+```{r}
+
+```
+The same idea as for-loops in other languages.
+
+
+A while-loop runs a block of code repeatedly as long as some
+condition is true:
+```{r}
+
+```
+Again, the same idea as in other languages.
+
+
+Use `break` to exit a loop early:
+```{r}
+
+```
+
+Use `next` to skip to the next iteration early:
+```{r}
+
+```
+
+
+A repeat-loop runs a block of code repeatedly:
+```{r}
+
+```
+
+If you know how many results you expect to get from the loop,
+allocate storage before the loop begins:
+```{r}
+
+```
+
+If you need indices, using `1:length(x)` can cause bugs:
+```{r}
+
+```
+
+Use `seq_along(x)` instead.
+
+
+Recursion
+---------
+
+A recursive function is one that calls itself.
+
+We'll see an example of this the next section.
+
+
+How to Write Loops
+------------------
+
+When thinking about writing a loop, try (in order):
+
+1. vectorization (fast!)
+2. apply functions
+    * Try an apply function if iterations are independent.
+3. for/while-loops
+    * Try a for-loop if some iterations depend on others.
+    * Try a while-loop if the number of iterations is unknown.
+4. recursion
+    * Convenient for naturally recursive problems (like Fibonacci),
+      but often there are faster solutions.
+
+Before you write the loop, try writing the code for just 1 iteration.
+
+Make sure that code works; it's easy to test code for 1 iteration.
+
+When you have 1 iteration working, then try using the code in a loop
+(you will have to make some small changes).
+
+If your loop doesn't work, try to figure out which iteration is
+causing the problem. One way to do this is to use message() to print
+out information.
+
+Then try to write the code for the broken iteration, get that
+iteration working, and repeat this whole process.
+
+
+Functions
+=========
+
+You can write your own function with the `function` command.
+
+Generally, you'll assign the function to a variable:
+```{r}
+
+```
+
+Use curly braces `{ }` to write a function with multiple lines of
+code.
+
+The last expression in the function is returned:
+```{r}
+
+```
+
+Use `return()` to return a result immediately (exiting the function):
+```{r}
+
+```
+It's idiomatic to only use `return()` when strictly necessary.
+
+
+Parameters can have default arguments that are used if no argument is
+provided.
+
+Use `=` to assign default arguments:
+```{r}
+
+```
+
+
+Example: Recursion
+------------------
+
+Recall that a recursive function is one that calls itself:
+```{r}
+
+```
+This creates a kind of loop.
+
+
+R's built-in `Recall()` function will re-call the enclosing function:
+```{r}
+
+```
+
+Without `Recall()`, renaming a recursive function can break the
+function.
+
+
+Lazy Evaluation
+---------------
+
+Arguments to a function are only evaluated if they're used:
+```{r}
+
+```
+This is called "lazy evaluation".
+
+
+You can force evaluation with the `force()` function:
+```{r}
+
+```
+
+
+Because of lazy evaluation, you can use one parameter as part of a default
+argument to another parameter:
+```{r}
+
+```
+
+Default arguments can even be circular:
+```{r}
+
+```
+
+
+The Dots Parameter
+------------------
+
+The dots parameter `...` can accept any number of arguments.
+
+See `?dots` for documentation on the dots parameter.
+
+The dots parameter is not a normal R object. You need to use special
+functions to handle it.
+
+The `...length()` function returns the number of arguments to the
+dots parameter:
+```{r}
+
+```
+
+The `...elt()` function gets the nth argument to the dots parameter:
+```{r}
+
+```
+
+You can also pass arguments to the dots parameter to another
+function:
+```{r}
+
+```
+
+
+
+How to Write Functions
+----------------------
+
+Functions are the building blocks for solving problems.
+
+Take a divide-and-conquer approach, breaking large problems into
+smaller steps.
+
+Use a short function for each step. Then it's easier to:
+
+* Test that each step works correctly.
+* Modify, reuse, or repurpose a step.
+
+Before you write a function, it's useful to go through several steps:
+
+1. Write down what you want to do, in detail. It can also help to
+   draw a picture of what needs to happen.
+
+2. Check whether there's already a built-in function. Google it!
+
+3. Write the code to handle a simple case first. For data science
+   problems, use a small dataset at this step.

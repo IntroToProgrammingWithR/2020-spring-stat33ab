@@ -1,0 +1,498 @@
+> x = 5
+> if (x < 4)
+.   message("Hello")
+> else
+Error: unexpected 'else' in "else"
+> x = 5
+> if (x < 4)
+.   message("Hello")
+> if (x < 4)
+.   message("Hello") else
+.   message("Goodbye!")
+Goodbye!
+> if (x < 4) {
+.   message("Hello")
+. } else {
+.   message("Goodbye!")
+. }
+Goodbye!
+> y = if (x < 4) 42 else 8
+> y
+[1] 8
+> sum(mylist1[[1]], mylist[[2]])
+Error: object 'mylist1' not found
+> mylist1 = list(1:4, 2:6)
+> mylist2 = list(1, 3)
+> sum(mylist1[[1]], mylist[[2]])
+Error: object 'mylist' not found
+> mylist1 = list(1:4, 2:6)
+> mylist2 = list(1, 3)
+> sum(mylist1[[1]], mylist2[[2]])
+[1] 13
+> mapply(sum, mylist1, mylist2)
+[1] 11 23
+> sum(1:4, 1)
+[1] 11
+> x = 4
+> if (x < 3)
+.   message("Hi")
+> else
+Error: unexpected 'else' in "else"
+> if (x < 3)
+.   message("Hi") else
+.   message("Bye")
+Bye
+> if (x < 3) {
+.   message("Hi")
+. } else {
+.   message("Bye")
+. }
+Bye
+> y = if (x < 3) 42 else 8
+> y
+[1] 8
+> if (x < 3) {
+.   y = 42
+. } else {
+.   y = 8
+. }
+> mylist1 = list(1:2, 5:7)
+> mylist2 = list(3, c(5.5, 4.2))
+> mylist1
+[[1]]
+[1] 1 2
+
+[[2]]
+[1] 5 6 7
+
+> mylist2
+[[1]]
+[1] 3
+
+[[2]]
+[1] 5.5 4.2
+
+> sum(mylist1[[1]], mylist2[[1]])
+[1] 6
+> sum(mylist1[[2]], mylist2[[2]])
+[1] 27.7
+> mapply(sum, mylist1, mylist2)
+[1]  6.0 27.7
+> x = list(1:2, c(1, 4, NA))
+> sapply(x, mean)
+[1] 1.5  NA
+> x = list(1:2, c(1, 4, NA))
+> sapply(x, mean, na.rm = TRUE)
+[1] 1.5 2.5
+> ?mapply
+> dogs = readRDS("data/dogs/dogs_full.rds")
+> head(dogs)
+> split(dogs$weight, dogs$group)
+$herding
+ [1]   NA   NA 22.0   NA   NA   NA   NA 26.0   NA   NA   NA   NA   NA   NA
+[15] 45.0 31.5 62.5   NA   NA   NA 33.0   NA   NA   NA   NA
+
+$hound
+ [1] 24.0   NA   NA   NA   NA 23.0   NA 65.0 55.0 77.5 82.5 85.0   NA   NA
+[15]   NA   NA 62.5   NA   NA   NA 51.5 97.5   NA 50.0   NA 92.5
+
+$`non-sporting`
+ [1] 15.0   NA   NA 12.0 24.0   NA   NA 27.0   NA 45.0   NA 52.5   NA   NA
+[15]   NA   NA   NA 20.0   NA
+
+$sporting
+ [1] 35.0   NA 30.0 25.0 45.0 62.5 59.5 67.5 65.0 60.0 67.5 62.5   NA   NA
+[15] 70.0 35.0   NA   NA   NA   NA   NA 55.0   NA   NA 40.0   NA   NA   NA
+
+$terrier
+ [1] 13.5 14.0 15.5   NA   NA 20.0 12.0 31.0 21.0 20.0 36.5 60.0   NA   NA
+[15] 19.0 35.0 26.0 17.0 17.0   NA 12.0 15.0 24.0 40.0 17.5 35.0 20.0 17.5
+
+$toy
+ [1]   NA   NA  5.5  5.0  5.0 12.5  5.5  9.0 16.0 11.0 15.5   NA 13.0   NA
+[15]   NA   NA   NA 10.0   NA
+
+$working
+ [1]  47.5    NA    NA  77.5    NA 125.0    NA    NA    NA  80.0 115.0 175.0
+[13]    NA 155.0 115.0    NA    NA    NA    NA    NA 100.0  92.5    NA 130.0
+[25]  47.5    NA    NA
+
+> by_group = split(dogs$weight, dogs$group)
+> sapply(by_group, mean)
+     herding        hound non-sporting     sporting      terrier          toy 
+          NA           NA           NA           NA           NA           NA 
+     working 
+          NA 
+> sapply(by_group, mean, na.rm = TRUE)
+     herding        hound non-sporting     sporting      terrier          toy 
+   36.666667    63.833333    27.928571    51.966667    23.413043     9.818182 
+     working 
+  105.000000 
+> dogs$grooming
+  [1] weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  daily  
+ [11] monthly weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly 
+ [21] weekly  weekly  daily   weekly  weekly  weekly  weekly  daily   weekly  daily  
+ [31] weekly  daily   weekly  weekly  weekly  weekly  weekly  daily   weekly  weekly 
+ [41] weekly  weekly  weekly  daily   weekly  daily   weekly  weekly  weekly  weekly 
+ [51] weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  daily  
+ [61] daily   daily   weekly  daily   weekly  daily   daily   weekly  weekly  daily  
+ [71] daily   weekly  weekly  weekly  daily   weekly  weekly  weekly  daily   daily  
+ [81] weekly  weekly  weekly  weekly  weekly  daily   weekly  <NA>    <NA>    <NA>   
+ [91] <NA>    <NA>    <NA>    weekly  daily   <NA>    weekly  <NA>    <NA>    <NA>   
+[101] <NA>    <NA>    weekly  <NA>    <NA>    weekly  <NA>    <NA>    <NA>    weekly 
+[111] <NA>    <NA>    daily   daily   weekly  <NA>    <NA>    <NA>    <NA>    <NA>   
+[121] <NA>    <NA>    weekly  <NA>    <NA>    weekly  weekly  <NA>    <NA>    <NA>   
+[131] <NA>    weekly  weekly  <NA>    <NA>    <NA>    <NA>    weekly  <NA>    <NA>   
+[141] <NA>    weekly  weekly  weekly  weekly  <NA>    <NA>    weekly  <NA>    <NA>   
+[151] <NA>    <NA>    <NA>    <NA>    <NA>    <NA>    <NA>    <NA>    <NA>    <NA>   
+[161] <NA>    <NA>    weekly  weekly  weekly  <NA>    <NA>    weekly  weekly  <NA>   
+[171] <NA>    <NA>   
+Levels: daily weekly monthly
+> by_grooming = split(dogs$weight, dogs$grooming)
+> by_grooming
+$daily
+ [1]  22.0    NA   5.0  12.5   5.5    NA    NA    NA  21.0    NA  77.5  20.0
+[13]  36.5  55.0  13.0    NA  82.5  80.0    NA 155.0    NA    NA    NA
+
+$weekly
+ [1]    NA  13.5  35.0  14.0    NA  30.0  25.0    NA    NA  15.0    NA  24.0
+[13]  15.5   5.5    NA    NA  45.0    NA  20.0    NA  62.5  59.5  12.0  67.5
+[25]   5.0    NA  65.0    NA   9.0  60.0    NA  67.5  24.0  62.5    NA  16.0
+[37]  12.0    NA    NA  11.0    NA  15.5    NA    NA  23.0    NA  31.0    NA
+[49]  26.0  70.0  65.0    NA 125.0    NA    NA  77.5  27.0    NA  60.0    NA
+[61]  85.0    NA 115.0 175.0    NA  45.0 115.0    NA  45.0  19.0    NA    NA
+[73]    NA  26.0  55.0  17.0    NA 130.0  12.0    NA  97.5  15.0    NA  40.0
+[85]    NA    NA    NA  20.0
+
+$monthly
+[1] 47.5
+
+> sapply(by_grooming, mean, na.rm = TRUE)
+   daily   weekly  monthly 
+45.03846 45.24510 47.50000 
+> ?split
+> tapply(dogs$weight, dogs$grooming, mean, na.rm = TRUE)
+   daily   weekly  monthly 
+45.03846 45.24510 47.50000 
+> x = 1:5
+> for (i in x) {
+.   message(i)
+. }
+1
+2
+3
+4
+5
+> x = 1:5
+> for (i in x) {
+.   message("Hi")
+.   message(i)
+. }
+Hi
+1
+Hi
+2
+Hi
+3
+Hi
+4
+Hi
+5
+> x = 1:5
+> for (i in x)
+.   message(i)
+1
+2
+3
+4
+5
+> x = c("Hi", "Hello", "Goodbye")
+> i = 1
+> while (i <= length(x)) {
+.   message(x[[i]])
+.   i = i + 1
+. }
+Hi
+Hello
+Goodbye
+> for (i in x) {
+.   message(i)
+. }
+Hi
+Hello
+Goodbye
+> for (i in x) {
+.   if (i == "Goodbye")
+.     break
+.   message(i)
+. }
+Hi
+Hello
+> x
+[1] "Hi"      "Hello"   "Goodbye"
+> for (i in x) {
+.   if (i == "Hello")
+.     break
+.   message(i)
+. }
+Hi
+> for (i in x) {
+.   if (i == "Hello")
+.     next
+.   message(i)
+. }
+Hi
+Goodbye
+> x
+[1] "Hi"      "Hello"   "Goodbye"
+> i = 1
+> while (TRUE) {
+.   message(x[[i]])
+.   i = i + 1
+.   if (i > length(x))
+.     break
+. }
+Hi
+Hello
+Goodbye
+> i = 1
+> repeat {
+.   message(x[[i]])
+.   i = i + 1
+.   if (i > length(x))
+.     break
+. }
+Hi
+Hello
+Goodbye
+> mylist = list(1:3, 2:7)
+> seq_along(mylist)
+[1] 1 2
+> result = numeric(length(mylist))
+> result
+[1] 0 0
+> for (i in seq_along(mylist)) {
+.   result[i] = mean(mylist[[i]])
+. }
+> result
+[1] 2.0 4.5
+> result = NULL
+> for (i in seq_along(mylist)) {
+.   result = c(result, mean(mylist[[i]]))
+. }
+> result
+[1] 2.0 4.5
+> mylist = list()
+> result = numeric(length(mylist))
+> for (i in 1:length(mylist)) {
+.   result[i] = mean(mylist[[i]])
+. }
+Error in mylist[[i]] : subscript out of bounds
+> 1:length(mylist)
+[1] 1 0
+> length(mylist)
+[1] 0
+> 1:0
+[1] 1 0
+> seq_along(mylit)
+Error: object 'mylit' not found
+> seq_along(mylist)
+integer(0)
+> mylist = list()
+> result = numeric(length(mylist))
+> for (i in seq_along(mylist))
+.   result[i] = mean(mylist[[i]])
+> }
+Error: unexpected '}' in "}"
+> for (i in seq_along(mylist)) {
+.   result[i] = mean(mylist[[i]])
+. }
+> hi = function() message("Hello")
+> hi()
+Hello
+> hi_bye = function() {
+.   message("Hello")
+.   message("Goodbye")
+. }
+> hi_bye()
+Hello
+Goodbye
+> hi_bye = function(x) {
+.   message("Hello")
+.   message(x)
+. }
+> hi_bye("Stay well!")
+Hello
+Stay well!
+> f2c = function(f) {
+.   (f - 32) * 5 / 9
+. }
+> f2c(68)
+[1] 20
+> f2c(100)
+[1] 37.77778
+> f2c = function(f) {
+.   zeroed =  (f - 32)
+.   zeroed * 5 / 9
+. }
+> f2c(68)
+[1] 20
+> f2c = function(f) {
+.   zeroed =  (f - 32)
+.   message("Hi!")
+. }
+> f2c(40)
+Hi!
+> f2c = function(f) {
+.   zeroed =  (f - 32)
+.   return (zeroed * 5 / 9)
+.   message("Hi!")
+. }
+> f2c(40)
+[1] 4.444444
+> hi = function(msg) {
+.   message("Hi")
+.   message(msg)
+. }
+> msg("STAT 33B")
+Error in msg("STAT 33B") : could not find function "msg"
+> hi = function(msg) {
+.   message("Hi")
+.   message(msg)
+. }
+> message("STAT 33B")
+STAT 33B
+> hi("STAT 33B")
+Hi
+STAT 33B
+> hi("STAT 33B")
+Hi
+STAT 33B
+> hi = function(msg = "Stay Well!") {
+.   message("Hi")
+.   message(msg)
+. }
+> hi()
+Hi
+Stay Well!
+> hi("STAT 33B")
+Hi
+STAT 33B
+> x = c(1, 2, 3)
+> print_it = function(v) {
+.   if (length(v) == 1) {
+.     message(v)
+.   } else {
+.     message(v[[1]])
+.     print_it(v[-1])
+.   }
+. }
+> print_it(x)
+1
+2
+3
+> print_it = function(v) {
+.   if (length(v) == 1) {
+.     message(v)
+.   } else {
+.     message(v[[1]])
+.     Recall(v[-1])
+.   }
+. }
+> print_it(x)
+1
+2
+3
+> print_elements = function(v) {
+.   if (length(v) == 1) {
+.     message(v)
+.   } else {
+.     Recall(v[-1])
+.   }
+. }
+> print_elements(x)
+3
+> x
+[1] 1 2 3
+> print_elements(x)
+3
+> print_elements = function(v) {
+.   if (length(v) == 1) {
+.     message(v)
+.   } else {
+.     message(v[[1]])
+.     Recall(v[-1])
+.   }
+. }
+> print_elements(x)
+1
+2
+3
+> f = function(x) 42
+> f(message("Hello"))
+[1] 42
+> f = function(x) {
+.   force(x)
+.   42 
+. }
+> f(message("Hello"))
+Hello
+[1] 42
+> f = function(x, y = x) {
+.   message(x)
+.   message(y)
+. }
+> f("Hi")
+Hi
+Hi
+> f("Hi", "Bye")
+Hi
+Bye
+> f()
+Error in message(x) : argument "x" is missing, with no default
+> f = function(x = y, y = x) {
+.   message(x)
+.   message(y)
+. }
+> f(31)
+31
+31
+> f(y = 31)
+31
+31
+> f = function(x = y, y = x) {
+.   message(paste("x is", x))
+.   message(paste("y is", y))
+. }
+> f(y = 31)
+x is 31
+y is 31
+> f()
+Error in paste("x is", x) : 
+  promise already under evaluation: recursive default argument reference or earlier problems?
+> ?dots
+> many_args = function(...) {
+.   ...length()
+. }
+> many_args()
+[1] 0
+> many_args("Hi", 2, 3)
+[1] 3
+> second_arg = function(...) {
+.   ...elt(2)
+. }
+> second_arg("hi", "bye")
+[1] "bye"
+> second_arg("hi")
+Error in second_arg("hi") : the ... list contains fewer than 2 elements
+> mean_na = function(x, ...) {
+.   mean(x, na.rm = TRUE, ...)
+. }
+> ?mean
+> x = c(1, 5, 6, 4, 3)
+> x = c(1, 5, 6, 4, 3, NA)
+> mean_na(x)
+[1] 3.8
+> mean_na(x, trim = 0.5)
+[1] 4
+> 

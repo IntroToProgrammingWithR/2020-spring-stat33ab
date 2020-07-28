@@ -1,0 +1,446 @@
+---
+title: "Stat 33B - Lecture 11"
+date: April 8, 2020
+output: pdf_document
+---
+
+
+Messages, Warnings, & Errors
+============================
+
+The `message()` function prints message to the R console:
+```{r}
+message("Hello everyone!")
+
+message("Hello everyone!", " This is my message.")
+
+message("Hello everyone!", 5)
+
+message("Hello\nHi")
+
+x = message("Hi")
+
+x
+```
+
+
+The `warning()` function prints a warning:
+```{r}
+if (c(TRUE, FALSE)) {
+  5
+}
+
+warning("This is your final warning!")
+```
+
+The argument to `call.` controls whether the name of the function
+that issued the warning is printed:
+
+```{r}
+f = function() warning("This is the function warning!", call. = FALSE)
+
+f()
+```
+
+
+The `stop()` function prints an error message and stops evaluation:
+```{r}
+stop("This is an error")
+
+f = function() stop("This is an error in a function!", call. = FALSE)
+
+f()
+```
+The `stop()` function also has a `call.` parameter.
+
+
+These three functions -- `message()`, `warning()`, and `stop()` --
+are part of R's "condition system".
+
+The condition system provides a way to report and handle unusual
+conditions.
+
+
+Handling Unusual Conditions
+---------------------------
+
+Use the `try()` function to try running an expression that might
+produce an error:
+```{r}
+x = "hi"
+result = try(5 + x)
+
+class(result)
+
+if (inherits(result, "try-error")) {
+  # Do something about the error
+} else {
+  # No error, proceed as normal
+}
+result
+```
+
+If the expression succeeds, `try()` returns the result.
+
+
+If the expression fails (an error), `try()` returns an object with
+class `try-error`.
+
+The error can also be silenced by setting `silent = TRUE`:
+```{r}
+result = try(5 + "hi", silent = TRUE)
+result
+```
+
+The `tryCatch()` function provides another way to handle conditions.
+
+The function takes "handlers" for different conditions:
+
+* `message`
+* `warning`
+* `error`
+* `interrupt` -- when the user interrupts the code (for example, by
+  pressing Ctrl-C)
+
+Each handler should be a function with one parameter. If the
+condition occurs, the handler is called with the condition object.
+
+The `tryCatch()` function returns the result of the expression if no
+unusual conditions occurred. Otherwise, it returns the result of
+calling the handler.
+
+For example:
+```{r}
+x = "Hi"
+result = tryCatch(5 + x,
+  error = function(e) {
+    warning("x wasn't compatible with 5")
+    NA
+  })
+
+
+f = function() warning("This is a very bad warning!")
+result = tryCatch(f(),
+  warning = function(e) {
+    NA
+  })
+
+```
+
+With `tryCatch()`, handled conditions are always silent.
+
+
+
+The `cat()` Function
+------------------
+
+Like `message()`, the `cat()` function prints a message to the
+console:
+```{r}
+cat("Hello", "Hi")
+```
+
+But `cat()` is not part of R's condition system.
+
+Messages printed with `cat()` cannot be handled with `tryCatch()`.
+
+
+The `print()` Function
+--------------------
+
+The `print()` function prints R's representation of an object to the
+console.
+
+The output is numbered:
+```{r}
+print("Hello\nHi")
+```
+
+Note that strings keep their quotes and special characters are not
+converted.
+
+
+For most output, use the condition system rather than `cat()` or
+`print()`!
+
+
+Formatting Output
+-----------------
+
+The `paste()` function combines strings:
+```{r}
+x = paste("Hi", "Hello")
+x
+```
+
+The `sprintf()` function can substitute values into strings.
+
+Substitutions are marked with `%` followed by a character:
+```{r}
+x = 5
+sprintf("The value of x is %i. And the next value is %s", x, "Hello")
+```
+
+See `?sprintf` for all the details.
+
+The `sprintf()` function may be familiar to you from other languages.
+
+
+
+Global Options
+==============
+
+The `options()` function sets global options for the R session.
+
+Options have many uses (see `?options`).
+
+One is controlling errors and warnings.
+
+
+
+Example: the `warn` option controls how warnings R displayed.
+
+To make R treat warnings as errors:
+```{r}
+options(warn = 2)
+```
+This is useful for finding the source of a warning.
+
+
+The `warn` option can be set to three different values:
+
+* `warn = 0` (the default) warnings are only displayed after code
+  finishes running
+
+* `warn = 1` warnings are displayed immediately
+
+* `warn = 2` warnings stop code from running, like errors
+
+
+
+It's possible to override the default options every time R starts.
+
+At startup, R runs code from an `.Rprofile` file, usually located in
+your system's home directory.
+
+```{r}
+normalizePath("~")
+```
+
+
+See `?Startup` for full details.
+
+
+
+A few other useful options to make R warn about partial name matches
+in calls and the `$` operator:
+
+* `warnPartialMatchAttr = TRUE`
+
+* `warnPartialMatchDollar = TRUE`
+
+* `warnPartialMatchArgs = TRUE`
+
+For example:
+```{r}
+x = list(abc = 1)
+x$a
+```
+
+
+Preventing Bugs
+===============
+
+Code Clarity
+------------
+
+Format your code so that it's easy to read:
+
+* Use whitespace:
+
+    + Put spaces after commas and around binary operators.
+    + Indent code inside curly braces `{ }` by 2 spaces or 1 tab.
+    + Don't mix tabs and spaces.
+    + Separate logical steps or "paragraphs" with blank lines.
+
+* Put closing curly braces `}` on their own line.
+    + Exception: use `} else {`
+
+* Use a consistent naming style:
+   + `lowercase_with_underscores`
+   + `camelCase`
+
+* Use descriptive variable names. Short names are okay for
+  frequently-used variables where the context makes the meaning
+  apparent.
+
+* Use comments:
+    + To create a big picture plan for how to write your code.
+    + To explain tricky code.
+    + To summarize the purpose of a "paragraph" of code.
+    + To document how to use your functions. Also see roxygen2.
+
+
+Without formatting:
+```{r}
+f=function(x,xx){
+xx=match.arg(xx,c("celsius","fahrenheit"),several.ok=TRUE)
+x1=xx=="fahrenheit"
+x[x1]=(x[x1]-32)*5/9
+x+273.15}
+```
+
+With formatting:
+```{r}
+to_kelvin = function(temperature, unit) {
+  unit = match.arg(unit, c("celsius", "fahrenheit"),
+    several.ok = TRUE)
+
+  # Convert everything to celsius first.
+  is_f = unit == "fahrenheit"
+  temperature[is_f] = (temperature[is_f] - 32) * 5 / 9
+
+  temperature + 273.15
+}
+```
+
+Modularity
+----------
+
+Try to break problems into smaller steps.
+
+Write down the input(s) and output(s) for each step.
+
+Create functions for steps that are reusable. Use parameters for
+input and the return value for output.
+
+Be wary of extremely short (1 line) or long (> 20 line) functions.
+Often a sign of failure to break down the problem.
+
+
+Defensive Programming
+---------------------
+
+Test whether inputs satisfy your assumptions.
+
+For instance, if your function should only work on scalars, check the
+lengths of the arguments.
+
+Raise an error with `stop()` if the assumptions aren't satisfied.
+
+Useful functions for testing assumptions:
+
+* `is.X()` functions for testing various properties. For instance,
+  `is.character()` to test whether an object is a character vector.
+
+* `inherits()` for testing the class of an object.
+
+* `length()`, `dim()` for testing dimensions.
+
+
+
+Debugging
+=========
+
+Debugging code is the process of confirming, step-by-step, that what
+you belive the code does is what the code actually does.
+
+The key idea is to check each step of the code.
+
+Two strategies:
+
+* Work forward through the code from the beginning.
+* Work backward from the source of an error.
+
+R has built-in functions to help with debugging.
+
+The `browser()` function pauses the running code and starts R's
+debugging system.
+
+For example:
+```{r}
+for (i in 1:10) {
+  message(i)
+  
+  if (i == 5)
+    browser()
+}
+```
+
+The key debugger commands are:
+
+* `n` to run the next line
+* `s` to "step into" a call
+* `c` to continue running the code
+* `Q` to quit the debugger
+* `where` to print call stack
+* `help` to print debugger help
+
+
+```{r}
+f = function() {
+  browser()
+  g()
+  message(4)
+}
+
+g = function() {
+  message(1)
+  message(2)
+  message(3)
+}
+
+f()
+```
+
+
+The `debug()` function places a call to `browser()` at the beginning
+of a function.
+
+Use `debug()` to debug functions that you can't or don't want to
+edit.
+
+For example:
+```{r}
+f = function() {
+  message(1)
+  message(2)
+  message("Hi")
+}
+
+debug(f)
+```
+
+Use `undebug()` to reverse the effect of `debug()`:
+```{r}
+undebug(f)
+```
+
+The `debugonce()` function places a call to `browser()` at the
+beginning of a function for the next call only.
+
+The idea is that you then don't have to call `undebug()`.
+
+Example:
+```{r}
+debugonce(f)
+```
+
+The global option `error` can be used to make R enter the debugger
+any time an error occurs.
+
+Set the option to `error = recover`:
+```{r}
+options(error = recover)
+```
+
+Then:
+```{r}
+f = function() {
+  stop("This is an error!")
+}
+
+f()
+```
+
+See Chapter 13 of "The Art of R Programming" by N. Matloff for more.

@@ -1,0 +1,812 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R version 3.6.2 (2019-12-12) -- Dark and Stormy Night
+Type 'citation()', 'contributors()', or 'license()' for more information
+
+Libraries:
+* /home/nick/.config/R/library
+* /usr/lib/R/library
+
+> x = c(1, 2)
+> y = x
+> x[1] = 7
+> y
+[1] 1 2
+> getwd()
+[1] "/home/nick"
+> setwd("/home")
+> getwd()
+[1] "/home"
+> list.files()
+[1] "lost+found" "nick"      
+> setwd("/home/nick/university/teach/stat33ab/stat33b/sandbox/")
+> list.files()
+[1] "data"           "notes_backup.R" "notes.R"       
+> ?list.files
+> list.files("data")
+[1] "dogs"    "sta141a"
+> list.files("data/dogs")
+[1] "dogs_full.csv" "dogs_full.rds" "dogs_top.rds" 
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33b/sandbox"
+> list.files("..")
+[1] "docs"     "hw"       "lectures" "private"  "sandbox" 
+> list.files("../../..")
+ [1] "2018.1-sta141a"   "archive"          "cal_handbook.pdf"
+ [4] "carpentry.md"     "data"             "lor"             
+ [7] "references.md"    "sta141b"          "sta160"          
+[10] "stat33ab"         "teaching-notes"   "teaching-tools"  
+> dogs = readRDS("data/dogs/dogs_full.rds")
+> ls()
+[1] "dogs" "x"    "y"   
+> head(dogs)
+                   breed    group datadog popularity_all popularity
+1          Border Collie  herding    3.64             45         39
+2         Border Terrier  terrier    3.61             80         61
+3               Brittany sporting    3.54             30         30
+4          Cairn Terrier  terrier    3.53             59         48
+5 Welsh Springer Spaniel sporting    3.34            130         81
+6 English Cocker Spaniel sporting    3.33             63         51
+  lifetime_cost intelligence_rank longevity ailments price food_cost
+1         20143                 1     12.52        2   623       324
+2         22638                30     14.00        0   833       324
+3         22589                19     12.92        0   618       466
+4         21992                35     13.84        2   435       324
+5         20224                31     12.49        1   750       324
+6         18993                18     11.66        0   800       324
+  grooming   kids megarank_kids megarank   size weight height
+1   weekly    low             1       29 medium     NA     20
+2   weekly   high             2        1  small   13.5     NA
+3   weekly medium             3       11 medium   35.0     19
+4   weekly   high             4        2  small   14.0     10
+5   weekly   high             5        4 medium     NA     18
+6   weekly   high             6        5 medium   30.0     16
+> tail(dogs)
+                          breed        group datadog popularity_all popularity lifetime_cost
+167                      Vizsla     sporting      NA             37         NA            NA
+168                  Weimaraner     sporting      NA             32         NA            NA
+169               Welsh Terrier      terrier      NA             99         NA            NA
+170            Wire Fox Terrier      terrier      NA            100         NA            NA
+171 Wirehaired Pointing Griffon     sporting      NA             92         NA            NA
+172              Xoloitzcuintli non-sporting      NA            155         NA            NA
+    intelligence_rank longevity ailments price food_cost grooming kids megarank_kids megarank   size
+167                25     12.50        0   935        NA     <NA> <NA>            NA       NA medium
+168                21        NA        1   562        NA   weekly high            NA       NA  large
+169                53        NA        0   843        NA   weekly high            NA       NA  small
+170                51     13.17        0   668        NA     <NA> <NA>            NA       NA  small
+171                46      8.80        0   755        NA     <NA> <NA>            NA       NA medium
+172                NA        NA       NA   717        NA     <NA> <NA>            NA       NA medium
+    weight height
+167     NA   22.5
+168     NA   25.0
+169   20.0   15.0
+170   17.5   15.0
+171     NA   22.0
+172     NA   16.5
+> nrow(dogs)
+[1] 172
+> str(dogs)
+Classes 'tbl_df', 'tbl' and 'data.frame':	172 obs. of  18 variables:
+ $ breed            : chr  "Border Collie" "Border Terrier" "Brittany" "Cairn Terrier" ...
+ $ group            : Factor w/ 7 levels "herding","hound",..: 1 5 4 5 4 4 4 6 1 1 ...
+ $ datadog          : num  3.64 3.61 3.54 3.53 3.34 3.33 3.3 3.26 3.25 3.22 ...
+ $ popularity_all   : int  45 80 30 59 130 63 27 38 60 20 ...
+ $ popularity       : int  39 61 30 48 81 51 27 33 49 20 ...
+ $ lifetime_cost    : num  20143 22638 22589 21992 20224 ...
+ $ intelligence_rank: int  1 30 19 35 31 18 20 8 10 6 ...
+ $ longevity        : num  12.5 14 12.9 13.8 12.5 ...
+ $ ailments         : int  2 0 0 2 1 0 2 5 1 5 ...
+ $ price            : num  623 833 618 435 750 800 465 740 530 465 ...
+ $ food_cost        : num  324 324 466 324 324 324 674 324 466 405 ...
+ $ grooming         : Factor w/ 3 levels "daily","weekly",..: 2 2 2 2 2 2 2 2 2 1 ...
+ $ kids             : Factor w/ 3 levels "high","medium",..: 3 1 2 1 1 1 1 2 3 1 ...
+ $ megarank_kids    : int  1 2 3 4 5 6 7 8 9 11 ...
+ $ megarank         : int  29 1 11 2 4 5 6 22 52 8 ...
+ $ size             : Factor w/ 3 levels "large","medium",..: 2 3 2 3 2 2 3 3 2 3 ...
+ $ weight           : num  NA 13.5 35 14 NA 30 25 NA NA 22 ...
+ $ height           : num  20 NA 19 10 18 16 14.5 9.5 18.5 14.5 ...
+> summary(dogs)
+    breed                    group       datadog      popularity_all     popularity   lifetime_cost  
+ Length:172         herding     :25   Min.   :0.990   Min.   :  1.00   Min.   : 1.0   Min.   :12653  
+ Class :character   hound       :26   1st Qu.:2.185   1st Qu.: 43.75   1st Qu.:22.5   1st Qu.:17816  
+ Mode  :character   non-sporting:19   Median :2.710   Median : 87.50   Median :44.0   Median :20087  
+                    sporting    :28   Mean   :2.604   Mean   : 87.12   Mean   :44.0   Mean   :19820  
+                    terrier     :28   3rd Qu.:3.035   3rd Qu.:130.25   3rd Qu.:65.5   3rd Qu.:21798  
+                    toy         :19   Max.   :3.640   Max.   :173.00   Max.   :87.0   Max.   :26686  
+                    working     :27   NA's   :85                       NA's   :85     NA's   :81     
+ intelligence_rank   longevity        ailments         price          food_cost         grooming 
+ Min.   : 1.00     Min.   : 6.29   Min.   :0.000   Min.   : 283.0   Min.   : 270.0   daily  :23  
+ 1st Qu.:27.00     1st Qu.: 9.70   1st Qu.:0.000   1st Qu.: 587.2   1st Qu.: 324.0   weekly :88  
+ Median :42.00     Median :11.29   Median :1.000   Median : 795.0   Median : 466.0   monthly: 1  
+ Mean   :40.92     Mean   :10.96   Mean   :1.216   Mean   : 876.8   Mean   : 489.6   NA's   :60  
+ 3rd Qu.:54.25     3rd Qu.:12.37   3rd Qu.:2.000   3rd Qu.:1042.2   3rd Qu.: 466.0               
+ Max.   :80.00     Max.   :16.50   Max.   :9.000   Max.   :3460.0   Max.   :1349.0               
+ NA's   :40        NA's   :37      NA's   :24      NA's   :26       NA's   :85                   
+     kids    megarank_kids      megarank         size        weight           height     
+ high  :67   Min.   : 1.00   Min.   : 1.00   large :54   Min.   :  5.00   Min.   : 5.00  
+ medium:35   1st Qu.:22.50   1st Qu.:22.50   medium:60   1st Qu.: 17.50   1st Qu.:14.00  
+ low   :10   Median :44.00   Median :44.00   small :58   Median : 35.00   Median :19.00  
+ NA's  :60   Mean   :43.95   Mean   :43.94               Mean   : 44.97   Mean   :19.09  
+             3rd Qu.:65.50   3rd Qu.:65.50               3rd Qu.: 62.50   3rd Qu.:24.12  
+             Max.   :87.00   Max.   :87.00               Max.   :175.00   Max.   :32.00  
+             NA's   :85      NA's   :85                  NA's   :86       NA's   :13     
+> head(dogs)
+                   breed    group datadog popularity_all popularity lifetime_cost intelligence_rank
+1          Border Collie  herding    3.64             45         39         20143                 1
+2         Border Terrier  terrier    3.61             80         61         22638                30
+3               Brittany sporting    3.54             30         30         22589                19
+4          Cairn Terrier  terrier    3.53             59         48         21992                35
+5 Welsh Springer Spaniel sporting    3.34            130         81         20224                31
+6 English Cocker Spaniel sporting    3.33             63         51         18993                18
+  longevity ailments price food_cost grooming   kids megarank_kids megarank   size weight height
+1     12.52        2   623       324   weekly    low             1       29 medium     NA     20
+2     14.00        0   833       324   weekly   high             2        1  small   13.5     NA
+3     12.92        0   618       466   weekly medium             3       11 medium   35.0     19
+4     13.84        2   435       324   weekly   high             4        2  small   14.0     10
+5     12.49        1   750       324   weekly   high             5        4 medium     NA     18
+6     11.66        0   800       324   weekly   high             6        5 medium   30.0     16
+> dogs$breed
+  [1] "Border Collie"                      "Border Terrier"                    
+  [3] "Brittany"                           "Cairn Terrier"                     
+  [5] "Welsh Springer Spaniel"             "English Cocker Spaniel"            
+  [7] "Cocker Spaniel"                     "Papillon"                          
+  [9] "Australian Cattle Dog"              "Shetland Sheepdog"                 
+ [11] "Siberian Husky"                     "Lhasa Apso"                        
+ [13] "Affenpinscher"                      "Dachshund"                         
+ [15] "Miniature Schnauzer"                "Chihuahua"                         
+ [17] "Australian Terrier"                 "Whippet"                           
+ [19] "English Springer Spaniel"           "West Highland White Terrier"       
+ [21] "Bedlington Terrier"                 "Poodle"                            
+ [23] "Bichon Frise"                       "German Shorthaired Pointer"        
+ [25] "Pointer"                            "Tibetan Spaniel"                   
+ [27] "Labrador Retriever"                 "Maltese"                           
+ [29] "Pomeranian"                         "Shih Tzu"                          
+ [31] "Australian Shepherd"                "Yorkshire Terrier"                 
+ [33] "Irish Setter"                       "Pharaoh Hound"                     
+ [35] "Brussels Griffon"                   "Golden Retriever"                  
+ [37] "Samoyed"                            "Beagle"                            
+ [39] "Chesapeake Bay Retriever"           "Tibetan Terrier"                   
+ [41] "Gordon Setter"                      "English Setter"                    
+ [43] "Pug"                                "Briard"                            
+ [45] "Norfolk Terrier"                    "Flat-Coated Retriever"             
+ [47] "Boston Terrier"                     "Doberman Pinscher"                 
+ [49] "English Toy Spaniel"                "Belgian Tervuren"                  
+ [51] "Cavalier King Charles Spaniel"      "Dalmatian"                         
+ [53] "Basset Hound"                       "Basenji"                           
+ [55] "Italian Greyhound"                  "Staffordshire Bull Terrier"        
+ [57] "Bouvier des Flandres"               "Pembroke Welsh Corgi"              
+ [59] "Clumber Spaniel"                    "Dandie Dinmont Terrier"            
+ [61] "Saluki"                             "Giant Schnauzer"                   
+ [63] "Greyhound"                          "Scottish Terrier"                  
+ [65] "Rottweiler"                         "Kerry Blue Terrier"                
+ [67] "Afghan Hound"                       "Newfoundland"                      
+ [69] "German Shepherd"                    "Pekingese"                         
+ [71] "Old English Sheepdog"               "Akita"                             
+ [73] "Rhodesian Ridgeback"                "French Bulldog"                    
+ [75] "Borzoi"                             "Bernese Mountain Dog"              
+ [77] "Bull Terrier"                       "Boxer"                             
+ [79] "Alaskan Malamute"                   "Chow Chow"                         
+ [81] "Bloodhound"                         "Irish Wolfhound"                   
+ [83] "Bullmastiff"                        "Mastiff"                           
+ [85] "Great Dane"                         "Saint Bernard"                     
+ [87] "Bulldog"                            "Airedale Terrier"                  
+ [89] "American English Coonhound"         "American Eskimo Dog"               
+ [91] "American Foxhound"                  "American Staffordshire Terrier"    
+ [93] "American Water Spaniel"             "Anatolian Shepherd Dog"            
+ [95] "Bearded Collie"                     "Beauceron"                         
+ [97] "Belgian Malinois"                   "Belgian Sheepdog"                  
+ [99] "Black and Tan Coonhound"            "Black Russian Terrier"             
+[101] "Bluetick Coonhound"                 "Boykin Spaniel"                    
+[103] "Canaan Dog"                         "Cane Corso"                        
+[105] "Cardigan Welsh Corgi"               "Cesky Terrier"                     
+[107] "Chinese Crested"                    "Chinese Shar Pei"                  
+[109] "Collie"                             "Curly Coated Retriever"            
+[111] "English Foxhound"                   "Entlebucher Mountain Dog"          
+[113] "Field Spaniel"                      "Finnish Lapphund"                  
+[115] "Finnish Spitz"                      "German Pinscher"                   
+[117] "German Wirehaired Pointer"          "Glen of Imaal Terrier"             
+[119] "Great Pyrenees"                     "Greater Swiss Mountain Dog"        
+[121] "Harrier"                            "Havanese"                          
+[123] "Ibizan Hound"                       "Icelandic Sheepdog"                
+[125] "Irish Red and White Setter"         "Irish Terrier"                     
+[127] "Irish Water Spaniel"                "Japanese Chin"                     
+[129] "Keeshond"                           "Komondor"                          
+[131] "Kuvasz"                             "Lakeland Terrier"                  
+[133] "Leonberger"                         "Löwchen"                           
+[135] "Manchester Terrier"                 "Miniature Bull Terrier"            
+[137] "Miniature Pinscher"                 "Neapolitan Mastiff"                
+[139] "Norwegian Buhund"                   "Norwegian Elkhound"                
+[141] "Norwegian Lundehund"                "Norwich Terrier"                   
+[143] "Nova Scotia Duck Tolling Retriever" "Otterhound"                        
+[145] "Parson Russell Terrier"             "Petit Basset Griffon Vendeen"      
+[147] "Plott"                              "Polish Lowland Sheepdog"           
+[149] "Portuguese Water Dog"               "Puli"                              
+[151] "Pyrenean Shepherd"                  "Redbone Coonhound"                 
+[153] "Schipperke"                         "Scottish Deerhound"                
+[155] "Sealyham Terrier"                   "Shiba Inu"                         
+[157] "Silky Terrier"                      "Skye Terrier"                      
+[159] "Smooth Fox Terrier"                 "Soft-Coated Wheaten Terrier"       
+[161] "Spinone Italiano"                   "Standard Schnauzer"                
+[163] "Sussex Spaniel"                     "Swedish Vallhund"                  
+[165] "Tibetan Mastiff"                    "Toy Fox Terrier"                   
+[167] "Vizsla"                             "Weimaraner"                        
+[169] "Welsh Terrier"                      "Wire Fox Terrier"                  
+[171] "Wirehaired Pointing Griffon"        "Xoloitzcuintli"                    
+> dogs$"breed"
+  [1] "Border Collie"                      "Border Terrier"                    
+  [3] "Brittany"                           "Cairn Terrier"                     
+  [5] "Welsh Springer Spaniel"             "English Cocker Spaniel"            
+  [7] "Cocker Spaniel"                     "Papillon"                          
+  [9] "Australian Cattle Dog"              "Shetland Sheepdog"                 
+ [11] "Siberian Husky"                     "Lhasa Apso"                        
+ [13] "Affenpinscher"                      "Dachshund"                         
+ [15] "Miniature Schnauzer"                "Chihuahua"                         
+ [17] "Australian Terrier"                 "Whippet"                           
+ [19] "English Springer Spaniel"           "West Highland White Terrier"       
+ [21] "Bedlington Terrier"                 "Poodle"                            
+ [23] "Bichon Frise"                       "German Shorthaired Pointer"        
+ [25] "Pointer"                            "Tibetan Spaniel"                   
+ [27] "Labrador Retriever"                 "Maltese"                           
+ [29] "Pomeranian"                         "Shih Tzu"                          
+ [31] "Australian Shepherd"                "Yorkshire Terrier"                 
+ [33] "Irish Setter"                       "Pharaoh Hound"                     
+ [35] "Brussels Griffon"                   "Golden Retriever"                  
+ [37] "Samoyed"                            "Beagle"                            
+ [39] "Chesapeake Bay Retriever"           "Tibetan Terrier"                   
+ [41] "Gordon Setter"                      "English Setter"                    
+ [43] "Pug"                                "Briard"                            
+ [45] "Norfolk Terrier"                    "Flat-Coated Retriever"             
+ [47] "Boston Terrier"                     "Doberman Pinscher"                 
+ [49] "English Toy Spaniel"                "Belgian Tervuren"                  
+ [51] "Cavalier King Charles Spaniel"      "Dalmatian"                         
+ [53] "Basset Hound"                       "Basenji"                           
+ [55] "Italian Greyhound"                  "Staffordshire Bull Terrier"        
+ [57] "Bouvier des Flandres"               "Pembroke Welsh Corgi"              
+ [59] "Clumber Spaniel"                    "Dandie Dinmont Terrier"            
+ [61] "Saluki"                             "Giant Schnauzer"                   
+ [63] "Greyhound"                          "Scottish Terrier"                  
+ [65] "Rottweiler"                         "Kerry Blue Terrier"                
+ [67] "Afghan Hound"                       "Newfoundland"                      
+ [69] "German Shepherd"                    "Pekingese"                         
+ [71] "Old English Sheepdog"               "Akita"                             
+ [73] "Rhodesian Ridgeback"                "French Bulldog"                    
+ [75] "Borzoi"                             "Bernese Mountain Dog"              
+ [77] "Bull Terrier"                       "Boxer"                             
+ [79] "Alaskan Malamute"                   "Chow Chow"                         
+ [81] "Bloodhound"                         "Irish Wolfhound"                   
+ [83] "Bullmastiff"                        "Mastiff"                           
+ [85] "Great Dane"                         "Saint Bernard"                     
+ [87] "Bulldog"                            "Airedale Terrier"                  
+ [89] "American English Coonhound"         "American Eskimo Dog"               
+ [91] "American Foxhound"                  "American Staffordshire Terrier"    
+ [93] "American Water Spaniel"             "Anatolian Shepherd Dog"            
+ [95] "Bearded Collie"                     "Beauceron"                         
+ [97] "Belgian Malinois"                   "Belgian Sheepdog"                  
+ [99] "Black and Tan Coonhound"            "Black Russian Terrier"             
+[101] "Bluetick Coonhound"                 "Boykin Spaniel"                    
+[103] "Canaan Dog"                         "Cane Corso"                        
+[105] "Cardigan Welsh Corgi"               "Cesky Terrier"                     
+[107] "Chinese Crested"                    "Chinese Shar Pei"                  
+[109] "Collie"                             "Curly Coated Retriever"            
+[111] "English Foxhound"                   "Entlebucher Mountain Dog"          
+[113] "Field Spaniel"                      "Finnish Lapphund"                  
+[115] "Finnish Spitz"                      "German Pinscher"                   
+[117] "German Wirehaired Pointer"          "Glen of Imaal Terrier"             
+[119] "Great Pyrenees"                     "Greater Swiss Mountain Dog"        
+[121] "Harrier"                            "Havanese"                          
+[123] "Ibizan Hound"                       "Icelandic Sheepdog"                
+[125] "Irish Red and White Setter"         "Irish Terrier"                     
+[127] "Irish Water Spaniel"                "Japanese Chin"                     
+[129] "Keeshond"                           "Komondor"                          
+[131] "Kuvasz"                             "Lakeland Terrier"                  
+[133] "Leonberger"                         "Löwchen"                           
+[135] "Manchester Terrier"                 "Miniature Bull Terrier"            
+[137] "Miniature Pinscher"                 "Neapolitan Mastiff"                
+[139] "Norwegian Buhund"                   "Norwegian Elkhound"                
+[141] "Norwegian Lundehund"                "Norwich Terrier"                   
+[143] "Nova Scotia Duck Tolling Retriever" "Otterhound"                        
+[145] "Parson Russell Terrier"             "Petit Basset Griffon Vendeen"      
+[147] "Plott"                              "Polish Lowland Sheepdog"           
+[149] "Portuguese Water Dog"               "Puli"                              
+[151] "Pyrenean Shepherd"                  "Redbone Coonhound"                 
+[153] "Schipperke"                         "Scottish Deerhound"                
+[155] "Sealyham Terrier"                   "Shiba Inu"                         
+[157] "Silky Terrier"                      "Skye Terrier"                      
+[159] "Smooth Fox Terrier"                 "Soft-Coated Wheaten Terrier"       
+[161] "Spinone Italiano"                   "Standard Schnauzer"                
+[163] "Sussex Spaniel"                     "Swedish Vallhund"                  
+[165] "Tibetan Mastiff"                    "Toy Fox Terrier"                   
+[167] "Vizsla"                             "Weimaraner"                        
+[169] "Welsh Terrier"                      "Wire Fox Terrier"                  
+[171] "Wirehaired Pointing Griffon"        "Xoloitzcuintli"                    
+> data.frame(x = c(1, 5, 7), height = c(2.1, 3.1, 4.1))
+  x height
+1 1    2.1
+2 5    3.1
+3 7    4.1
+> data.frame(x = c(1, 5, 7), height = c(2.1, 3.1))
+Error in data.frame(x = c(1, 5, 7), height = c(2.1, 3.1)) : 
+  arguments imply differing number of rows: 3, 2
+> class(dogs)
+[1] "tbl_df"     "tbl"        "data.frame"
+> class(5.1)
+[1] "numeric"
+> class("hi")
+[1] "character"
+> class(c("hi","hello"))
+[1] "character"
+> class(lm)
+[1] "function"
+> 1:3
+[1] 1 2 3
+> 2:7
+[1] 2 3 4 5 6 7
+> class(data.frame(x = 1:3))
+[1] "data.frame"
+> typeof("hi")
+[1] "character"
+> typeof(3.1)
+[1] "double"
+> typeof(dogs)
+[1] "list"
+> typeof(1)
+[1] "double"
+> typeof(c(1, 2, 3))
+[1] "double"
+> typeof(1L)
+[1] "integer"
+> 
+> class(x)
+[1] "numeric"
+> x = 1L
+> class(x)
+[1] "integer"
+> class(x) = "data.frame"
+Warning in format.data.frame(x, trim = TRUE, drop0trailing = TRUE, ...) :
+  corrupt data frame: columns will be truncated or padded with NAs
+> x
+NULL
+<0 rows> (or 0-length row.names)
+> class(x)
+[1] "data.frame"
+> c(T, F, 6)
+[1] 1 0 6
+> rnorm("3.1")
+[1] -0.7455465  0.9155712 -0.4360431
+> rnorm(3)
+[1] -1.0870897  0.2694973 -1.4117591
+> typeof(lm)
+[1] "closure"
+> lists(4.1, "hi", lm)
+Error in lists(4.1, "hi", lm) : could not find function "lists"
+> list(4.1, "hi", lm)
+[[1]]
+[1] 4.1
+
+[[2]]
+[1] "hi"
+
+[[3]]
+function (formula, data, subset, weights, na.action, method = "qr", 
+    model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE, 
+    contrasts = NULL, offset, ...) 
+{
+    ret.x <- x
+    ret.y <- y
+    cl <- match.call()
+    mf <- match.call(expand.dots = FALSE)
+    m <- match(c("formula", "data", "subset", "weights", "na.action", 
+        "offset"), names(mf), 0L)
+    mf <- mf[c(1L, m)]
+    mf$drop.unused.levels <- TRUE
+    mf[[1L]] <- quote(stats::model.frame)
+    mf <- eval(mf, parent.frame())
+    if (method == "model.frame") 
+        return(mf)
+    else if (method != "qr") 
+        warning(gettextf("method = '%s' is not supported. Using 'qr'", 
+            method), domain = NA)
+    mt <- attr(mf, "terms")
+    y <- model.response(mf, "numeric")
+    w <- as.vector(model.weights(mf))
+    if (!is.null(w) && !is.numeric(w)) 
+        stop("'weights' must be a numeric vector")
+    offset <- model.offset(mf)
+    mlm <- is.matrix(y)
+    ny <- if (mlm) 
+        nrow(y)
+    else length(y)
+    if (!is.null(offset)) {
+        if (!mlm) 
+            offset <- as.vector(offset)
+        if (NROW(offset) != ny) 
+            stop(gettextf("number of offsets is %d, should equal %d (number of observations)", 
+                NROW(offset), ny), domain = NA)
+    }
+    if (is.empty.model(mt)) {
+        x <- NULL
+        z <- list(coefficients = if (mlm) matrix(NA_real_, 0, 
+            ncol(y)) else numeric(), residuals = y, fitted.values = 0 * 
+            y, weights = w, rank = 0L, df.residual = if (!is.null(w)) sum(w != 
+            0) else ny)
+        if (!is.null(offset)) {
+            z$fitted.values <- offset
+            z$residuals <- y - offset
+        }
+    }
+    else {
+        x <- model.matrix(mt, mf, contrasts)
+        z <- if (is.null(w)) 
+            lm.fit(x, y, offset = offset, singular.ok = singular.ok, 
+                ...)
+        else lm.wfit(x, y, w, offset = offset, singular.ok = singular.ok, 
+            ...)
+    }
+    class(z) <- c(if (mlm) "mlm", "lm")
+    z$na.action <- attr(mf, "na.action")
+    z$offset <- offset
+    z$contrasts <- attr(x, "contrasts")
+    z$xlevels <- .getXlevels(mt, mf)
+    z$call <- cl
+    z$terms <- mt
+    if (model) 
+        z$model <- mf
+    if (ret.x) 
+        z$x <- x
+    if (ret.y) 
+        z$y <- y
+    if (!qr) 
+        z$qr <- NULL
+    z
+}
+<bytecode: 0x5631769a1d88>
+<environment: namespace:stats>
+
+> c(4.1, sin)
+[[1]]
+[1] 4.1
+
+[[2]]
+function (x)  .Primitive("sin")
+
+> typeof(c(4.1, sin))
+[1] "list"
+> class(c(4.1, sin))
+[1] "list"
+> class(dogs)
+[1] "tbl_df"     "tbl"        "data.frame"
+> typeof(dogs)
+[1] "list"
+> unclass(dogs)
+$breed
+  [1] "Border Collie"                      "Border Terrier"                    
+  [3] "Brittany"                           "Cairn Terrier"                     
+  [5] "Welsh Springer Spaniel"             "English Cocker Spaniel"            
+  [7] "Cocker Spaniel"                     "Papillon"                          
+  [9] "Australian Cattle Dog"              "Shetland Sheepdog"                 
+ [11] "Siberian Husky"                     "Lhasa Apso"                        
+ [13] "Affenpinscher"                      "Dachshund"                         
+ [15] "Miniature Schnauzer"                "Chihuahua"                         
+ [17] "Australian Terrier"                 "Whippet"                           
+ [19] "English Springer Spaniel"           "West Highland White Terrier"       
+ [21] "Bedlington Terrier"                 "Poodle"                            
+ [23] "Bichon Frise"                       "German Shorthaired Pointer"        
+ [25] "Pointer"                            "Tibetan Spaniel"                   
+ [27] "Labrador Retriever"                 "Maltese"                           
+ [29] "Pomeranian"                         "Shih Tzu"                          
+ [31] "Australian Shepherd"                "Yorkshire Terrier"                 
+ [33] "Irish Setter"                       "Pharaoh Hound"                     
+ [35] "Brussels Griffon"                   "Golden Retriever"                  
+ [37] "Samoyed"                            "Beagle"                            
+ [39] "Chesapeake Bay Retriever"           "Tibetan Terrier"                   
+ [41] "Gordon Setter"                      "English Setter"                    
+ [43] "Pug"                                "Briard"                            
+ [45] "Norfolk Terrier"                    "Flat-Coated Retriever"             
+ [47] "Boston Terrier"                     "Doberman Pinscher"                 
+ [49] "English Toy Spaniel"                "Belgian Tervuren"                  
+ [51] "Cavalier King Charles Spaniel"      "Dalmatian"                         
+ [53] "Basset Hound"                       "Basenji"                           
+ [55] "Italian Greyhound"                  "Staffordshire Bull Terrier"        
+ [57] "Bouvier des Flandres"               "Pembroke Welsh Corgi"              
+ [59] "Clumber Spaniel"                    "Dandie Dinmont Terrier"            
+ [61] "Saluki"                             "Giant Schnauzer"                   
+ [63] "Greyhound"                          "Scottish Terrier"                  
+ [65] "Rottweiler"                         "Kerry Blue Terrier"                
+ [67] "Afghan Hound"                       "Newfoundland"                      
+ [69] "German Shepherd"                    "Pekingese"                         
+ [71] "Old English Sheepdog"               "Akita"                             
+ [73] "Rhodesian Ridgeback"                "French Bulldog"                    
+ [75] "Borzoi"                             "Bernese Mountain Dog"              
+ [77] "Bull Terrier"                       "Boxer"                             
+ [79] "Alaskan Malamute"                   "Chow Chow"                         
+ [81] "Bloodhound"                         "Irish Wolfhound"                   
+ [83] "Bullmastiff"                        "Mastiff"                           
+ [85] "Great Dane"                         "Saint Bernard"                     
+ [87] "Bulldog"                            "Airedale Terrier"                  
+ [89] "American English Coonhound"         "American Eskimo Dog"               
+ [91] "American Foxhound"                  "American Staffordshire Terrier"    
+ [93] "American Water Spaniel"             "Anatolian Shepherd Dog"            
+ [95] "Bearded Collie"                     "Beauceron"                         
+ [97] "Belgian Malinois"                   "Belgian Sheepdog"                  
+ [99] "Black and Tan Coonhound"            "Black Russian Terrier"             
+[101] "Bluetick Coonhound"                 "Boykin Spaniel"                    
+[103] "Canaan Dog"                         "Cane Corso"                        
+[105] "Cardigan Welsh Corgi"               "Cesky Terrier"                     
+[107] "Chinese Crested"                    "Chinese Shar Pei"                  
+[109] "Collie"                             "Curly Coated Retriever"            
+[111] "English Foxhound"                   "Entlebucher Mountain Dog"          
+[113] "Field Spaniel"                      "Finnish Lapphund"                  
+[115] "Finnish Spitz"                      "German Pinscher"                   
+[117] "German Wirehaired Pointer"          "Glen of Imaal Terrier"             
+[119] "Great Pyrenees"                     "Greater Swiss Mountain Dog"        
+[121] "Harrier"                            "Havanese"                          
+[123] "Ibizan Hound"                       "Icelandic Sheepdog"                
+[125] "Irish Red and White Setter"         "Irish Terrier"                     
+[127] "Irish Water Spaniel"                "Japanese Chin"                     
+[129] "Keeshond"                           "Komondor"                          
+[131] "Kuvasz"                             "Lakeland Terrier"                  
+[133] "Leonberger"                         "Löwchen"                           
+[135] "Manchester Terrier"                 "Miniature Bull Terrier"            
+[137] "Miniature Pinscher"                 "Neapolitan Mastiff"                
+[139] "Norwegian Buhund"                   "Norwegian Elkhound"                
+[141] "Norwegian Lundehund"                "Norwich Terrier"                   
+[143] "Nova Scotia Duck Tolling Retriever" "Otterhound"                        
+[145] "Parson Russell Terrier"             "Petit Basset Griffon Vendeen"      
+[147] "Plott"                              "Polish Lowland Sheepdog"           
+[149] "Portuguese Water Dog"               "Puli"                              
+[151] "Pyrenean Shepherd"                  "Redbone Coonhound"                 
+[153] "Schipperke"                         "Scottish Deerhound"                
+[155] "Sealyham Terrier"                   "Shiba Inu"                         
+[157] "Silky Terrier"                      "Skye Terrier"                      
+[159] "Smooth Fox Terrier"                 "Soft-Coated Wheaten Terrier"       
+[161] "Spinone Italiano"                   "Standard Schnauzer"                
+[163] "Sussex Spaniel"                     "Swedish Vallhund"                  
+[165] "Tibetan Mastiff"                    "Toy Fox Terrier"                   
+[167] "Vizsla"                             "Weimaraner"                        
+[169] "Welsh Terrier"                      "Wire Fox Terrier"                  
+[171] "Wirehaired Pointing Griffon"        "Xoloitzcuintli"                    
+
+$group
+  [1] herding      terrier      sporting     terrier      sporting     sporting     sporting    
+  [8] toy          herding      herding      working      non-sporting toy          hound       
+ [15] terrier      toy          terrier      hound        sporting     terrier      terrier     
+ [22] non-sporting non-sporting sporting     sporting     non-sporting sporting     toy         
+ [29] toy          toy          herding      toy          sporting     hound        toy         
+ [36] sporting     working      hound        sporting     non-sporting sporting     sporting    
+ [43] toy          herding      terrier      sporting     non-sporting working      toy         
+ [50] herding      toy          non-sporting hound        hound        toy          terrier     
+ [57] herding      herding      sporting     terrier      hound        working      hound       
+ [64] terrier      working      terrier      hound        working      herding      toy         
+ [71] herding      working      hound        non-sporting hound        working      terrier     
+ [78] working      working      non-sporting hound        hound        working      working     
+ [85] working      working      non-sporting terrier      hound        non-sporting hound       
+ [92] terrier      sporting     working      herding      herding      herding      herding     
+ [99] hound        working      hound        sporting     herding      working      herding     
+[106] terrier      toy          non-sporting herding      sporting     hound        herding     
+[113] sporting     herding      non-sporting working      sporting     terrier      working     
+[120] working      hound        toy          hound        herding      sporting     terrier     
+[127] sporting     toy          non-sporting working      working      terrier      working     
+[134] non-sporting terrier      terrier      toy          working      herding      hound       
+[141] non-sporting terrier      sporting     hound        terrier      hound        hound       
+[148] herding      working      herding      herding      hound        non-sporting hound       
+[155] terrier      non-sporting toy          terrier      terrier      terrier      sporting    
+[162] working      sporting     herding      working      toy          sporting     sporting    
+[169] terrier      terrier      sporting     non-sporting
+Levels: herding hound non-sporting sporting terrier toy working
+
+$datadog
+  [1] 3.64 3.61 3.54 3.53 3.34 3.33 3.30 3.26 3.25 3.22 3.22 3.21 3.20 3.19 3.19 3.15 3.11 3.11 3.09 3.08
+ [21] 3.07 3.04 3.03 3.03 3.03 3.02 2.97 2.93 2.93 2.93 2.91 2.85 2.84 2.81 2.80 2.80 2.80 2.79 2.78 2.75
+ [41] 2.73 2.72 2.72 2.71 2.71 2.70 2.61 2.59 2.59 2.57 2.57 2.57 2.54 2.51 2.49 2.48 2.47 2.45 2.44 2.42
+ [61] 2.41 2.38 2.29 2.27 2.24 2.13 2.08 2.07 2.06 2.05 2.04 1.95 1.91 1.90 1.89 1.85 1.85 1.83 1.82 1.76
+ [81] 1.66 1.66 1.64 1.57 1.53 1.42 0.99   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[101]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[121]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[141]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[161]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+
+$popularity_all
+  [1]  45  80  30  59 130  63  27  38  60  20  16  62 139   9  12  14 121  57  29  35 134   8  39  15 115
+ [26] 114   1  23  17  11  24   5  70 151  77   4  69   3  46  86  94  87  26 125 120  90  22  13 129 108
+ [51]  21  73  41  93  65  76  83  25 133 160 117  95 140  54  10 124  88  43   2  64  84  47  44  18 102
+ [76]  34  51   7  58  68  48  79  40  28  19  49   6  55  33 116 173  72 157 111 112 144  74 118 109 128
+[101] 136 138 168  67  81 106  61  50  36 154 171 146 141 104 167 137  75 158  71  82 172  31 149 143 147
+[126] 132 150  78  98 166 148 135 103 152 119 127  42 110 165  96 170  89 107 169  97 131 145 159  56 156
+[151] 162 126 105 142 163  53  85 164 113  52 123  91 161 153 122 101  37  32  99 100  92 155
+
+$popularity
+  [1] 39 61 30 48 81 51 27 33 49 20 16 50 84  9 12 14 77 46 29 32 83  8 34 15 74 73  1 23 17 11 24  5 56 86
+ [35] 59  4 55  3 40 64 69 65 26 79 76 67 22 13 80 72 21 57 36 68 53 58 62 25 82 87 75 70 85 45 10 78 66 37
+ [69]  2 52 63 41 38 18 71 31 44  7 47 54 42 60 35 28 19 43  6 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[103] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[137] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[171] NA NA
+
+$lifetime_cost
+  [1] 20143 22638 22589 21992 20224 18993 24330 21001 20395 21006 22049 22031 18333 20113 20087 26250 17892
+ [18] 20976 21946 20490 22107 21237 19735 25842 24445 25549 21299 19084 15792 21152 21458 20701 20323 21047
+ [35] 19551 21447 25352 19468 16697 20336 19605 20312 18527 19673 24308 16000 17741 18397 17521 19132 18639
+ [52] 19886 18328 22096 16463 21650 18959 23978 18084 21633 24866 26686 15819 17525 18886 17240 24077 19351
+ [69] 17416 20565 22611 20994 16530 17266 16176 16099 18490 15746 21986 15898 13824 18435 13936 13581 14662
+ [86] 20022 13479    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+[103]    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+[120]    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA 15141    NA    NA    NA
+[137]    NA    NA    NA    NA    NA    NA 12653    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA
+[154]    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA 22839 23747    NA    NA    NA    NA    NA
+[171]    NA    NA
+
+$intelligence_rank
+  [1]  1 30 19 35 31 18 20  8 10  6 45 68 37 49 12 67 34 51 13 47 40  2 45 17 43 46  7 59 23 70 42 27 35 37
+ [35] 59  4 33 73 27 62 34 37 57 30 56 18 54  5 45 14 44 39 71 79 60 49 29 11 37 62 43 28 46 65  9 35 80 34
+ [69]  3 74 63 54 52 58 76 22 66 48 50 77 75 41 69 72 48 65 78 29 NA NA 46 34 44 NA 34 NA 22 15 44 NA NA NA
+[103] NA NA 26 NA 61 51 16 41 46 NA 34 NA 43 NA 44 NA 64 NA NA NA 53 NA NA 53 24 62 16 NA 42 62 NA NA 32 NA
+[137] 37 NA NA 36 NA 38 NA 46 NA 62 NA NA NA 27 NA NA 15 47 56 NA 37 55 40 40 NA 18 NA NA NA NA 25 21 53 51
+[171] 46 NA
+
+$longevity
+  [1] 12.52 14.00 12.92 13.84 12.49 11.66 12.50 13.00 11.67 12.53 12.58 13.92 11.42 12.63 11.81 16.50 11.05
+ [18] 12.87 12.54 12.80 13.51 11.95 12.21 11.46 12.42 14.42 12.04 12.25  9.67 13.20 12.28 12.60 11.63 11.83
+ [35] 12.00 12.04 12.44 12.30  9.48 12.31 11.10 11.57 11.00 11.17 13.07  9.02 10.92 10.33 10.10 10.60 11.29
+ [52] 11.27 11.43 13.58 10.02 12.05 10.34 12.25 10.00 12.17 12.00 10.00  9.36 10.69  9.11  9.40 11.92  9.32
+ [69]  9.73 11.56 11.19 10.16  9.10  9.00  9.08  7.56 10.21  8.81 10.67  9.01  6.75  6.94  7.57  6.50  6.96
+ [86]  7.78  6.29 11.45 11.50    NA    NA    NA    NA 10.75 12.77    NA    NA    NA    NA    NA    NA    NA
+[103] 14.67    NA 12.70  8.42 10.08    NA    NA 10.75    NA    NA  9.90  7.33 11.17 11.42 10.00 10.42 10.00
+[120]  6.80    NA 10.25    NA    NA 11.57    NA  9.33  9.25 12.17  9.17    NA    NA  6.98 10.00  9.32  6.60
+[137]    NA    NA 12.67    NA    NA    NA  6.50 10.80    NA 12.70    NA 10.80 11.42    NA    NA    NA 13.00
+[154]  8.70 12.25  7.00 14.25 11.00 13.17 12.16  9.00    NA 11.17 14.17 11.92    NA 12.50    NA    NA 13.17
+[171]  8.80    NA
+
+$ailments
+  [1]  2  0  0  2  1  0  2  5  1  5  0  1  0  2  2  1  0  0  4  3  2  2  0  1  1  0  3  1  1  1  2  4  2  0
+ [35]  0  4  1  1  1  0  1  2  1  1  0  0  1  4  0  2  2  2  2  3  0  1  1  9  0  0  0  1  1  1  3  1  0  2
+ [69]  8  1  1  1  2  0  0  4  2  4  2  2  2  3  2  2  4  3  5  1 NA  0 NA  1  0 NA  0 NA  0  4  0  0  0 NA
+[103]  0 NA  0 NA NA  4  2  0  0 NA  0 NA  0 NA  1 NA  1  1  0  0  0 NA NA  0  1  0  1  1  1  0 NA  0  0  0
+[137]  0  1 NA  1 NA  0  1  1  0  0  0 NA  0  0 NA  0  4  2  1  1  0  0  0  0 NA  1  0 NA NA NA  0  1  0  0
+[171]  0 NA
+
+$price
+  [1]  623  833  618  435  750  800  465  740  530  465  650  350  510  423  715  588  640  915  615  538
+ [21] 1058  900  693  545  294 1050  810  650  670  583  565 1057  525  913  833  958 1162  288  522 1140
+ [41]  700  615  469  650 2083  600  690  790  925 1070 1017  695  490  940  800 1145 1335  587 1033  925
+ [61] 1525  810 1175  829 1118 1200  890 1178  820  885  832 1202  995 1900  675 1320 1085  700 1210  515
+ [81]  608 1333  980  900 1040  875 2680  733  283  560  757 1043  730   NA   NA  967 1080   NA  325 2833
+[101]  370  531   NA 1070  828   NA  538  840  650   NA   NA 1167   NA   NA   NA 1500  655   NA  503 1605
+[121]   NA  830 1500   NA 1000  588   NA  513  610  656   NA 1093 1480   NA  720 1740  535 1760   NA  448
+[141]   NA 1245 1500   NA  528  400   NA   NA   NA  913   NA  425  658   NA   NA  890  448  550  575  832
+[161] 1725  855   NA  772 3460  460  935  562  843  668  755  717
+
+$food_cost
+  [1]  324  324  466  324  324  324  674  324  466  405  466  324  324  324  405  324  324  324  466  324
+ [21]  324  466  324  971  710  466  466  270  324  324  466  324  466  466  324  466  710  324  466  324
+ [41]  466  466  405  466  466  466  324  466  405  466  324  466  324  324  324  466  466  674  466  466
+ [61]  710 1349  324  324  710  466  710  710  466  466  710  710  466  466  466  710  466  466  710  466
+ [81]  710 1217  466  701  710 1217  466   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[101]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[121]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[141]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[161]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+
+$grooming
+  [1] weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  daily   monthly weekly 
+ [13] weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  daily   weekly 
+ [25] weekly  weekly  weekly  daily   weekly  daily   weekly  daily   weekly  weekly  weekly  weekly 
+ [37] weekly  daily   weekly  weekly  weekly  weekly  weekly  daily   weekly  daily   weekly  weekly 
+ [49] weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  weekly  daily  
+ [61] daily   daily   weekly  daily   weekly  daily   daily   weekly  weekly  daily   daily   weekly 
+ [73] weekly  weekly  daily   weekly  weekly  weekly  daily   daily   weekly  weekly  weekly  weekly 
+ [85] weekly  daily   weekly  <NA>    <NA>    <NA>    <NA>    <NA>    <NA>    weekly  daily   <NA>   
+ [97] weekly  <NA>    <NA>    <NA>    <NA>    <NA>    weekly  <NA>    <NA>    weekly  <NA>    <NA>   
+[109] <NA>    weekly  <NA>    <NA>    daily   daily   weekly  <NA>    <NA>    <NA>    <NA>    <NA>   
+[121] <NA>    <NA>    weekly  <NA>    <NA>    weekly  weekly  <NA>    <NA>    <NA>    <NA>    weekly 
+[133] weekly  <NA>    <NA>    <NA>    <NA>    weekly  <NA>    <NA>    <NA>    weekly  weekly  weekly 
+[145] weekly  <NA>    <NA>    weekly  <NA>    <NA>    <NA>    <NA>    <NA>    <NA>    <NA>    <NA>   
+[157] <NA>    <NA>    <NA>    <NA>    <NA>    <NA>    weekly  weekly  weekly  <NA>    <NA>    weekly 
+[169] weekly  <NA>    <NA>    <NA>   
+Levels: daily weekly monthly
+
+$kids
+  [1] low    high   medium high   high   high   high   medium low    high   high   high   medium low   
+ [15] medium low    medium medium high   high   medium medium high   high   high   high   high   low   
+ [29] medium high   medium low    high   medium low    high   high   high   high   medium high   high  
+ [43] high   high   medium high   high   medium medium high   high   high   high   medium low    high  
+ [57] high   high   high   high   high   medium high   medium medium medium high   high   medium medium
+ [71] high   low    medium high   medium high   medium high   medium medium medium high   high   high  
+ [85] high   high   medium <NA>   <NA>   <NA>   <NA>   <NA>   <NA>   medium high   <NA>   high   <NA>  
+ [99] <NA>   <NA>   <NA>   <NA>   high   <NA>   <NA>   high   <NA>   <NA>   <NA>   medium <NA>   <NA>  
+[113] medium high   high   <NA>   <NA>   <NA>   <NA>   <NA>   <NA>   <NA>   high   <NA>   <NA>   high  
+[127] high   <NA>   <NA>   <NA>   <NA>   high   high   <NA>   <NA>   <NA>   <NA>   high   <NA>   <NA>  
+[141] <NA>   medium high   high   medium <NA>   <NA>   medium <NA>   <NA>   <NA>   <NA>   <NA>   <NA>  
+[155] <NA>   <NA>   <NA>   <NA>   <NA>   <NA>   <NA>   <NA>   low    high   high   <NA>   <NA>   high  
+[169] high   <NA>   <NA>   <NA>  
+Levels: high medium low
+
+$megarank_kids
+  [1]  1  2  3  4  5  6  7  8  9 11 10 12 13 14 14 16 17 17 19 20 21 22 25 23 24 26 27 29 28 29 31 32 33 34
+ [35] 36 37 35 38 39 40 41 43 42 44 45 46 47 49 48 52 50 50 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68
+ [69] 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[103] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[137] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[171] NA NA
+
+$megarank
+  [1] 29  1 11  2  4  5  6 22 52  8  3  7 26 54 27 55 30 30  9 10 35 39 16 12 13 14 15 65 45 19 46 69 17 47
+ [35] 66 20 18 28 21 51 23 25 24 33 53 34 32 57 56 38 35 35 39 59 77 41 42 43 44 49 50 67 48 71 68 76 60 58
+ [69] 74 78 61 86 79 62 82 63 80 64 83 85 84 70 72 73 75 81 87 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[103] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[137] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+[171] NA NA
+
+$size
+  [1] medium small  medium small  medium medium small  small  medium small  medium small  small  small 
+ [15] small  small  small  medium medium small  small  medium small  large  large  small  medium small 
+ [29] small  small  medium small  large  medium small  medium medium small  large  small  large  large 
+ [43] medium large  small  medium medium large  small  large  small  medium small  medium small  medium
+ [57] large  small  medium small  medium large  large  small  large  medium large  large  large  small 
+ [71] medium large  large  medium large  large  medium medium large  medium large  large  large  large 
+ [85] large  large  medium medium large  small  medium medium medium large  medium large  large  large 
+ [99] large  large  large  medium medium large  small  small  small  medium large  large  large  medium
+[113] medium medium medium medium large  small  large  large  medium small  large  medium large  medium
+[127] medium small  medium large  large  small  large  small  small  small  small  large  medium medium
+[141] small  small  medium large  small  small  medium medium medium medium medium large  small  large 
+[155] small  small  small  small  small  medium large  medium small  small  large  small  medium large 
+[169] small  small  medium medium
+Levels: large medium small
+
+$weight
+  [1]    NA  13.5  35.0  14.0    NA  30.0  25.0    NA    NA  22.0  47.5  15.0    NA  24.0  15.5   5.5    NA
+ [18]    NA  45.0    NA  20.0    NA    NA  62.5  59.5  12.0  67.5   5.0   5.0  12.5    NA   5.5  65.0    NA
+ [35]   9.0  60.0    NA    NA  67.5  24.0  62.5    NA  16.0    NA  12.0    NA    NA    NA  11.0    NA  15.5
+ [52]    NA    NA  23.0    NA  31.0    NA  26.0  70.0  21.0    NA  77.5  65.0  20.0    NA  36.5  55.0 125.0
+ [69]    NA  13.0    NA    NA  77.5  27.0  82.5    NA  60.0    NA  80.0    NA  85.0    NA 115.0 175.0    NA
+ [86] 155.0  45.0    NA    NA    NA    NA    NA  35.0 115.0    NA    NA    NA    NA    NA    NA  62.5    NA
+[103]  45.0    NA  31.5  19.0    NA  52.5  62.5    NA    NA    NA    NA    NA    NA    NA    NA  35.0    NA
+[120]    NA    NA    NA    NA    NA    NA  26.0  55.0    NA    NA 100.0  92.5  17.0    NA    NA  17.0    NA
+[137]    NA 130.0  33.0  51.5    NA  12.0    NA  97.5  15.0    NA  50.0    NA  47.5    NA    NA    NA    NA
+[154]  92.5  24.0  20.0  10.0  40.0  17.5  35.0    NA    NA  40.0    NA    NA    NA    NA    NA  20.0  17.5
+[171]    NA    NA
+
+$height
+  [1] 20.00    NA 19.00 10.00 18.00 16.00 14.50  9.50 18.50 14.50 21.75 10.50 10.25    NA 13.00  5.00 10.50
+ [18] 20.00 19.50 10.50    NA 16.00 10.50 24.00 25.50 10.00 23.00  9.00    NA  9.75 20.50    NA 26.00 23.00
+ [35]    NA 22.75 21.25 14.00 23.50 15.50 25.00 24.50 16.00 24.50  9.50 23.25    NA 26.00 10.00 24.00 12.50
+ [52] 21.00 14.00 16.50 14.00 15.00 25.50 11.00 18.50  9.00 23.00 25.50    NA 10.00 24.50 18.50 26.00 27.00
+ [69] 24.00    NA 22.00 26.00 25.50    NA 28.00 25.25 21.50 23.25 24.00 18.50 25.00 32.00 25.50 30.00 30.00
+ [86] 26.50    NA 23.00 24.50 14.00 23.00 18.00 16.50 28.00 21.00 25.75 24.00 24.00 25.00 28.00 24.00 16.00
+[103] 21.50 25.00 11.50 11.50 12.00 19.00 24.00 25.00 24.00 18.50 17.50 18.50 17.75 18.50 24.00 13.25 28.50
+[120] 26.00 20.00  9.75 25.00 17.25 24.25 18.00 22.50  9.50 17.50 27.50 28.00 14.50 28.50 13.00    NA 12.00
+[137] 11.25 27.50 17.25 20.00 13.50 10.00 19.00 25.50 13.50 14.00 22.50 18.50 20.00 16.50 18.00 24.00 11.50
+[154]    NA 10.50 15.00  9.50  9.75 15.00 18.00 24.50 18.50 14.00 12.50 25.00 10.00 22.50 25.00 15.00 15.00
+[171] 22.00 16.50
+
+attr(,"row.names")
+  [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25
+ [26]  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50
+ [51]  51  52  53  54  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75
+ [76]  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100
+[101] 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125
+[126] 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150
+[151] 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172
+> matrix(c("a", "b", "c", "d"), 2, 2)
+     [,1] [,2]
+[1,] "a"  "c" 
+[2,] "b"  "d" 
+> typeof(matrix(c("a", "b", "c", "d"), 2, 2))
+[1] "character"
+>

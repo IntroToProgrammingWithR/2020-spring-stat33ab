@@ -1,0 +1,272 @@
+---
+title: "Stat 33B - Lecture 10"
+date: April 1, 2020
+output: pdf_document
+---
+
+Review: Homework 4
+==================
+
+Suppose we want to sample from the distribution on -1 to 1 shown in the plot
+produced by this code:
+```{r, dslide}
+dslide = function(x) {
+  ifelse(x > 1, 0,
+    ifelse(x > 0, dnorm(x) / dnorm(0), dunif(x, -1, 0))
+  )
+}
+
+curve(dslide, -2, 2, xlab = "Value", ylab = "Density (unscaled)")
+curve(dunif(x, -1, 1), add = TRUE)
+```
+
+The exact steps in rejection sampling are:
+
+1. Sample an x coordinate.
+2. Sample a y coordinate.
+3. Test whether the y value falls below the target distribution's density
+   curve. If it does, then x is a new sample value. If it does not, then x is
+   rejected.
+4. Repeat steps 1-3 until reaching the desired number of sample values.
+
+
+```{r}
+rslide = function(n = 100) {
+  accepted = 0
+  iterations = 0
+  results = numeric(n)
+  while (accepted < n) {
+    iterations = iterations + 1
+    x = runif(1, -1, 1)
+    y = runif(1, 0, 1.2)
+    if (y < dslide(x)) {
+      # Accepted
+      accepted = accepted + 1
+      results[accepted] = x
+    }
+  }
+  
+  list(results, acceptance = accepted / iterations)
+}
+
+set.seed(53)
+samp = rslide(200000)
+samp
+
+plot(density(samp))
+
+
+repeat {
+  x = runif(1, -1, 1)
+  y = runif(1, 0, 1.2)
+  if (y < dslide(x)) {
+    # Accepted
+    accepted = accepted + 1
+    results[accepted] = x
+    if (accepeted == n)
+      break
+  }
+}
+```
+
+Review: STAT 33B So Far
+=======================
+
+Topics:
+
+* Vectors, data frames, and lists
+* Types and classes
+* Taking subsets with `[`, `[[`, `$`, and `subset()`
+* ggplot2
+* Tidy data and tidyr
+* Relational data and `merge()`
+* If-statements and loops
+* Writing functions
+* Scoping and environments
+
+See the video lectures for a review of the last two.
+
+Types and Classes
+-----------------
+
+Types describe how an object is stored in memory.
+
+Classes describe how an object behaves. Objects may have more than one.
+
+Common types and classes:
+```{r}
+typeof(4)
+
+typeof("hi")
+
+typeof(3+4i)
+
+typeof(sin)
+
+typeof(iris)
+
+class(iris)
+
+class(5)
+class(TRUE)
+typeof(TRUE)
+```
+
+
+Taking Subsets
+--------------
+
+Use `[` to get one or more elements. Keeps the container.
+
+
+Use `[[` to get exactly one element. Drops the container.
+
+
+Use `$` to get columns or list elements by name. Drops the container.
+
+
+Examples:
+```{r}
+x = c(5, 3, 1.2)
+x
+
+x[c(1, 1, 2)]
+
+x[[1]]
+
+x[1]
+
+mylist = list(a = 1:3, b = letters)
+class(mylist[1])
+
+class(mylist[[1]])
+
+mylist["a"]
+
+mylist[c(TRUE, FALSE)]
+```
+
+
+ggplot2
+-------
+
+Build up the plot in layers. Create layers with functions, add layers with `+`.
+
+Fundamental layers are:
+
+1. Data with `ggplot()`.
+2. Geometry with `geom_` functions.
+3. Aesthetics with `aes()`. Goes inside data or geometry layer.
+
+Other layers described in the docs allow further customization.
+
+Examples:
+```{r}
+library(ggplot2)
+
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) + geom_point()
+```
+
+
+Tidy Data
+---------
+
+Tidy data are tabular data that satisfy 3 properties:
+
+1. Each row is corresponds to one observation.
+2. Each column corresponds to one covariate.
+3. Each cell contains only one value.
+
+Most common problems with data:
+
+* Observations split across multiple rows. Fix with `pivot_wider()`.
+
+* Multiple observations combined into a single row. Fix with `pivot_longer()`.
+
+
+Relational Data
+---------------
+
+Relational data are data split across multiple related tables. Tables are
+linked by "key" columns.
+
+Often we need to "join" tables by matching rows using the key columns. The
+`merge()` function joins tables.
+
+
+Several kinds of joins:
+
+* Inner join (default) keeps only matching rows.
+
+* Left join (`all.x = TRUE`) keeps all rows in left table, matching rows in
+  right table.
+
+* Right join (`all.y = TRUE`) keeps all rows in right table, matching rows in
+  left table.
+
+* Full join (`all = TRUE`) keeps all rows in both tables.
+
+Example:
+```{r}
+titles = readRDS("data/imdb/titles10s.rds")
+cast = readRDS("data/imdb/cast10s.rds")
+people = readRDS("data/imdb/people10s.rds")
+
+lb = titles[titles$primaryTitle == "Lady Bird", ]
+lb_cast = merge(lb, cast, all.x = TRUE)
+merge(lb_cast, people, all.x = TRUE)
+```
+
+
+If-statements and Loops
+-----------------------
+
+Two kinds of if-statements:
+
+* `if` is the thing to use in most cases
+* `ifelse()` is vectorized
+
+Examples:
+```{r}
+x = 10
+
+if (x < 20) {
+  message("Hello")
+} else {
+  message("Bye")
+}
+
+x = c(1, 2, 3, 4)
+ifelse(x < 3, c(-1, -2, -3, -4), 10)
+
+# Alternative:
+x[x < 3] = c(-1, -2, -3, -4)[x < 3]
+x[x >= 3] = 10
+```
+
+Four kinds of loops:
+
+* Vectorization
+
+* Apply functions
+    + Use apply functions if you know the number of iterations and each
+      iteration is independent
+
+* `for`, `while`, `repeat`
+    + Use `for` if you know the number of **iterations**
+    * Use `while` or `repeat` if you don't know the number of iterations
+
+* Recursion
+
+Examples:
+```{r}
+
+```
+
+
+R Gotchas
+=========
+
+Many of R's gotchas are listed in The R Inferno:
+
+  <https://www.burns-stat.com/pages/Tutor/R_inferno.pdf>

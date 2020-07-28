@@ -1,0 +1,294 @@
+---
+title: "Stat 33B - Lecture 12"
+date: April 15, 2020
+output: pdf_document
+---
+
+See the lecture slides for more notes.
+
+
+The S3 Object System
+====================
+
+The `class()` function returns an object's S3 classes.
+```{r}
+class(5)
+
+attr(5, "class")
+```
+
+
+Use `inherits()` to test whether an object is an instance of a
+specific S3 class:
+```{r}
+inherits(5, "numeric")
+```
+
+Use `methods()` to list the methods defined for a given generic
+function.
+
+For S3 methods only, use `.S3methods()` instead.
+
+```{r}
+methods(print)
+
+.S3methods(print)
+
+.S3methods(summary)
+
+.S3methods(t.test)
+```
+
+S3 methods are always named `GENERIC.CLASS()`.
+
+Example: `print.lm()` is the `print()` method for the `lm` class.
+
+But some functions with `.` in their name are not methods!
+
+Example: `t.test()` is a generic function, not a method!
+
+```{r}
+print.lm
+```
+
+Methods in packages are not always accessible from the global
+workspace.
+
+Use `getS3method()` or `getAnywhere()` to get these methods.
+
+```{r}
+getS3method("print.lm")
+
+getAnywhere("print.lm")
+```
+
+Creating S3 Classes
+-------------------
+
+An S3 object is just an object with a "class" attribute.
+
+So you can use `attr()`, `class()`, or `structure()` to create an S3
+object:
+```{r}
+x = 5
+attr(x, "class") = "Foo"
+
+x
+
+class(x)
+
+inherits(x, "Foo")
+```
+
+It's a good habit to define a constructor function:
+```{r}
+Animal = function(name = NA, breed = NA, weight = NA) {
+  ani = list(name = name, breed = breed, weight = weight)
+  structure(ani, class = "Animal")
+}
+
+Cat = function(...) {
+  cat = Animal(...)
+  class(cat) = c("Cat", class(cat))
+  cat
+}
+```
+For S3, the constructor function implicitly defines the class.
+
+
+Inheritance is based on the order of the classes:
+```{r}
+
+```
+
+
+Creating S3 Generics & Methods
+------------------------------
+
+Use the `UseMethod()` function to create an S3 generic function.
+
+S3 generics select a method based on one argument.
+
+You can specify the argument to use in `UseMethod()`, or take the
+default (the first argument).
+
+Examples:
+```{r}
+# Generic function:
+move = function(animal) {
+  UseMethod("move")
+}
+
+# "Animal" method of move():
+move.Animal = function(animal) {
+  message("The animal moved!")
+}
+
+move.Cat = function(animal) {
+  message("The cat moved!")
+}
+
+move.default = function(animal) {
+  message("The unknown class moved!")
+}
+
+move(f)
+
+x = structure(5, class = "Foo")
+move(x)
+```
+
+
+Use the `NextMethod()` function to make a method call the method for
+the object's parent class:
+```{r}
+move.Cat = function(animal) {
+  message("The cat moved!")
+  NextMethod()
+}
+
+move(f)
+
+methods(print)
+
+print.Cat = function(x, ...) {
+  msg = sprintf("%s is a %s that weights %i", x$name, x$breed, x$weight)
+  message(msg)
+}
+```
+
+
+
+The S4 Object System
+====================
+
+_Note: The S4 object system may appear on a homework or lab, but will not be on
+any quizzes or exams._
+
+Use `isS4()` to test whether an object is an S4 object:
+```{r}
+isS4(5)
+```
+
+Use `is()` to test whether an object is an instance of a specific S3
+or S4 class:
+```{r}
+is(f, "Cat")
+is(f, "Animal")
+```
+
+Use `.S4methods()` to list the S4 methods defined for a given generic
+function:
+```{r}
+.S4methods("show")
+```
+
+Use `getClasses()` to list all defined S4 classes:
+```{r}
+getClasses()
+```
+
+Use `class?CLASSNAME` to get help with a specific class:
+```{r}
+class?ANY
+
+class?environment
+
+class?EmptyMethodsList
+
+class?density # no documentation for "density" class
+```
+
+
+Creating S4 Classes
+-------------------
+
+Use `setClass()` to create a new class:
+```{r}
+setClass("Dog", slots = list(
+  name = "character",
+  breed = "character",
+  weight = "numeric"
+))
+```
+
+Use `new()` to create an object of a given class:
+```{r}
+sparky = new("Dog", name = "Sparky", breed = "Silky Terrier", weight = 12)
+
+Dog = function(name = NA_character_, breed = NA_character_, weight = NA_real_) {
+  new("Dog", name = name, breed = breed, weight = weight)
+}
+
+sparky@name
+```
+
+S4 classes can inherit from built-in data types such as vectors and
+lists.
+
+The `.Data` slot provides access to the inherited object:
+```{r}
+setClass("MyList", contains = "list")
+
+x = new("MyList")
+x@.Data
+
+x@.Data[1] = "Hi"
+x
+```
+
+
+
+Creating S4 Generics & Methods
+------------------------------
+
+Use `setGeneric()` to mark a function as an S4 generic:
+```{r}
+setGeneric("bark", function(dog) standardGeneric("bark"))
+```
+
+If the generic isn't already defined, you must provide a definition.
+
+The standard definition is a call to `standardGeneric()`.
+
+This is the S4 equivalent of S3's `UseMethod()`.
+
+
+Use `setMethod()` to define a method:
+```{r}
+setMethod("bark", "Dog", function(dog) {
+  message("Woof woof!")
+})
+```
+
+Use the `callNextMethod()` function to call the method for the
+object's parent class:
+```{r}
+# A better setup for the Animal/Dog/Cat objects:
+setClass("Animal", slots = list(
+  name = "character",
+  breed = "character",
+  weight = "numeric"
+))
+
+setClass("Dog", contains = "Animal")
+setClass("Cat", contains = "Animal")
+
+setGeneric("move", function(x) standardGeneric("move"))
+
+setMethod("move", "Animal", function(x) {
+  message("The animal moves.")
+})
+
+setMethod("move", "Cat", function(x) {
+  callNextMethod()
+  message("This is a cat, so it moves very, very quietly!")
+})
+
+mid = new("Cat", name = "Midnight", breed = "Norwegian Forest", weight = 8)
+sparky = new("Dog", name = "Sparky", breed = "Silky Terrier", weight = 12)
+
+move(mid)
+
+move(sparky)
+```

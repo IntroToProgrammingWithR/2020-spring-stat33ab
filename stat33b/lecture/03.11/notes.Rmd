@@ -1,0 +1,467 @@
+---
+title: "Stat 33B - Lecture 8"
+date: March 11, 2020
+output: pdf_document
+---
+
+Review: If-statements
+=====================
+
+If you use `else`, you need to make sure it's on the same line as
+code from the `if` block:
+```{r}
+x = 4
+
+if (x < 2)  message("Hi") else message("Bye")
+
+y = if (x < 2) "Hi" else "Bye"
+y
+```
+This was a problem I ran into in the previous lecture.
+
+
+Loops
+=====
+
+Four ways to write loops in R:
+
+1. Vectorization (fast!)
+2. Apply functions: `lapply()`, `sapply()`, etc
+3. `for`, `while`, and `repeat` loops
+4. Recursion (slow)
+
+
+Apply Functions
+---------------
+
+Similar to "map" functions in other languages.
+
+Applies a function (FUN) to each element of a vector or list (X):
+```
+lapply(X, FUN, ...)
+```
+
+We saw:
+
+* `lapply()`: always returns a list ("l" for list)
+* `sapply()`: attempts to return a vector ("s" for simplify)
+* `vapply()`: always returns a vector ("v" for vector)
+
+
+`mapply()` applies a function to each element of multiple vectors or
+lists:
+```{r}
+data1 = list(1:3, 5:8)
+data2 = list(3)
+
+sum(data1[[1]], data2[[1]])
+sum(data1[[2]], data2[[2]])
+
+mapply(sum, data1, data2)
+```
+"m" for **multiple** vectors.
+
+
+### Flashback to Data Analysis
+
+The `split()` function splits a vector or data frame into groups
+based on some other vector.
+
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+
+split(dogs, dogs$kids)
+
+split(dogs$weight, dogs$group)
+```
+
+The `split()` function is especially useful when combined with
+`lapply()` or `sapply`().
+
+```{r}
+by_group = split(dogs$weight, dogs$group)
+sapply(by_group, median, na.rm = TRUE)
+```
+This is an R idiom!
+
+
+The `tapply()` function is equivalent to the `split()` and `sapply()`
+idiom:
+```{r}
+tapply(dogs$weight, dogs$group, median, na.rm = TRUE)
+```
+"t" for **table**, because `tapply()` is a generalization of the
+frequency-counting function `table()`.
+
+
+The `split()` and `tapply()` functions are important for analyzing
+data in data frames.
+
+
+### Even More Apply Functions
+
+* `apply()` applies a function to rows, columns, or elements of a
+  matrix, and returns a matrix.
+* `eapply()` applies a function to the elements of an environment.
+  We'll learn about environments in a later lecture.
+* `rapply()` applies a function to all elements of a recursive list
+  (a list of lists).
+
+See this StackOverflow Post for a good summary:
+
+    https://stackoverflow.com/a/7141669
+
+The Tidyverse package purrr provides alternatives to R's apply
+functions.
+
+
+`for`, `while`, and `repeat`
+----------------------
+
+A for-loop runs a block of code once for each element of a vector or
+list.
+
+```{r}
+for (i in 1:10) {
+  message(i)
+}
+
+x = lapply(1:10, message)
+
+# Fibonacci: 1 1 2 3 5 8 13 ...
+
+n = 15
+fib = c(1, 1)
+for (i in 3:n) {
+  fib[i] = fib[i - 1] + fib[i - 2]
+}
+```
+The same idea as for-loops in other languages.
+
+
+A while-loop runs a block of code repeatedly as long as some
+condition is true:
+```{r}
+n = 15
+fib = c(1, 1)
+i = 3
+while (i <= n) {
+  fib[i] = fib[i - 1] + fib[i - 2]
+  i = i + 1
+}
+```
+Again, the same idea as in other languages.
+
+
+Use `break` to exit a loop early:
+```{r}
+for (i in 1:10) {
+  if (i %% 3 == 0) {
+    message("Stopped")
+    message(i)
+    break
+  }
+}
+```
+
+Use `next` to skip to the next iteration early:
+```{r}
+for (i in 1:10) {
+  if (i %% 3 == 0) {
+    message("Div 3")
+    next
+  }
+  message(i)
+}
+```
+
+
+A repeat-loop runs a block of code repeatedly:
+```{r}
+n = 15
+fib = c(1, 1)
+i = 2
+repeat {
+  i = i + 1
+  fib[i] = fib[i - 1] + fib[i - 2]
+  if (i >= n)
+    break
+}
+```
+
+If you know how many results you expect to get from the loop,
+allocate storage before the loop begins:
+```{r}
+n = 15
+fib = numeric(n)
+fib[1:2] = 1
+for (i in 3:n) {
+  fib[i] = fib[i - 1] + fib[i - 2]
+}
+```
+
+If you need indices, using `1:length(x)` can cause bugs:
+```{r}
+1:0
+
+x = numeric(0)
+1:length(x)
+
+for (i in seq_along(x)) {
+  message(x[i])
+}
+```
+
+Use `seq_along(x)` instead.
+
+
+Recursion
+---------
+
+A recursive function is one that calls itself.
+
+We'll see an example of this the next section.
+
+
+How to Write Loops
+------------------
+
+When thinking about writing a loop, try (in order):
+
+1. vectorization (fast!)
+2. apply functions
+    * Try an apply function if iterations are independent.
+3. for/while-loops
+    * Try a for-loop if some iterations depend on others.
+    * Try a while-loop if the number of iterations is unknown.
+4. recursion
+    * Convenient for naturally recursive problems (like Fibonacci),
+      but often there are faster solutions.
+
+Before you write the loop, try writing the code for just 1 iteration.
+
+Make sure that code works; it's easy to test code for 1 iteration.
+
+When you have 1 iteration working, then try using the code in a loop
+(you will have to make some small changes).
+
+If your loop doesn't work, try to figure out which iteration is
+causing the problem. One way to do this is to use message() to print
+out information.
+
+Then try to write the code for the broken iteration, get that
+iteration working, and repeat this whole process.
+
+
+Functions
+=========
+
+You can write your own function with the `function` command.
+
+Generally, you'll assign the function to a variable:
+```{r}
+hi = function() {
+  message("Hi")
+}
+
+hi()
+```
+
+Use curly braces `{ }` to write a function with multiple lines of
+code.
+
+The last expression in the function is returned:
+```{r}
+square = function(x) x^2
+
+square(7)
+
+square(c(5, 6, 7))
+
+cube = function(x) {
+  x^3
+}
+
+cube(c(-1, 1, 2))
+```
+
+Use `return()` to return a result immediately (exiting the function):
+```{r}
+cube0 = function(x) {
+  if (x == 0)
+    return (42)
+  
+  x^3
+}
+
+cube0(0)
+```
+It's idiomatic to only use `return()` when strictly necessary.
+
+
+Parameters can have default arguments that are used if no argument is
+provided.
+
+Use `=` to assign default arguments:
+```{r}
+cube0 = function(x = -1) {
+  if (x == 0)
+    return (42)
+  
+  x^3
+}
+
+cube0()
+```
+
+
+Example: Recursion
+------------------
+
+Recall that a recursive function is one that calls itself:
+```{r}
+# Compute nth element of Fibonacci
+find_fib = function(n = 15) {
+  if (n %in% c(1, 2))
+    return(1)
+  
+  find_fib(n - 1) + find_fib(n - 2)
+}
+
+find_fib(15)
+```
+This creates a kind of loop.
+
+
+R's built-in `Recall()` function will re-call the enclosing function:
+```{r}
+foo = function(n = 15) {
+  if (n %in% c(1, 2))
+    return(1)
+  
+  Recall(n - 1) + Recall(n - 2)
+}
+
+foo(15)
+```
+
+Without `Recall()`, renaming a recursive function can break the
+function.
+
+
+Lazy Evaluation
+---------------
+
+Arguments to a function are only evaluated if they're used:
+```{r}
+f = function(x) 42
+
+f(message("Hi!"))
+```
+This is called "lazy evaluation".
+
+
+You can force evaluation with the `force()` function:
+```{r}
+f = function(x) {
+  force(x)
+  42
+}
+
+f(message("Hi!"))
+```
+
+
+Because of lazy evaluation, you can use one parameter as part of a default
+argument to another parameter:
+```{r}
+add = function(x, y = x) {
+  x + y
+}
+
+add(2)
+
+add(2, 3)
+```
+
+Default arguments can even be circular:
+```{r}
+add = function(x = y, y = x) {
+  x + y
+}
+
+add(4)
+
+add(y = 3)
+
+add()
+```
+
+
+The Dots Parameter
+------------------
+
+The dots parameter `...` can accept any number of arguments.
+
+See `?dots` for documentation on the dots parameter.
+
+The dots parameter is not a normal R object. You need to use special
+functions to handle it.
+
+The `...length()` function returns the number of arguments to the
+dots parameter:
+```{r}
+count_args = function(...) {
+  ...length()
+}
+
+count_args()
+
+count_args(1, 4)
+
+count_args("hi")
+```
+
+The `...elt()` function gets the nth argument to the dots parameter:
+```{r}
+get_nth = function(n, ...) {
+  ...elt(n)
+}
+
+get_nth(4, "a", "b", "c")
+```
+
+You can also pass arguments to the dots parameter to another
+function:
+```{r}
+trace_mean = function(x, trace = 0.01, ...) {
+  mean(x[x > trace], ...)
+}
+
+trace_mean(c(1, 2, 0.005, NA), na.rm = TRUE)
+```
+
+
+
+How to Write Functions
+----------------------
+
+Functions are the building blocks for solving problems.
+
+Take a divide-and-conquer approach, breaking large problems into
+smaller steps.
+
+Use a short function for each step. Then it's easier to:
+
+* Test that each step works correctly.
+* Modify, reuse, or repurpose a step.
+
+Before you write a function, it's useful to go through several steps:
+
+1. Write down what you want to do, in detail. It can also help to
+   draw a picture of what needs to happen.
+
+2. Check whether there's already a built-in function. Google it!
+
+3. Write the code to handle a simple case first. For data science
+   problems, use a small dataset at this step.

@@ -1,0 +1,150 @@
+---
+title: "Stat 33B - Lecture 14"
+date: April 29, 2020
+output: pdf_document
+---
+
+Review: Creating Closures
+=========================
+
+How do you create a function that "remembers" something between
+calls?
+
+Same skeleton every time:
+```{r}
+
+```
+
+Example:
+```{r}
+
+```
+
+Review: Creating S3 Objects
+===========================
+
+How do you create an S3 object?
+
+Most of the time, use a list as the base for the object:
+```{r}
+
+```
+
+Add named elements to the list to create fields:
+```{r}
+
+```
+
+Formulas
+========
+
+Examples:
+```{r}
+
+```
+
+
+dplyr
+=====
+
+Remember the dogs data?
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+
+head(dogs)
+```
+
+
+Use `slice()` to choose rows by position:
+```{r}
+
+```
+
+Use `filter()` to choose rows that satisfy a condition:
+```{r}
+
+```
+
+Suppose we want all toy dogs and all sporting dogs:
+```{r}
+
+```
+
+Suppose we want to get all dogs with group "toy" and weight < 10:
+```{r}
+
+```
+
+
+Use `select()` to choose columns by name or position:
+```{r}
+
+```
+
+Use `:` to indicate a range of rows or columns, including by name:
+```{r}
+
+```
+
+Use `-` to exclude rows or columns, including by name:
+```{r}
+
+```
+
+Other useful `dplyr` functions:
+
+* `arrange()` changes the ordering of the rows.
+* `mutate()` adds new columns by transforming existing columns.
+* `group_by()` splits rows into groups when summarizing.
+* `summarise()` reduces multiple rows down to a single value.
+
+
+magrittr
+========
+
+The pipe operator is different way to call a function:
+```{r}
+
+```
+
+Use `.` as a placeholder for the previous operand:
+```{r}
+
+```
+
+
+Non-standard Evaluation
+=======================
+
+The `substitute()` function is the key to NSE.
+
+When called on a parameter inside of a function, `substitute()`
+returns the unevaluated argument to that parameter:
+```{r}
+
+```
+
+These objects that represent code are called "language objects".
+
+They have a tree structure.
+
+Use the subset `[` operator to access or edit language objects:
+```{r}
+
+```
+
+The `quote()` function captures its argument as a language object:
+```{r}
+
+```
+
+The `eval()` function evaluates a language object:
+```{r}
+
+```
+
+Non-standard evaluation is extremely powerful.
+
+With great power comes great responsibility!
+
+Think twice before creating a function that uses NSE.

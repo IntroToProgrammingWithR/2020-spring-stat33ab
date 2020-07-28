@@ -1,0 +1,431 @@
+---
+title: "Stat 33B - Lecture 9"
+date: March 18, 2020
+output: pdf_document
+---
+
+
+Scope & Dynamic Lookup
+======================
+
+Scope
+-----
+
+The "scope" of a variable is the section of a program where that
+variable exists and can be accessed.
+
+
+In R:
+
+* Function definitions are the primary way to create a new scope.
+* If-statements and loops do not affect scope at all.
+
+
+You can test whether a variable is in scope with the `exists()`
+function:
+```{r}
+exists("x")
+
+x = 3
+x
+
+exists("x")
+```
+
+
+Variables defined inside of a function are "local" to that function.
+
+Local variables are not visible outside the function:
+```{r}
+f = function() {
+  y = 44
+  exists("y")
+}
+
+g = function() {
+  y
+}
+
+f()
+g()
+
+y
+```
+
+Local variables reset each time the function is called:
+```{r}
+create_or_add = function() {
+  if (exists("counter")) {
+    counter = counter + 1
+  } else {
+    counter = 0
+  }
+  counter
+}
+
+create_or_add()
+create_or_add()
+```
+
+
+A function can use variables defined outside (non-local), but only if
+those variables are in scope where the function was **defined**.
+
+This property is called "lexical scoping".
+
+For example:
+```{r}
+getx = function() x
+
+x
+
+getx()
+
+make_gety = function() {
+  y = 3
+  
+  function() x + y
+}
+
+gety = make_gety()
+gety()
+
+test_gety = function() {
+  y = 15
+  gety()
+}
+
+test_gety()
+```
+
+Variables defined directly in the R console are "global" and
+available to any function.
+
+
+Local variables "mask" or hide non-local variables with the same name:
+```{r}
+getx_local = function() {
+  x = "Hello"
+  x
+}
+
+getx_local()
+```
+Locals get priority!
+
+
+EXCEPTION: R ignores non-functions when looking up the name of a
+called function.
+
+For example:
+```{r}
+compute_mean = function() {
+  x = c(1, 2, 3)
+  mean = 0 
+  # the local variable mean is ignored, because it's not a function
+  mean(x)
+}
+
+compute_mean()
+```
+
+
+Besides function definitions, the `local()` function also creates a
+new scope:
+```{r}
+local({
+  z = 4
+})
+```
+
+
+In summary:
+
+* Function definitions (or `local()`) create a new scope.
+
+* Local variables get reset each time a function is called.
+
+* Where a function is **defined** determines which variables are in
+  scope.
+
+* Local variables mask non-local variables.
+
+* R ignores non-functions when looking up the name of a called
+  function.
+
+For a function, **where** a variable will be looked for depends only
+on where the function was defined (because of lexical scoping).
+
+
+Dynamic Lookup, Part 1: Functions
+---------------------------------
+
+Variables are only looked up **when** they are actually used.
+
+For a function, this means variables are only looked up **when** the
+function is called.
+
+This is called "dynamic lookup".
+
+For example:
+```{r}
+get_cats = function() cats
+
+cats = 3
+get_cats()
+
+cats = 21
+get_cats()
+```
+
+Dynamic lookup can be counterintuitive.
+
+
+
+Environments
+============
+
+The data structure that R uses to keep track of variables at run-time
+is called an "environment".
+
+Each environment has a "frame" that maps names to R objects (a hash
+table).
+
+Each environment also has a "parent environment" (with one exception
+we'll see later).
+
+
+Dynamic Lookup, Part 2: Environments
+------------------------------------
+
+At run-time, **each call** to a function creates a new environment:
+
+* Its frame contains the function's local variables.
+
+* Its parent environment is the environment where the function was
+  **defined**. This satisfies lexical scoping.
+
+When R looks up a variable, it checks the current environment first.
+If the variable isn't there, it checks the environment's parent, then
+the environment's parent's parent, and so on.
+
+
+The "global environment" corresponds to the R console.
+
+Use `globalenv()` to get the global environment:
+```{r}
+globalenv()
+```
+
+
+Assignment in Environments
+--------------------------
+
+The `<-` and `=` assign a variable in the current environment.
+
+Use `<<-` to assign a variable in the parent environment:
+```{r}
+assignx = function(newx) {
+  x <<- newx
+}
+
+x
+assignx("Reassigned")
+x
+```
+This means you can write a function that has a "side effect" on the
+environment where it was defined.
+
+
+In the R community, side effects are generally frowned upon, because
+they make code harder to understand and predict.
+
+Some side effects are useful:
+
+* Making plots.
+* Writing data to a file.
+
+But side effects are not necessary for most functions, and you should
+avoid them when possible.
+
+
+Use `assign()` to assign a variable in a specific environment:
+```{r}
+assign("stat33", "is great", globalenv())
+# stat33 = "is great"
+stat33
+
+assign("dogs", 3)
+dogs
+```
+
+Most of R's functions for working with environments assume the
+current environment if you don't specify an environment.
+
+
+Unlike other R objects, environments **do not** follow the
+copy-on-write rule.
+
+They are reference objects:
+```{r}
+# Copy-on-write example:
+x = c(4, 5, 6)
+y = x
+x[1] = 6
+x
+y
+
+# Exception is environments:
+genv = globalenv()
+genv2 = genv
+genv$x = "This is a test!"
+genv$x
+genv2$x
+```
+
+
+Inspecting Environments
+-----------------------
+
+Use `ls()` to list the names (variables) in an environment:
+```{r}
+ls()
+```
+
+By default, the `ls()` function ignores names that start with `.`
+
+Use `all.names = TRUE` to make the function print these names:
+```{r}
+.x = 14
+
+ls(all.names = TRUE)
+
+ls(name = globalenv())
+```
+
+The `names()` function can also print out all names in an environment:
+```{r}
+names(globalenv())
+```
+
+
+
+Use `exists()` to check whether a variable is in an environment:
+```{r}
+exists("hi", globalenv())
+```
+
+Use `[[`, or `$`, `get()` to get a variable:
+```{r}
+genv = globalenv()
+
+genv$cats
+genv[["cats"]]
+
+get("cats", globalenv())
+```
+
+Use `parent.env()` to get the parent environment:
+```{r}
+parent.env(globalenv())
+```
+
+Dynamic Lookup, Part 3: The Search Path
+---------------------------------------
+
+The global environment is not the top-level environment.
+
+Besides your own code, R also uses environments to keep track of
+packages.
+
+When you load a package with `library()`, R creates a new environment:
+
+  * Its frame contains the package's local variables.
+
+  * Its parent environment is the envionment of the most recently
+    loaded package.
+
+  * The new environment becomes the parent of the global environment.
+
+So R remembers the order in which packages are loaded.
+
+This history of packages is called the "search path".
+
+Use `search()` to see the names of environments in the search path:
+```{r}
+search()
+```
+
+The "base environment", or `package:base`, is a special environment
+that R creates at startup.
+
+The parent of the base environment is another special environment
+called the "empty environment", which contains no variables and has
+no parent.
+```{r}
+parent.env(baseenv())
+
+parent.env(parent.env(globalenv())) # and so on..
+```
+
+
+
+Use `PACKAGE::NAME` to access a name in a specific package:
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+dplyr::filter(dogs, weight < 20)
+
+# 1. Use to disambiguate which function you're calling.
+# stats::filter()
+
+# 2. To use just one function from a package.
+dplyr::filter()
+```
+You do not have to load the package first to do this (but the package
+does have to be installed).
+
+
+
+Closures
+--------
+
+A "closure" is a function that keeps track of its environment.
+
+The idea of a closure is used in many languages, not just R.
+
+In R, every function is a closure.
+
+Functions keep track of the environment where they were defined.
+
+Use `environment()` to get the environment where a function was
+defined:
+```{r}
+f = function() 42
+
+environment(f)
+```
+
+You can use the closure property to create functions that remember
+previous calls.
+
+For example, suppose we want to make a counter function that keeps
+track of how many times it's been called:
+```{r}
+make_counter = function() {
+  count = 0
+  
+  function() {
+    count <<- count + 1
+    count
+  }
+}
+
+counter = make_counter()
+environment(counter)$count
+
+counter()
+counter()
+```
+
+Use functions with "memory" sparingly. They make it harder for others
+to understand your code.

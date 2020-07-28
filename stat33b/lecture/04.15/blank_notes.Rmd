@@ -1,0 +1,185 @@
+---
+title: "Stat 33B - Lecture 12"
+date: April 15, 2020
+output: pdf_document
+---
+
+See the lecture slides for more notes.
+
+
+The S3 Object System
+====================
+
+The `class()` function returns an object's S3 classes.
+```{r}
+
+```
+
+
+Use `inherits()` to test whether an object is an instance of a
+specific S3 class:
+```{r}
+
+```
+
+Use `methods()` to list the methods defined for a given generic
+function.
+
+For S3 methods only, use `.S3methods()` instead.
+
+```{r}
+
+```
+
+S3 methods are always named `GENERIC.CLASS()`.
+
+Example: `print.lm()` is the `print()` method for the `lm` class.
+
+But some functions with `.` in their name are not methods!
+
+Example: `t.test()` is a generic function, not a method!
+
+```{r}
+
+```
+
+Methods in packages are not always accessible from the global
+workspace.
+
+Use `getS3method()` or `getAnywhere()` to get these methods.
+
+```{r}
+
+```
+
+Creating S3 Classes
+-------------------
+
+An S3 object is just an object with a "class" attribute.
+
+So you can use `attr()`, `class()`, or `structure()` to create an S3
+object:
+```{r}
+
+```
+
+It's a good habit to define a constructor function:
+```{r}
+
+```
+For S3, the constructor function implicitly defines the class.
+
+
+Inheritance is based on the order of the classes:
+```{r}
+
+```
+
+
+Creating S3 Generics & Methods
+------------------------------
+
+Use the `UseMethod()` function to create an S3 generic function.
+
+S3 generics select a method based on one argument.
+
+You can specify the argument to use in `UseMethod()`, or take the
+default (the first argument).
+
+Examples:
+```{r}
+
+```
+
+
+Use the `NextMethod()` function to make a method call the method for
+the object's parent class:
+```{r}
+
+```
+
+
+
+The S4 Object System
+====================
+
+_Note: The S4 object system may appear on a homework or lab, but will not be on
+any quizzes or exams._
+
+Use `isS4()` to test whether an object is an S4 object:
+```{r}
+
+```
+
+Use `is()` to test whether an object is an instance of a specific S3
+or S4 class:
+```{r}
+
+```
+
+Use `.S4methods()` to list the S4 methods defined for a given generic
+function:
+```{r}
+
+```
+
+Use `getClasses()` to list all defined S4 classes:
+```{r}
+
+```
+
+Use `class?CLASSNAME` to get help with a specific class:
+```{r}
+
+```
+
+Creating S4 Classes
+-------------------
+
+Use `setClass()` to create a new class:
+```{r}
+
+```
+
+Use `new()` to create an object of a given class:
+```{r}
+
+```
+
+S4 classes can inherit from built-in data types such as vectors and
+lists.
+
+The `.Data` slot provides access to the inherited object:
+```{r}
+
+```
+
+
+
+Creating S4 Generics & Methods
+------------------------------
+
+Use `setGeneric()` to mark a function as an S4 generic:
+```{r}
+
+```
+
+If the generic isn't already defined, you must provide a definition.
+
+The standard definition is a call to `standardGeneric()`:
+```{r}
+
+```
+This is the S4 equivalent of S3's `UseMethod()`.
+
+
+Use `setMethod()` to define a method:
+```{r}
+
+```
+
+Use the `callNextMethod()` function to call the method for the
+object's parent class:
+```{r}
+
+```

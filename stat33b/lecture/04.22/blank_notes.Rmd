@@ -1,0 +1,88 @@
+---
+title: "Stat 33B - Lecture 13"
+date: April 22, 2020
+output: pdf_document
+---
+
+Profiling
+=========
+
+The `Rprof()` function enables or disables R's built-in profiler.
+
+Key parameters:
+
+* `filename` -- path to output file. Defaults to `Rprof.out`.
+* `interval` -- time between samples, in seconds.
+* `memory.profiling` -- whether to track memory in addition to time.
+
+Call `Rprof(NULL)` to disable the profiler.
+
+
+
+The `summaryRprof()` function summarizes results from `Rprof()`.
+
+Key parameters:
+
+* `filename` -- path to output file. Defaults to `Rprof.out`.
+* `memory` -- how to display memory profile. Use `"both"` to see
+  total changes.
+
+The summary lists times in seconds and memory in bytes.
+
+
+The profvis package provides a visualization, making it easier to
+understand the results.
+
+Call `profvis()` on the code you want to profile.
+
+Under the hood, profvis still uses `Rprof()`.
+
+
+
+Example: Rejection Sampler
+--------------------------
+
+Recall the rejection sampler from homework 4.
+
+Preallocation was important here.
+
+What does the profiler show if we don't preallocate?
+
+```{r}
+dslide = function(x) {
+  ifelse(x > 1, 0,
+    ifelse(x > 0, dnorm(x) / dnorm(0), dunif(x, -1, 0))
+  )
+}
+
+# NO PREALLOCATION:
+rslide = function(n) {
+  samp = c()
+  accepted = 0
+  while (accepted < n) {
+    x = runif(1, -1, 1)
+    y = runif(1)
+  
+    if (y < dslide(x)) {
+      accepted = accepted + 1
+      samp = c(samp, x)
+    }
+  }
+
+  samp
+}
+```
+
+
+Example: Random Walk
+--------------------
+
+In a 2-dimensional random walk, at each step we randomly choose a
+move in one of the four compass directions.
+
+Goal: write an efficient function to compute the path of a 2-d random
+walk.
+
+```{r}
+
+```

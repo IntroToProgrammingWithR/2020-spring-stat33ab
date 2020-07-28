@@ -1,0 +1,276 @@
+---
+title: "Stat 33B - Lecture 5"
+date: February 19, 2020
+output: pdf_document
+---
+
+Announcements
+=============
+
+Grades posted (please check):
+
+* Homework 1
+* Lab 1
+* Quiz 1
+* Attendance up to 12 Feb
+
+Solutions are posted!
+
+
+Homework 3 will be posted later today or tomorrow.
+
+
+Previous Lecture: Visualizations
+================================
+
+We started working with the dogs data to recreate the Best in Show
+visualization:
+
+    https://informationisbeautiful.net/visualizations/
+        best-in-show-whats-the-top-data-dog/
+
+
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+```
+
+In `ggplot2`, graphics are composed of layers.
+
+Layer 1: Data -- the data frame to plot.
+Layer 2: GEOMetry -- shapes to represent data.
+Layer 3: AESthetic -- "wires" between geometry and data
+
+
+```{r}
+library(ggplot2) 
+
+dogs[ , "datadog"]
+dogs[["datadog"]]
+
+# Aesthetic layer applies to every geometry layer:
+ggplot(dogs, aes(x = datadog, y = popularity)) + geom_point()
+
+# Alternate syntax:
+# Aesthetic layer only applies to geom_point:
+ggplot(dogs) + geom_point(aes(x = datadog, y = popularity))
+```
+
+
+
+More About `ggplot2`
+==================
+
+Important layers in `ggplot2`:
+
+Layer       | Description
+----------  | -----------
+data        | A data frame to visualize
+aesthetics  | The map or "wires" between data and geometry
+geometry    | Geometry to represent the data visually
+statistics  | An alternative to geometry
+scales      | How numbers in data are converted to numbers on screen
+labels      | Titles and axis labels
+guides      | Legend settings
+annotations | Additional geoms that are not mapped to data
+coordinates | Coordinate systems (Cartesian, logarithmic, polar)
+facets      | Side-by-side panels
+
+
+Saving Your Plots
+-----------------
+
+Use `ggsave()` to save the last plot you created to a file:
+
+```{r}
+ggsave("my33bplot1.png")
+```
+
+__Important Note:__ RStudio can maintain several different working directories
+at the same time. The working directory for code run from a notebook might be
+different from code entered manually in the R prompt! This is the reason my
+plot showed up in an unexpected place during this lecture.
+
+```{r}
+ggsave("~/university/teach/stat33ab/stat33b/sandbox/myplot.jpeg")
+```
+
+
+
+Adding More Details
+-------------------
+
+How else can we make our plot look more like the Best in Show plot?
+
+
+1. Add the dog breeds as text.
+
+Add more geometries to add additional details to a plot:
+```{r}
+ggplot(dogs, aes(x = datadog, y = popularity))  +
+  geom_point() +
+  geom_text(aes(label = breed), size = 2, hjust = "left",
+            vjust = "bottom", nudge_x = 0.05)
+```
+
+See the `ggrepel` package for automatic label positioning.
+
+
+2. Color the points by type of dog.
+
+```{r}
+ggplot(dogs, aes(x = datadog, y = popularity))  +
+  geom_point(aes(color = group)) +
+  geom_text(aes(label = breed), size = 2, hjust = "left",
+            vjust = "bottom", nudge_x = 0.05)
+```
+
+Where you set the aesthetics matters. In the code above, the `x` and `y`
+aesthetics apply to ALL geometries. The `color` aesthetic only applies to
+`geom_point`, and the `label` aesthetic only applies to `geom_text`. To make
+these aesthetics apply to everything, move them to the `aes` call in the data
+layer.
+
+
+We can also set parameters outside of the aesthetics.
+```{r}
+ggplot(dogs, aes(x = datadog, y = popularity))  +
+  geom_point(color = "purple")
+```
+
+Doing so sets a constant value instead of mapping to a feature in the
+data.
+
+You can also use the scales layer to customize the color choices.
+
+Read the documentation for details about parameters.
+
+
+3. Reverse the y-axis.
+
+Use the scale layer to change axes.
+
+```{r}
+ggplot(dogs, aes(x = datadog, y = popularity))  +
+  geom_point(aes(color = group)) +
+  geom_text(aes(label = breed), size = 2, hjust = "left",
+            vjust = "bottom", nudge_x = 0.05) +
+  scale_y_reverse()
+```
+
+
+4. Add titles and labels.
+
+```{r}
+ggplot(dogs, aes(x = datadog, y = popularity))  +
+  geom_point(aes(color = group)) +
+  geom_text(aes(label = breed), size = 2, hjust = "left",
+            vjust = "bottom", nudge_x = 0.05) +
+  scale_y_reverse() +
+  labs(title = "Best in Show", x = "Datadog", y = "Popularity")
+```
+
+
+
+Reshaping Data
+==============
+
+The `ggplot2` functions require data in "tidy" form:
+
+1. Each observation must have its own row.
+2. Each feature must have its own column.
+3. Each value must have its own cell.
+
+Also required by most other Tidyverse packages.
+
+Tidy data sets are convenient for data analysis in general.
+
+
+The `tidyr` package provides functions to reshape data to and from
+tidy form.
+```{r}
+# You may need to install the package first:
+# install.packages("tidyr")
+
+# Load the package:
+library(tidyr)
+```
+
+An example of tidy data (Tuberculosis Data Set):
+```{r}
+# Included with tidyr:
+table1
+```
+
+The `country` and `year` columns identify the observation.
+
+The `cases` and `population` columns are measurements.
+
+
+Determine the identifiers and the measurements are BEFORE reshaping!
+
+
+
+Rotating Rows into Columns
+--------------------------
+
+Some data sets split measurements for one observation across several
+rows.
+
+For example, `cases` and `population` here:
+```{r}
+# Included with tidyr:
+table2
+```
+
+To make this data tidy:
+
+* Rotate the `count` row values into columns, by `type`.
+* New columns are `cases` and `population`.
+
+Tidying this data set makes it wider.
+
+
+Use `pivot_wider()` to rotate rows into columns:
+```{r}
+pivot_wider(table2, names_from = type, values_from = count)
+```
+
+Need to specify:
+
+* Column names to rotate as `names_from`.
+* Measurements to rotate as `values_from`.
+
+
+If you wanted to do this without `tidyr`:
+
+1. Subset rows to separate `cases` and `population` values.
+2. Remove the `type` column from each.
+3. Rename the `count` column to `cases` and `population`.
+4. Merge these two subsets by matching `country` and `year`.
+
+```{r}
+# Step 1
+cases = table2[table2$type == "cases", ]
+pop = table2[table2$type == "population", ]
+pop
+
+# Step 2
+cases = cases[-3]
+pop = pop[-3]
+
+# Step 3
+names(pop)[3] = "population"
+names(cases)[3] = "cases"
+
+pop
+cases
+
+# Risky way to do step 4:
+cbind(pop, cases)
+
+# Okay for this data set, because rows line up in country and year.
+#
+# Other data sets might not have rows that line up.
+```
+
+We'll see a better way to do step 4 later.

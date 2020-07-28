@@ -1,0 +1,230 @@
+---
+title: "Stat 33B - Lecture 14"
+date: April 29, 2020
+output: pdf_document
+---
+
+Review: Creating Closures
+=========================
+
+How do you create a function that "remembers" something between
+calls?
+
+Same skeleton every time:
+```{r}
+make_foo = function() {
+  # Put variables that will persist between calls here:
+  memory = numeric(0)
+  
+  # This is the foo() function:
+  function(x) {
+    # Code to do computions for foo()
+    # ...
+    # memory[i] <<- x 
+  }
+}
+
+foo = make_foo()
+
+# Then:
+foo(3)
+foo(4)
+```
+
+Example:
+```{r}
+# Create a function that returns the last value passed as an argument!
+make_remember = function() {
+  memory = NA
+  
+  function(x) {
+    old_mem = memory
+    memory <<- x 
+    old_mem
+  }
+}
+
+remember = make_remember()
+
+
+remember("Hi") # NA
+remember("Hello") # "Hi"
+```
+
+Review: Creating S3 Objects
+===========================
+
+How do you create an S3 object?
+
+Most of the time, use a list as the base for the object:
+```{r}
+structure(list(), class = "foo")
+```
+
+Add named elements to the list to create fields:
+```{r}
+foo = function() {
+  base = list(x = 4)
+  structure(base, class = "foo")
+}
+
+obj = foo()
+obj$x
+```
+
+Formulas
+========
+
+Remember the dogs data?
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+
+head(dogs)
+```
+
+
+Examples:
+```{r}
+plot(datadog ~ popularity, data = dogs)
+
+lm(datadog ~ popularity + weight, data = dogs)
+```
+
+
+dplyr
+=====
+
+Use `slice()` to choose rows by position:
+```{r}
+library(dplyr)
+
+slice(dogs, 1:3)
+# dogs[1:3, ]
+```
+
+Use `filter()` to choose rows that satisfy a condition:
+```{r}
+filter(dogs, group == "herding")
+# dogs[dogs$group == "herding", ]
+# subset(dogs, group == "herding")
+```
+
+Suppose we want all toy dogs and all sporting dogs:
+```{r}
+filter(dogs, group %in% c("toy", "sporting"))
+```
+
+Suppose we want to get all dogs with group "toy" and weight < 10:
+```{r}
+filter(dogs, group == "toy" & weight < 10)
+filter(dogs, group == "toy", weight < 10)
+```
+
+
+Use `select()` to choose columns by name or position:
+```{r}
+select(dogs, group)
+#dogs["group"]
+
+select(dogs, 3)
+```
+
+Use `:` to indicate a range of rows or columns, including by name:
+```{r}
+select(dogs, 2:4)
+
+# ONLY IN dplyr:
+select(dogs, breed:popularity)
+```
+
+Use `-` to exclude rows or columns, including by name:
+```{r}
+select(dogs, -1)
+dogs[-1]
+
+# ONLY IN dplyr:
+select(dogs, -c(breed, datadog, popularity))
+```
+
+Other useful `dplyr` functions:
+
+* `arrange()` changes the ordering of the rows.
+* `mutate()` adds new columns by transforming existing columns.
+* `group_by()` splits rows into groups when summarizing.
+* `summarise()` reduces multiple rows down to a single value.
+
+
+magrittr
+========
+
+The pipe operator is different way to call a function:
+```{r}
+c(1, 2, 3) %>% sum %>% sqrt
+
+sqrt(sum(c(1, 2, 3)))
+
+total = sum(c(1, 2, 3))
+sqrt(total)
+```
+
+Use `.` as a placeholder for the previous operand:
+```{r}
+TRUE %>% mean(c(1, 2, 3, NA), na.rm = .)
+```
+
+
+Non-standard Evaluation
+=======================
+
+Example of `curve()`:
+```{r}
+curve(sqrt(x - 1), 0, 2)
+```
+
+
+The `substitute()` function is the key to NSE.
+
+When called on a parameter inside of a function, `substitute()`
+returns the unevaluated argument to that parameter:
+```{r}
+f = function(x) {
+  substitute(x)
+}
+
+z = f(4 + 10)
+z
+
+z = f(g(10) + 3)
+```
+
+These objects that represent code are called "language objects".
+
+They have a tree structure.
+
+Use the subset `[` operator to access or edit language objects:
+```{r}
+z[[2]]
+
+z[[2]][[2]] = 10
+
+class(z)
+sapply(as.list(z), class)
+as.list(z)
+```
+
+The `quote()` function captures its argument as a language object:
+```{r}
+x = quote(5 + 6)
+```
+
+The `eval()` function evaluates a language object:
+```{r}
+eval(x)
+eval(z)
+```
+
+Non-standard evaluation is extremely powerful.
+
+With great power comes great responsibility!
+
+Think twice before creating a function that uses NSE.

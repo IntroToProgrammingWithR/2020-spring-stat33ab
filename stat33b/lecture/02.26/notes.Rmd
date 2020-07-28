@@ -1,0 +1,231 @@
+---
+title: "Stat 33B - Lecture 6"
+date: February 26, 2020
+output: pdf_document
+---
+
+Announcements
+=============
+
+Quiz 2 this Friday:
+
+* Similar length to Quiz 1
+* Multiple-choice and fill-in-the-blank questions.
+* Covers everything up to the end of last week.
+
+
+Review
+======
+
+Previous lecture:
+
+* Tidy data
+* The `pivot_wider` function
+
+
+We took this untidy data:
+```{r}
+library(tidyr)
+
+table2
+```
+
+And used the `pivot_wider()` function to rotate rows into columns:
+
+```{r}
+pivot_wider(table2, names_from = type, values_from = count)
+```
+
+
+Rotating Columns into Rows
+--------------------------
+
+Some data sets put measurements for multiple observations in a single
+row.
+
+In this table, each row contains the measurements for two
+observations of the `cases` variable:
+```{r}
+table4a
+```
+
+To make this data tidy:
+
+* Rotate the `1999` and `2000` columns into rows.
+* New columns are `year` and `cases`.
+
+Tidying this data set makes it longer.
+
+
+__Important Note:__ Earlier we saw negative indexing with positions:
+```{r}
+table4a[-1]
+```
+
+Tidyverse functions (but not base R!) also support negative indexing with
+names!
+
+
+Use `pivot_longer()` to rotate columns into rows:
+```{r}
+pivot_longer(table4a, -country, names_to = "year", values_to = "cases")
+```
+
+Need to specify:
+
+* Columns to rotate as `cols`.
+* Name(s) of new identifier column(s) as `names_to`.
+* Name(s) of new measuerment column(s) as `values_to`.
+
+
+See `vignette("pivot")` for more examples of using `tidyr`.
+
+
+If you wanted to do this without `tidyr`:
+
+1. Subset columns to separate `1999` and `2000` into two data frames.
+2. Add a `year` column to each.
+3. Rename the `1999` and `2000` columns to `cases`.
+4. Stack the two data frames with `rbind()`.
+
+```{r}
+
+col99 = table4a[-3]
+col00 = table4a[-2]
+
+names(col99)[2] = "cases"
+col99["year"] = 1999
+
+col99
+
+names(col00)[2] = "cases"
+col00["year"] = 2000
+
+col00
+
+rbind(col99, col00)
+```
+
+
+Merging Data
+============
+
+A merge or "join" combines data from two separate data frames, based
+on some identifying values they have in common.
+
+
+Recall the `pivot_wider()` example with `table2`.
+
+To make `table2` tidy without `tidyr`:
+
+1. Subset rows to separate `cases` and `population` values.
+2. Remove the `type` column from each.
+3. Rename the `count` column to `cases` and `population`.
+4. Merge these two subsets by matching `country` and `year`.
+
+The two subsets are:
+```{r}
+table2
+
+cases = table2[table2$type == "cases", ]
+pop = table2[table2$type == "population", ]
+
+names(pop)[4] = "population"
+pop = pop[-3]
+
+pop
+
+names(cases)[4] = "cases"
+cases = cases[-3]
+```
+
+
+BAD ways to combine rows:
+
+```{r, eval = FALSE}
+cases$population = pop$population
+
+# OR
+
+cbind(cases, pop["population"])
+```
+
+Dangerous if you're not 110% sure the order of rows matches!
+
+
+Imagine if the rows were in a different order:
+```{r}
+pop = pop[c(4, 5, 1, 2, 3, 6), ]
+```
+
+Then adding a new column or using `cbind()` would mix up the observations.
+
+
+Instead, match rows on `country` and `year` with the `merge()` function:
+```{r}
+merge(cases, pop)
+```
+
+The function automatically uses columns that have the same name in both tables
+to match.
+
+
+More Merges
+-----------
+
+Data split across multiple tables are called _relational data_.
+
+A column shared by several tables is called a _key_.
+
+For example, a grocery store's inventory system might have:
+
+* A table that lists stores
+* A table that lists items (fruits, vegetables, etc)
+* A table that lists quantity of each item at each store
+
+See the bCourse for the data set:
+```{r}
+stores = readRDS("data/grocery/stores.rds")
+
+stores
+
+items = readRDS("data/grocery/items.rds")
+
+items
+
+inv = readRDS("data/grocery/inventory.rds")
+
+inv
+```
+
+By default, the `merge()` function only keeps rows that match:
+
+```{r}
+merge(stores, inv)
+```
+
+Use the `all` parameter to force all rows from both tables to show
+up:
+
+```{r}
+merge(stores, inv, by.x = "store_id", by.y = "StoreID", all = TRUE)
+```
+
+There are also `all.x` and `all.y` parameters to only force all rows
+from one table.
+
+
+Use the `by` parameter to specify the key. If the name of the key is
+different for the two tables, use `by.x` and `by.y`.
+
+```{r}
+merge(stores, inv, by.x = "store_id", by.y = "StoreID")
+```
+
+If you're familiar with SQL `JOIN`s, the `merge()` function is the
+same idea. Specifically:
+
+* `INNER JOIN` is `all = FALSE` (the default)
+* `LEFT JOIN` is `all.x = TRUE`
+* `RIGHT JOIN` is `all.y = TRUE`
+* `OUTER JOIN` is `all = TRUE`

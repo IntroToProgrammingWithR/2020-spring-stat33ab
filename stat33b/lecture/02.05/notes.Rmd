@@ -1,0 +1,498 @@
+---
+title: "Stat 33B - Lecture 3"
+date: February 5, 2020
+output: pdf_document
+---
+
+Announcements
+-------------
+
+Second homework assignment will be posted to the bCourse later today.
+
+From now on:
+
+* The attendance question will be at the beginning of lecture.
+* If you're late, ask me for it at the end of lecture.
+* The attendance question will no longer be posted in the notes.
+
+
+Review
+------
+
+Last time we learned about types and classes.
+```{r}
+typeof(5)
+
+class(5)
+```
+
+We also saw data frames, lists, matrices, and arrays.
+```{r}
+list(4, "hi")
+
+matrix(1:6, 2, 3)
+```
+R stores matrices in column order.
+
+
+# Data Types
+
+Attributes
+----------
+
+Attributes are name-value pairs in the metadata of an R object.
+
+Several functions for working with attributes:
+
+* `attr()` to get or set one attribute on an object
+* `attributes()` to get all attributes on an object
+* `structure()` to set all attributes on an object
+
+We've already been using attributes.
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+class(dogs)
+```
+
+
+Classes are stored in the "class" attribute:
+```{r}
+attr(dogs, "class")
+
+attributes(dogs)
+
+attr(dogs, "names")
+```
+
+The `class` function is just a helper for this attribute.
+
+Names are also attributes:
+```{r}
+names(dogs)
+```
+
+Some common attributes:
+
+* `class` -- class
+* `row.names` -- row names
+* `names` -- element names or column names
+* `dim` -- dimensions (on matrices)
+* `dimnames` -- names of dimensions (on matrices)
+
+```{r}
+x = matrix(1:4, 2, 2)
+attributes(x)
+```
+
+
+Some of these also have helper functions:
+```{r}
+dim(x)
+```
+
+
+The `length` function is superficially similar to these, but there's no length
+attribute.
+
+```{r}
+length(x)
+```
+
+
+Idiomatic R: use a helper function to set attributes when possible.
+
+
+We can set the class of an object with the helper function:
+```{r}
+x = 5
+class(x) = "data.frame"
+x
+```
+
+Or with the `attr()` or `structure()` functions:
+```{r}
+attr(x, "class") = "data.frame"
+
+structure(5, class = "data.frame")
+```
+
+Q: What happens if there's a type in the class name?
+
+A: Not an error, but R will probably not recognize the class:
+```{r}
+x = structure(5, class = "dat.frame")
+x
+```
+In a few lectures, we'll see how to create our own classes.
+
+
+Notice that "atomic" values like numbers don't have attributes:
+```{r}
+attributes(5)
+```
+
+But the class function always returns a class:
+```{r}
+class(5)
+```
+
+The `attr()` function shows that the class for this object is not an attribute:
+```{r}
+attr(5, "class")
+```
+Instead, the class for atomic objects is built into R.
+
+
+Special Values
+--------------
+
+R has four special values.
+
+`NA` represents a missing or unknown value in a data set.
+```{r}
+class(NA)
+typeof(NA)
+```
+
+
+The missing value `NA` is contagious!
+```{r}
+5 + NA
+```
+
+Using a unknown argument in a computation usually produces an unknown result.
+
+
+`NULL` represents a value that's not defined _in R_. Functions often use `NULL`
+to mean the absence of a result.
+```{r}
+attr(5, "class")
+```
+
+For instance, if we try to get the matrix dimensions of a vector:
+```{r}
+dim(6)
+```
+
+`NaN`, or "not a number", represents a value that's not defined mathematically.
+Produced by some computations:
+
+```{r}
+0 / 0
+```
+
+
+`Inf` represents infinity. Produced by some computations:
+
+```{r}
+-5 / 0
+```
+
+
+Comparison Operators
+--------------------
+
+We saw operators for doing arithmetic: `+`, `-`, `*`, `/`, `^`
+
+R also has operators for making comparisons. They are:
+
+* `==` for equality
+* `<`, `<=`, `>`, `>=` for inequality
+
+Like the arithmetic operators, these are vectorized.
+
+Examples:
+```{r}
+c(1, 2, 3) == c(2, 2, 2)
+
+c(1, 2, 3) < c(2, 2, 2)
+
+# NA is contagious
+c(NA, 3) < c(2, 3)
+```
+
+To check equality for special values, use the `is.` functions:
+
+* `is.na()`
+* `is.null()`
+* `is.nan()`
+* `is.infinite()`
+
+Examples:
+```{r}
+# NA is contagious
+NA == NA
+
+is.na(c(NA, 1))
+```
+
+
+To check equality within a tolerance, use `all.equal()`. Useful for numerical
+algorithms.
+
+```{r}
+isTRUE(all.equal(4, 5, 6))
+```
+
+
+To check whether two objects are identical, use `identical()`. Useful for
+non-vectorized equality checks.
+
+```{r}
+c(1, 2, 3) == c(1, 2, 3)
+
+identical(c(1, 7, 3), c(1, 2, 3))
+```
+
+
+Logical Operators
+-----------------
+
+R also has operators for combining logical values. They are:
+
+* `!` for negation ("NOT")
+* `&` for conjunction ("AND"). `TRUE` when both arguments are `TRUE`.
+* `|` for disjunction ("OR"). `TRUE` when at least one argument is `TRUE`.
+* `xor()` for exclusive disjunction ("XOR"). `TRUE` when exactly one argument is
+  `TRUE`.
+
+These four operators are vectorized.
+
+Examples:
+```{r}
+!c(TRUE, FALSE)
+
+c(TRUE, TRUE) & c(TRUE, FALSE)
+```
+
+There are also short-circuited versions of `&` and `|`:
+
+* `&&`
+* `||`
+
+These are __not__ vectorized!
+
+Short-circuited means these operators only evaluate the second argument if it
+is necessary to determine the result.
+
+For instance, in `TRUE || x` we don't need to know the value of `x` to know the
+result will be `TRUE`. So in this case, `||` never looks up the value of `x`.
+
+Examples:
+```{r}
+# No need to evaluate the second FALSE:
+FALSE && FALSE
+
+
+# Easy source of bugs with vectors, since they are not vectorized:
+c(FALSE, TRUE) && c(TRUE, TRUE)
+```
+
+
+The `any()` and `all()` functions check whether any or all elements of a
+logical vector are `TRUE`, respectively:
+```{r}
+any(c(FALSE, FALSE, FALSE))
+
+
+all(c(FALSE, TRUE))
+```
+
+It is idiomatic to use `sum()` to count `TRUE` values in a vector:
+```{r}
+sum(c(TRUE, FALSE, TRUE)) # faster
+
+# Another way:
+table(c(TRUE, FALSE, FALSE)) # slower, but more information
+```
+
+
+Factors
+-------
+
+We need the dogs data again:
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+```
+
+R represents categorical data using the class `factor`:
+```{r}
+class(dogs$group)
+```
+
+Factors are not strings!
+
+For efficiency, R stores factors as integer vectors:
+```{r}
+typeof(dogs$group)
+```
+
+Each integer corresponds to one category or "level" of the factor.
+
+Besides efficiency, R uses factors to keep track of _possible_ categories even
+if they are not actually present in the vector.
+
+Functions for working with factors:
+
+* `factor()` creates a factor.
+* `levels()` returns the levels of a factor.
+* `droplevels()` removes levels of a factor that are not present.
+* `table()` prints a count of elements of each level. Also useful for other
+  data types.
+
+Examples:
+```{r}
+levels(dogs$group)
+
+factor(c("hi", "bye", "hi"))
+
+# Second argument sets the levels:
+hair = factor(c("black", "blonde"), c("black", "blonde", "brown", "red"))
+
+# Get counts for every level, even ones that weren't observed:
+table(hair)
+```
+
+
+# Working with Data
+
+
+Taking Subsets
+--------------
+
+Taking subsets is a fundamental operation for working with data in R!
+
+Two primary operators for taking subsets in R:
+
+1.  `[[` to "extract" an element.
+
+    + Selects exactly one element.
+    + Drops the container.
+    + By position or name.
+
+2. `[` to "subset" an element.
+
+    + Selects any number of elements.
+    + Keeps the container.
+    + By position, name, or logical values.
+
+
+Let's test these out on a vector:
+```{r}
+x = c(2, -1, 6)
+```
+
+Subsetting by position (positions start at 1 in R):
+```{r}
+x[1]
+
+x[[1]]
+
+x[c(2, 1)]
+
+# Can't get multiple elements with [[
+x[[c(2, 1)]]
+```
+
+Negative positions mean "everything except":
+```{r}
+x[-c(1, 3)]
+```
+
+-----
+
+_This section wasn't covered in the lecture and will be covered next week
+instead. I'm including it here for anyone that wants to read ahead._
+
+Subsetting by name:
+```{r}
+y = c(a = 1, b = 2)
+
+y["a"]
+
+x[["a"]]
+
+y[c("a", "a")]
+```
+
+
+Subsetting by logical value:
+```{r}
+x < 2 # logical vector
+
+
+# Length of the logical vector must match.
+#
+# TRUE to keep an element, FALSE to drop an element.
+x[x < 2]
+
+
+# Invalid with [[
+x[[x < 2]]
+```
+
+
+`[[` drops the container, `[` does not.
+
+This is most apparent for lists:
+
+```{r}
+mylist = list(a = 8, b = 44)
+
+mylist[1]
+class(mylist[1])
+
+mylist[[1]]
+class(mylist[[1]])
+```
+
+A visual representation of this idea:
+<https://twitter.com/hadleywickham/status/643381054758363136>
+
+
+Why do `[` and `[[` seem to do the same thing for vectors?
+
+Vectors contain scalars, but in R, a scalar is a 1-vector. So nothing to
+"extract" with `[[`.
+
+
+Data frames are lists, so:
+```{r}
+dogs[[1]]
+
+dogs[1]
+```
+
+We can also do multi-dimensional subsetting:
+```{r}
+dogs[[1, 1]]
+
+dogs[1, 1]
+```
+
+Use a blank to mean "everything" along one dimension:
+```{r}
+dogs[1, ]
+```
+
+The `[` has a parameter called `drop`:
+```{r}
+?`[`
+```
+
+The default `drop = TRUE`, means that `[` will "drop" (remove) the dimensions
+from objects that can be represented as a vector.
+
+This is a potential source of bugs:
+```{r}
+x = matrix(1:4, 2, 2)
+
+# Matrix multiplication operator is %*%
+#
+# (2x1) * (1x2) = (2x2)
+x[, 1] %*% x[1, ] # wrong answer
+
+# Try without drop:
+x[, 1, drop = FALSE] %*% x[1, ]
+```
+Even some of the R developers regret that the default is not `drop = FALSE`!
