@@ -1,0 +1,317 @@
+---
+title: "Stat 33A - Lecture 4"
+date: March 2, 2020
+output: pdf_document
+---
+
+Announcements
+=============
+
+Quiz 2 this week! Same format as quiz 1.
+
+
+Review
+======
+
+Last time:
+
+* Paths
+* Inspecting data frames
+
+In the notebook, if you use `setwd()` it only lasts for __that
+chunk__ and is then reset:
+
+
+So in subsequent chunks it looks like you didn't call `setwd()`:
+```{r}
+getwd()
+
+setwd("..")
+
+getwd()
+```
+
+```{r}
+getwd()
+```
+
+
+Plan ahead so that other people can run your code and reproduce your
+results.
+
+Good habits:
+
+* Putting your notebook(s) and data in the project directory.
+* Using paths relative to the project directory.
+
+Bad habits:
+
+* Calling `setwd()` in R notebooks and scripts.
+* Using absolute paths.
+
+It's okay to use `setwd()` in the *R console* to set the working
+directory to your project directory.
+
+
+R Packages
+==========
+
+The Comprehensive R Archive Network (CRAN) is a repository of
+user-contributed packages for R.
+
+You can install packages from CRAN with `install.packages()`:
+```{r}
+?install.packages
+```
+
+For maintaining your packages, there are also functions:
+
+* `remove.packages()` to remove a package
+* `update.packages()` to update ALL packages
+* `installed.packages()` to list installed packages
+
+```{r}
+installed.packages()
+```
+
+
+You can load an installed package into your R session with the
+`library()` function:
+```{r}
+library(dplyr)
+
+library("dplyr")
+```
+
+
+Install once, load with `library()` each time you restart R.
+
+
+Working with Data with `dplyr`
+==============================
+
+The `dplyr` package provides functions for working with data frames.
+
+We'll use `dplyr` for now, and learn about R's built-in tools later.
+
+Cheat sheet:
+
+    https://github.com/rstudio/cheatsheets/raw/master/
+        data-transformation.pdf
+
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+
+head(dogs)
+```
+
+
+Use `slice()` to choose rows by position:
+```{r}
+slice(dogs, 4)
+
+slice(dogs, c(1, 3, 3, 5))
+
+slice(dogs, 6:9)
+```
+
+Use `filter()` to choose rows that satisfy a condition:
+```{r}
+5 < 6
+
+c(1, 3, 4) < c(5, 2, 1)
+
+filter(dogs, group == "toy")
+```
+Suppose we want all toy dogs and all sporting dogs:
+```{r}
+filter(dogs, group == "toy")
+filter(dogs, group == "sporting")
+
+# Operators for combining conditions: &, AND
+TRUE & TRUE
+
+TRUE & FALSE
+
+FALSE & TRUE
+
+FALSE & FALSE
+
+# Another option for combining: |, OR
+TRUE | TRUE
+
+TRUE | FALSE
+
+FALSE | FALSE
+
+# How the two groups of dogs?
+
+filter(dogs, group == "toy" & group == "sporting") # no good
+
+filter(dogs, group == "toy" | group == "sporting") # this works
+```
+
+Suppose we want to get all dogs with group "toy" AND with weight < 10:
+```{r}
+light_dogs = filter(dogs, group == "toy" & weight < 10)
+
+# Check weight column:
+light_dogs$weight
+
+# Behind the scenes:
+dogs$group == "toy"
+```
+
+
+Use `select()` to choose columns by name or position:
+```{r}
+class(select(dogs, c(weight, height)))
+
+class(select(dogs, weight))
+
+class(dogs$weight)
+
+# Use vectors for arithmetic:
+dogs$weight + dogs$height
+
+# Rather than columns:
+select(dogs, weight) + select(dogs, height) 
+```
+
+Use `:` to indicate a range of rows or columns:
+```{r}
+names(dogs)
+
+select(dogs, 1:3)
+
+# Only in dplyr can we use names of columns with `:`
+select(dogs, price:kids)
+```
+
+Use `-` to exclude rows or columns:
+```{r}
+# Order of operations is important:
+-1:3
+-(1:3)
+
+slice(dogs, -(1:3))
+
+select(dogs, -1)
+
+# Only for dplyr:
+select(dogs, -datadog)
+```
+
+
+All dogs not in the toy group (how to invert a condition with `filter()`):
+```{r}
+filter(dogs, group != "toy")
+
+# Another way, useful for long conditions:
+filter(dogs, !(group == "toy"))
+
+!c(FALSE, TRUE, TRUE)
+```
+
+
+Other useful `dplyr` functions:
+
+* `arrange()` changes the ordering of the rows.
+* `mutate()` adds new columns by transforming existing columns.
+* `summarise()` reduces multiple rows down to a single value.
+* `group_by()` splits rows into groups when summarizing.
+
+
+
+The Tidyverse
+=============
+
+The Tidyverse (<https://www.tidyverse.org/>) is collection of R
+packages for doing data science in R.
+
+They are made by many of the same people that make RStudio, and
+provide alternatives to R's built-in tools for:
+
+* Reading files (package `readr`)
+* Manipulating data frames (packages `dplyr`, `tidyr`, `tibble`)
+* Manipulating strings (package `stringr`)
+* Manipulating factors (package `forcats`)
+* Functional programming (package `purrr`)
+* Making visualizations (package `ggplot2`)
+
+The Tidyverse packages are popular but controversial, because some of
+them use a syntax different from base R.
+
+RStudio cheat sheets (mostly for Tidyverse packages):
+
+    https://rstudio.com/resources/cheatsheets/
+
+
+
+Visualization with `ggplot2`
+============================
+
+The fundamental idea of `ggplot2` is that all graphics are composed
+of layers.
+
+
+Documentation:
+
+    https://ggplot2.tidyverse.org/
+
+
+As an example, let's create a simplifed version of the Best in Show
+visualization:
+
+    https://informationisbeautiful.net/visualizations/
+        best-in-show-whats-the-top-data-dog/
+
+
+Layer 1: Data -- the data frame to plot.
+
+Call the `ggplot()` function to set the data layer:
+```{r}
+library(ggplot2)
+
+ggplot(dogs)
+```
+
+Layer 2: GEOMetry -- shapes to represent data.
+
+Add a `geom_` function to set the geometry layer:
+```{r}
+ggplot(dogs) + geom_point()
+```
+
+Layer 3: AESthetic -- "wires" between geometry and data
+
+Call the `aes()` function in `ggplot()` or the `geom_` to set the
+mapping between the data layer and geometry layer:
+```{r}
+ggplot(dogs, aes(x = datadog, y = popularity_all)) + geom_point()
+```
+
+Important layers in `ggplot2`:
+
+Layer       | Description
+----------  | -----------
+data        | A data frame to visualize
+aesthetics  | The map or "wires" between data and geometry
+geometry    | Geometry to represent the data visually
+statistics  | An alternative to geometry
+scales      | How numbers in data are converted to numbers on screen
+labels      | Titles and axis labels
+guides      | Legend settings
+annotations | Additional geoms that are not mapped to data
+coordinates | Coordinate systems (Cartesian, logarithmic, polar)
+facets      | Side-by-side panels
+
+
+Saving Your Plots
+-----------------
+
+Use `ggsave()` to save the last plot you created to a file:
+
+```{r}
+ggsave("myplot.png")
+```

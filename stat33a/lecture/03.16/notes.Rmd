@@ -1,0 +1,489 @@
+---
+title: "Stat 33A - Lecture 6"
+date: March 16, 2020
+output: pdf_document
+---
+
+
+Review
+======
+
+Last time:
+
+R represents categorical data using the class `factor`:
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+
+str(dogs)
+
+class(dogs$group)
+```
+
+The categories of a factor are called "levels". You can list the
+levels with the `levels()` function:
+```{r}
+dogs$group
+
+levels(dogs$group)
+```
+
+Factors remember all possible levels even if you take a subset:
+```{r}
+library(dplyr)
+
+first(dogs$group)
+
+head(dogs$group, 1)
+```
+This is one of the ways factors are different from strings.
+
+You can make a factor forget levels that aren't present with
+`droplevels()`:
+```{r}
+subset = head(dogs$group, 1)
+droplevels(subset)
+```
+
+You can create a factor with the `factor()` function:
+```{r}
+colors = factor(c("red", "blue", "red", "blue", "blue"))
+
+factor(c(1, 2, 2, 1), levels = c(1, 2, 3))
+```
+
+
+Internally, R represents factors as integer vectors:
+```{r}
+colors
+
+unclass(colors)
+
+# To convert to text:
+as.character(colors)
+```
+Each integer corresponds to one level of the factor.
+
+This representation uses less memory than repeating each level's
+name.
+
+
+
+Exploratory Data Analysis
+=========================
+
+What does it mean to "explore" data?
+
+* Look for patterns (examine variation in the data)
+* Look for errors in the data
+* Look for relationships between variables
+* Look at data to get an overview (what data are present?)
+* Check assumptions (model, conclusions, etc)
+
+What are the techniques to "explore" data?
+
+* Make plots
+* Compute summary statistics
+* Fit models (including hypothesis tests, machine learning)
+
+
+The table below has _suggestions_ for choosing an appropriate plot
+based on the data types.
+
+You also need to think about what you're trying to convey.
+
+First Feature  | Second Feature   | Plot
+-------------- | ---------------- | ----
+categorical    |                  | bar, dot
+categorical    | categorical      | bar, dot, mosaic
+numerical      |                  | box, density, histogram
+numerical      | categorical      | box, density
+numerical      | numerical        | line, scatter, smooth scatter
+
+
+
+Example: How many dogs are there in each group (toy, sporting, etc)?
+
+```{r}
+dogs$group
+
+table(dogs$group)
+
+library(ggplot2)
+
+ggplot(dogs, aes(x = group)) + geom_bar() +
+  labs(x = "Dog Type", y = "Frequencies")
+```
+
+Example: What's the distribution of datadog scores?
+
+```{r}
+dogs$datadog
+
+ggplot(dogs, aes(x = datadog)) + geom_density()
+
+ggplot(dogs, aes(y = datadog)) + geom_boxplot()
+
+ggplot(dogs, aes(y = datadog, x = group)) + geom_boxplot()
+```
+
+Example: How are size and height related?
+
+```{r}
+dogs$height
+
+dogs$size
+
+ggplot(dogs, aes(x = size, y = height)) + geom_boxplot()
+
+ggplot(dogs, aes(x = height, color = size)) + geom_density()
+```
+
+
+Taking Subsets
+==============
+
+We've already seen how to take subsets with dplyr:
+
+* `slice()` to get rows by position or name.
+* `filter()` to get rows that satisfy a condition.
+* `select()` to get columns by position or name.
+
+Now we'll learn R's built-in functions for taking subsets.
+
+Why learn these?
+
+1. R's built-in functions are more general. They work with data
+   frames, lists, vectors, and more.
+
+   The dplyr functions only work with data frames.
+
+
+2. dplyr is popular, but not everyone uses it.
+
+   If you're going to use R packages or collaborate with people, you
+   need to be able to read code written either way.
+
+
+The fundamental built-in operators for taking subsets are:
+
+1.  The "double square bracket" or "extraction" operator `[[`
+
+    + By position or name.
+    + Selects exactly one element.
+    + Drops the container.
+
+2. The "(single) square bracket" or "subset" operator `[`
+
+    + By position, name, or logical values.
+    + Selects any number of elements.
+    + Keeps the container.
+
+
+The examples will clarify what some of these things mean.
+
+
+Methods of Selection
+--------------------
+
+Let's consider a vector first.
+```{r}
+x = c(4, 6, -1, NA, 7)
+```
+We'll see examples of data frames later.
+
+
+Both `[` and `[[` can select elements by position:
+```{r}
+x[1]
+
+x[3]
+
+x[[2]]
+
+x[[4]]
+
+x[c(1, 3, 4, 1)]
+```
+
+Notice that `[[` cannot select more than one element:
+```{r}
+x[[c(1, 3, 4)]]
+```
+
+
+Negative positions mean "everything except":
+```{r}
+x[-1]
+
+x[-c(1, 2)]
+
+x[[-1]]
+```
+
+
+Both `[` and `[[` can select elements by name:
+```{r}
+y = c(hi = 3, bye = 4)
+y
+
+y["hi"]
+
+y[["hi"]]
+
+y[c("hi", "hi")]
+
+y[[c("hi", "hi")]]
+```
+
+
+Only `[` can select elements using a logical vector.
+
+The logical vector should have the same length as the object being
+subsetted.
+
+`TRUE` means keep the element in that position, `FALSE` means drop
+the element in that position:
+```{r}
+x
+
+keep = c(TRUE, TRUE, FALSE, TRUE, FALSE)
+x[keep]
+```
+
+If the length is different, R recycles:
+```{r}
+keep = c(TRUE, FALSE)
+# 4 6 -1 NA 6
+# T F  T F  T
+x[keep]
+```
+
+In R, conditions return logical vectors.
+```{r}
+x > 0
+```
+
+So `[` can select elements based on a condition:
+```{r}
+x[x > 0]
+
+x[x > 0 & x < 6]
+```
+
+A logical vector can contain missing values `NA`.
+
+These are retained in the subset.
+
+
+The `which()` function returns the position of each `TRUE` in a
+logical vector, ignoring `NA`s:
+```{r}
+which(x > 0)
+```
+
+So you can use `which()` to drop `NA`s in a condition:
+```{r}
+x[which(x > 0)]
+```
+Do this as needed, not everywhere.
+
+Calling `which()` makes your code a little bit slower.
+
+
+
+Containers
+----------
+
+In a vector, every element must have the same data type.
+
+```{r}
+c(5, "hello")
+```
+
+That rule does not apply to lists.
+
+```{r}
+ll = list(5, "hello")
+
+class(ll)
+
+ll[1]
+
+ll[[1]]
+```
+
+Lists are like a container for other data types.
+
+`[` keeps the container, but `[[` drops the container:
+```{r}
+class(ll[1])
+
+ll[c(1, 1, 2)]
+
+class(ll[[1]])
+
+ll[[1]]
+
+ll2 = list(1, "hi", 1:3)
+ll2
+
+ll2[[3]]
+
+ll3 = list(a = 1, b = 2)
+
+ll3[["a"]]
+
+ll3["a"]
+
+ll3[c(TRUE, FALSE)]
+```
+
+A visual representation of this idea:
+
+    https://twitter.com/hadleywickham/status/643381054758363136
+
+
+This leads to one oddity with `[`:
+```{r}
+ll[1][1][1][1]
+```
+
+
+For lists, `[[` does recursive subsetting if you pass a vector of
+positions:
+```{r}
+ll2
+
+ll2[[c(3, 2)]]
+
+ll2[[3]]
+
+ll2[[3]][[2]]
+```
+
+Subsetting Data Frames
+----------------------
+
+R thinks of data frames as lists of columns.
+
+So `[` and `[[` get columns:
+```{r}
+iris
+
+class(iris[1])
+
+class(iris[[1]])
+
+iris["Sepal.Length"]
+```
+`[` keeps the data frame, `[[` drops the data frame.
+
+
+Data frames are 2-dimensional.
+
+Both `[` and `[[` can subset each dimension separately. The syntax
+is:
+
+    DATA[ROWS, COLUMNS]
+
+Use a blank to mean "everything" along one dimension.
+
+Examples:
+```{r}
+iris
+
+iris[1, ]
+
+iris[1, 1:3]
+
+iris[ , 2:3]
+
+iris[[1, 1]] # get one element
+
+iris[[1, ]] # no good
+```
+
+Finally, `[` will drop the container if you only select one column:
+```{r}
+iris[ , 2]
+```
+
+You can control this behavior with the `drop` parameter:
+```{r}
+class(iris[ , 2, drop = FALSE])
+
+iris[, 2]
+```
+The default is `drop = TRUE`.
+
+
+One exception!
+
+Data frames with class "tbl" and "tbl_df" are called tibbles, and
+part of a Tidyverse package called tibble.
+
+Notice that the dogs data frame is a tibble:
+```{r}
+class(dogs)
+```
+
+For tibbles, the default is `drop = FALSE`.
+
+This only applies if you load a Tidyverse package:
+
+  * tibble
+  * dplyr
+  * ggplot2
+  * ...
+
+Then using `[` to subset a single value DOES NOT drop the data frame:
+```{r}
+class(dogs[, 1])
+
+class(iris[, 1])
+
+class(dogs[, 1, drop = TRUE])
+```
+
+
+More Ways to Take Subsets
+-------------------------
+
+Two more built-in functions for taking subsets:
+
+1. `$` extracts an element by name in lists. Tries to match partial names.
+2. `subset()` takes subsets of rows in a data frame.
+
+Most useful in interactive programming!
+
+The `$` is similar to `[[`:
+```{r}
+iris$Sepal.L
+
+dogs$grou
+```
+
+Use quotes with `$` when names contain characters that are R
+operators (such as `+`, `-`, `>`, ...):
+```{r}
+ll4 = list("+" = 1, "a" = 2)
+
+ll4$"+"
+```
+
+Unlike `[[`, the `$` will try to match partial names.
+
+The `subset()` function is a shortcut to avoid typing the name of the
+data frame over and over when subsetting rows with a condition.
+
+For example:
+```{r}
+dogs[dogs$group == "toy" & dogs$weight < 20, ]
+```
+
+Equivalent, using `subset()`:
+```{r}
+subset(dogs, group == "toy" & weight < 20)
+```
+With `subset()`, there's no need to use `$`, and the `NA`s are
+eliminated automatically.

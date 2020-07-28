@@ -1,0 +1,225 @@
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R version 3.6.2 (2019-12-12) -- Dark and Stormy Night
+Type 'citation()', 'contributors()', or 'license()' for more information
+
+Libraries:
+* /home/nick/.config/R/library
+* /usr/lib/R/library
+
+> class(5.1)
+[1] "numeric"
+> x = "hello"
+> class(x)
+[1] "character"
+> TRUE + 5
+[1] 6
+> c(6, 8, 1)
+[1] 6 8 1
+> c("hi", "hello")
+[1] "hi"    "hello"
+> c(7, "hi")
+[1] "7"  "hi"
+> class(sin)
+[1] "function"
+> c(5, sin)
+[[1]]
+[1] 5
+
+[[2]]
+function (x)  .Primitive("sin")
+
+> class(c(5, sin))
+[1] "list"
+> list(5, "hi", 6.1)
+[[1]]
+[1] 5
+
+[[2]]
+[1] "hi"
+
+[[3]]
+[1] 6.1
+
+> list(5, 6)
+[[1]]
+[1] 5
+
+[[2]]
+[1] 6
+
+> c(1, 2) + c(3, 4)
+[1] 4 6
+> list(1, 2) + list(3, 4)
+Error in list(1, 2) + list(3, 4) : 
+  non-numeric argument to binary operator
+> list(a = 1, 2)
+$a
+[1] 1
+
+[[2]]
+[1] 2
+
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> getwd()
+[1] "/home/nick"
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> getwd()
+[1] "/home/nick"
+> setwd("/home/nick/university/teach/stat33ab/stat33b")
+The working directory was changed to /home/nick/university/teach/stat33ab/stat33b inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks.> getwd()
+[1] "/home/nick"
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> setwd("/home/nick/university/teach/stat33ab/stat33b")
+The working directory was changed to /home/nick/university/teach/stat33ab/stat33b inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks.> setwd("/home/nick/university/teach/stat33ab/stat33b")
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33b"
+> list.files()
+[1] "data"      "notes.Rmd"
+> setwd("/home/nick/university/teach/stat33ab/stat33a/sandbox")
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> list.files()
+[1] "data"      "notes.Rmd"
+> list.files("data")
+ [1] "airline"           "baywheels"         "census"           
+ [4] "college_scorecard" "craigslist"        "datasaurus"       
+ [7] "dc_bikes"          "digits"            "dogs"             
+[10] "duncan"            "gapminder"         "kickstarter"      
+[13] "mystery"           "simpson"           "stocks.sqlite"    
+[16] "suppliers.sqlite"  "ucd_catalog"       "us_shapes"        
+[19] "volerup.tsv"      
+> list.files("/home")
+[1] "lost+found" "nick"      
+> list.files("/")
+ [1] "bin"        "boot"       "dev"        "etc"        "home"      
+ [6] "lib"        "lib64"      "lost+found" "media"      "mnt"       
+[11] "opt"        "proc"       "root"       "run"        "sbin"      
+[16] "srv"        "swapfile"   "sys"        "tmp"        "usr"       
+[21] "var"       
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> list.files("..") # what's in stat33a
+[1] "docs"     "hw"       "labs"     "lectures" "private"  "quizzes"  "sandbox" 
+> list.files("../..") # what's in stat33ab
+[1] "data"                       "data-transformation.pdf"   
+[3] "data-visualization-2.1.pdf" "deb"                       
+[5] "rmarkdown-2.0.pdf"          "rmarkdown-reference.pdf"   
+[7] "STAT33.zip"                 "stat33a"                   
+[9] "stat33b"                   
+> list.files("../../stat33b")
+[1] "docs"     "hw"       "labs"     "lectures" "private"  "quizzes"  "sandbox" 
+> list.files("~")
+ [1] "archive"             "Documents"           "fa18_141a_evals.pdf"
+ [4] "garden"              "market"              "nltk_data"          
+ [7] "TIMESHEET.csv"       "TODO.md"             "university"         
+[10] "workshop"            "yard"                "Zotero"             
+> readRDS("data/dogs/dogs_full.rd")
+cannot open compressed file 'data/dogs/dogs_full.rd', probable reason 'No such file or directory'Error in gzfile(file, "rb") : cannot open the connection
+> dogs = readRDS("data/dogs/dogs_full.rds")
+> dogs
+> head(dogs)
+> head(dogs, 4)
+> tail(dogs)
+> dim(dogs)
+[1] 172  18
+> ncol(dogs)
+[1] 18
+> nrow(dogs)
+[1] 172
+> names(dogs)
+ [1] "breed"             "group"             "datadog"          
+ [4] "popularity_all"    "popularity"        "lifetime_cost"    
+ [7] "intelligence_rank" "longevity"         "ailments"         
+[10] "price"             "food_cost"         "grooming"         
+[13] "kids"              "megarank_kids"     "megarank"         
+[16] "size"              "weight"            "height"           
+> rownames(dogs)
+  [1] "1"   "2"   "3"   "4"   "5"   "6"   "7"   "8"   "9"   "10"  "11"  "12" 
+ [13] "13"  "14"  "15"  "16"  "17"  "18"  "19"  "20"  "21"  "22"  "23"  "24" 
+ [25] "25"  "26"  "27"  "28"  "29"  "30"  "31"  "32"  "33"  "34"  "35"  "36" 
+ [37] "37"  "38"  "39"  "40"  "41"  "42"  "43"  "44"  "45"  "46"  "47"  "48" 
+ [49] "49"  "50"  "51"  "52"  "53"  "54"  "55"  "56"  "57"  "58"  "59"  "60" 
+ [61] "61"  "62"  "63"  "64"  "65"  "66"  "67"  "68"  "69"  "70"  "71"  "72" 
+ [73] "73"  "74"  "75"  "76"  "77"  "78"  "79"  "80"  "81"  "82"  "83"  "84" 
+ [85] "85"  "86"  "87"  "88"  "89"  "90"  "91"  "92"  "93"  "94"  "95"  "96" 
+ [97] "97"  "98"  "99"  "100" "101" "102" "103" "104" "105" "106" "107" "108"
+[109] "109" "110" "111" "112" "113" "114" "115" "116" "117" "118" "119" "120"
+[121] "121" "122" "123" "124" "125" "126" "127" "128" "129" "130" "131" "132"
+[133] "133" "134" "135" "136" "137" "138" "139" "140" "141" "142" "143" "144"
+[145] "145" "146" "147" "148" "149" "150" "151" "152" "153" "154" "155" "156"
+[157] "157" "158" "159" "160" "161" "162" "163" "164" "165" "166" "167" "168"
+[169] "169" "170" "171" "172"
+> str(dogs)
+Classes 'tbl_df', 'tbl' and 'data.frame':	172 obs. of  18 variables:
+ $ breed            : chr  "Border Collie" "Border Terrier" "Brittany" "Cairn Terrier" ...
+ $ group            : Factor w/ 7 levels "herding","hound",..: 1 5 4 5 4 4 4 6 1 1 ...
+ $ datadog          : num  3.64 3.61 3.54 3.53 3.34 3.33 3.3 3.26 3.25 3.22 ...
+ $ popularity_all   : int  45 80 30 59 130 63 27 38 60 20 ...
+ $ popularity       : int  39 61 30 48 81 51 27 33 49 20 ...
+ $ lifetime_cost    : num  20143 22638 22589 21992 20224 ...
+ $ intelligence_rank: int  1 30 19 35 31 18 20 8 10 6 ...
+ $ longevity        : num  12.5 14 12.9 13.8 12.5 ...
+ $ ailments         : int  2 0 0 2 1 0 2 5 1 5 ...
+ $ price            : num  623 833 618 435 750 800 465 740 530 465 ...
+ $ food_cost        : num  324 324 466 324 324 324 674 324 466 405 ...
+ $ grooming         : Factor w/ 3 levels "daily","weekly",..: 2 2 2 2 2 2 2 2 2 1 ...
+ $ kids             : Factor w/ 3 levels "high","medium",..: 3 1 2 1 1 1 1 2 3 1 ...
+ $ megarank_kids    : int  1 2 3 4 5 6 7 8 9 11 ...
+ $ megarank         : int  29 1 11 2 4 5 6 22 52 8 ...
+ $ size             : Factor w/ 3 levels "large","medium",..: 2 3 2 3 2 2 3 3 2 3 ...
+ $ weight           : num  NA 13.5 35 14 NA 30 25 NA NA 22 ...
+ $ height           : num  20 NA 19 10 18 16 14.5 9.5 18.5 14.5 ...
+> summary(dogs)
+    breed                    group       datadog      popularity_all  
+ Length:172         herding     :25   Min.   :0.990   Min.   :  1.00  
+ Class :character   hound       :26   1st Qu.:2.185   1st Qu.: 43.75  
+ Mode  :character   non-sporting:19   Median :2.710   Median : 87.50  
+                    sporting    :28   Mean   :2.604   Mean   : 87.12  
+                    terrier     :28   3rd Qu.:3.035   3rd Qu.:130.25  
+                    toy         :19   Max.   :3.640   Max.   :173.00  
+                    working     :27   NA's   :85                      
+   popularity   lifetime_cost   intelligence_rank   longevity    
+ Min.   : 1.0   Min.   :12653   Min.   : 1.00     Min.   : 6.29  
+ 1st Qu.:22.5   1st Qu.:17816   1st Qu.:27.00     1st Qu.: 9.70  
+ Median :44.0   Median :20087   Median :42.00     Median :11.29  
+ Mean   :44.0   Mean   :19820   Mean   :40.92     Mean   :10.96  
+ 3rd Qu.:65.5   3rd Qu.:21798   3rd Qu.:54.25     3rd Qu.:12.37  
+ Max.   :87.0   Max.   :26686   Max.   :80.00     Max.   :16.50  
+ NA's   :85     NA's   :81      NA's   :40        NA's   :37     
+    ailments         price          food_cost         grooming      kids   
+ Min.   :0.000   Min.   : 283.0   Min.   : 270.0   daily  :23   high  :67  
+ 1st Qu.:0.000   1st Qu.: 587.2   1st Qu.: 324.0   weekly :88   medium:35  
+ Median :1.000   Median : 795.0   Median : 466.0   monthly: 1   low   :10  
+ Mean   :1.216   Mean   : 876.8   Mean   : 489.6   NA's   :60   NA's  :60  
+ 3rd Qu.:2.000   3rd Qu.:1042.2   3rd Qu.: 466.0                           
+ Max.   :9.000   Max.   :3460.0   Max.   :1349.0                           
+ NA's   :24      NA's   :26       NA's   :85                               
+ megarank_kids      megarank         size        weight           height     
+ Min.   : 1.00   Min.   : 1.00   large :54   Min.   :  5.00   Min.   : 5.00  
+ 1st Qu.:22.50   1st Qu.:22.50   medium:60   1st Qu.: 17.50   1st Qu.:14.00  
+ Median :44.00   Median :44.00   small :58   Median : 35.00   Median :19.00  
+ Mean   :43.95   Mean   :43.94               Mean   : 44.97   Mean   :19.09  
+ 3rd Qu.:65.50   3rd Qu.:65.50               3rd Qu.: 62.50   3rd Qu.:24.12  
+ Max.   :87.00   Max.   :87.00               Max.   :175.00   Max.   :32.00  
+ NA's   :85      NA's   :85                  NA's   :86       NA's   :13     
+>

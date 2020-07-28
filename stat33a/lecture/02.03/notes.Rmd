@@ -1,0 +1,329 @@
+---
+title: "Stat 33A - Lecture 2"
+date: February 3, 2020
+output: pdf_document
+---
+
+## Announcements
+
+First homework assignment posted to the bCourse.
+
+
+## Using Functions, Part 3
+
+Last time we saw how to call a function and set the arguments.
+```{r}
+sum(1, 2, 3)
+```
+```{r}
+x = 1
+```
+
+
+Each argument gets assigned to a _parameter_, which is like a variable inside
+of the function.
+
+Parameters are listed in each function's help file:
+```{r}
+?log
+```
+
+You can set arguments based on the order of the parameters:
+```{r}
+log(10, 2) # log of 10, base 2
+```
+
+Or by using the names of the parameters:
+```{r}
+log(x = 10, base = 2)
+```
+```{r}
+log(base = 2, 10)
+```
+```{r}
+log(bas = 2, x = 10)
+```
+
+
+## Data Types & Classes
+
+In statistics, we categorize data into different types:
+
+* Continuous (real numbers)
+* Discrete (integers, or finite number of values)
+* Logical (1 and 0s, T and Fs)
+* Nominal (categorical values with no ordering)
+* Ordinal (categorical values with ordering)
+* Graph (network data)
+* Textual (books, websites, etc)
+
+
+In R, we categorize values into different classes.
+
+Every value has at least one class.
+
+Class answers the question "How does this thing behave?"
+
+Check class with `class()`:
+
+```{r}
+class(5)
+```
+```{r}
+class("hi")
+```
+```{r}
+class(TRUE)
+```
+```{r}
+class(cos)
+```
+```{r}
+x = 1
+class(x)
+```
+
+
+
+R also has something called _types_. Not as important as classes for day-to-day
+programming.
+
+
+## Special Values
+
+R has four special values.
+
+`NA` represents a missing or unknown value in a data set.
+```{r}
+NA
+```
+```{r}
+class(NA)
+```
+
+
+The missing value `NA` is contagious!
+```{r}
+5 + NA
+```
+
+
+Using a unknown argument in a computation usually produces an unknown result.
+
+
+`NULL` represents a value that's not defined _in R_. Functions often use `NULL` to mean the absence of a result.
+```{r}
+dim(5)
+```
+```{r}
+class(NULL)
+```
+
+For instance, if we try to get the matrix dimensions of a vector:
+```{r}
+
+```
+
+`NaN`, or "not a number", represents a value that's not defined mathematically.
+Produced by some computations:
+
+```{r}
+0 / 0
+```
+```{r}
+class(NaN)
+```
+
+
+`Inf` represents infinity. Produced by some computations:
+
+```{r}
+- 5 / 0
+```
+```{r}
+class(Inf)
+```
+
+
+## Comparison Operators
+
+We saw operators for doing arithmetic: `+`, `-`, `*`, `/`, `^`
+
+R also has operators for making comparisons.
+
+Use `==` to check equality:
+
+```{r}
+1 == 2
+```
+
+
+```{r}
+NA == 1
+```
+
+If you want to check equality to `NA`, use `is.na()` instead:
+```{r}
+is.na(NA)
+```
+
+There are `is.` functions for the other special values, too.
+```{r}
+is.infinite(Inf)
+```
+
+
+
+Check inequality with `<`, `<=`, `>`, and `>=`. For instance:
+```{r}
+4 <= 5
+```
+
+
+## Vectors
+
+A vector is an ordered collection of values.
+
+In R, all of the values in a vector must be the same data type.
+
+Several ways to create a vector. One is the `c()` function, which __c__ombines
+values:
+```{r}
+c(1, 2, 3)
+```
+
+
+```{r}
+c("hi", "hello", '33A')
+```
+
+Check length with `length()`:
+```{r}
+length(c(1, 2, 3))
+```
+```{r}
+length(6)
+```
+```{r}
+class(c(1, 2, 3))
+```
+
+
+```{r}
+x = c(1, 7, 9, 8)
+```
+
+
+Another way is to create a sequence with `:` or `seq()`:
+```{r}
+1:5
+```
+More ways are described in this week's reading.
+```{r}
+7:20
+```
+```{r}
+?seq
+seq(1, 5, 0.5)
+```
+
+
+R does not make any distinction between scalars and vectors.
+
+A scalar is just a vector with one element.
+```{r}
+
+```
+
+You can name elements of a vector:
+```{r}
+
+# Can use quotes to use numbers as names, but not recommended
+x = c("dogs" = 3, "2" = 4)
+```
+```{r}
+x = c(dogs2 = 3, cats2 = 4)
+```
+
+```{r}
+names(x)
+```
+To set set names, use:
+```{r}
+names(x) = c("a", "b")
+```
+
+
+```{r}
+names(x)
+```
+
+
+Many operations are _vectorized_, which means they are computed
+element-by-element. For instance:
+```{r}
+c(1, 2, 3) + c(4, 5, 6)
+```
+```{r}
+sin(c(1, 2, 3))
+```
+```{r}
+c(1, 2) == c(3, 2)
+```
+```{r}
+c(1, 2) + c(3, 4, 5)
+```
+```{r}
+c(1, 2, 3) + 1
+```
+
+
+
+What happens if we pass several different data types to `c()`?
+```{r}
+class(c(7, "hi", TRUE))
+```
+
+## Implicit Coercion
+
+R can automatically convert between ("coerce") types in one direction:
+
+    logical -> integer -> numeric -> complex -> character
+
+```{r}
+class(1 + 4i)
+```
+```{r}
+1 + 0i
+```
+
+
+For instance:
+```{r}
+5 + TRUE
+```
+
+So if we pass different types to `c()`, R will attempt coercion:
+```{r}
+c(TRUE, 2.0)
+```
+```{r}
+class(c(1, sin))
+```
+
+
+There are data types R will never implicitly coerce:
+```{r}
+class(sin)
+```
+
+
+## Lists
+
+In a vector, every element has to have the same type.
+
+A list is a container for elements with *different* types.
+
+```{r}
+list(1, sin, "hi")
+```

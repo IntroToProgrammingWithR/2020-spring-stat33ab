@@ -1,0 +1,91 @@
+---
+title: "Stat 33A - Lecture 10"
+date: April 20, 2020
+output: pdf_document
+---
+
+Loops
+=====
+
+
+For-loops
+---------
+
+A for-loop iterates over a vector or list:
+```{r}
+
+```
+
+Use `next` to immediately skip to the next iteration:
+```{r}
+
+```
+
+Use `break` to immediately exit the loop:
+```{r}
+
+```
+
+
+Preallocation
+-------------
+
+These functions allocate vectors:
+
+* `character()`
+* `complex()`
+* `numeric()`
+* `logical()`
+* `vector()`
+* `rep()`
+
+```{r}
+
+```
+
+Preallocate!
+
+If you know how many results a loop will produce, allocate the result
+vector BEFORE the loop:
+```{r}
+
+```
+
+
+Use `seq_along(x)` instead of `1:length(x)`:
+```{r}
+
+```
+
+
+
+While-loops
+-----------
+
+A while-loop iterates while some condition is `TRUE`:
+```{r}
+
+```
+
+The `next` and `break` commands also apply to while-loops.
+
+
+
+Recursion
+=========
+
+A recursive function is one that calls itself:
+```{r}
+
+```
+
+Also see `?Recall`.
+
+
+
+Additional Examples
+===================
+
+```{r}
+
+```

@@ -1,0 +1,229 @@
+---
+title: "Stat 33A - Lecture 7"
+date: March 30, 2020
+output: pdf_document
+---
+
+
+Reshaping Data
+==============
+
+We'll use the tidyr package:
+```{r}
+# You may need to install the package first:
+# install.packages("tidyr")
+
+# Load the package:
+library(tidyr)
+```
+
+Most Tidyverse functions requre data in "tidy" form.
+
+The tidyr package provides an example of tidy data:
+```{r}
+table1
+```
+
+Three properties of tidy data:
+
+1. Each observation must have its own row.
+2. Each feature must have its own column.
+3. Each value must have its own cell.
+
+Convenient for data analysis in general.
+
+
+An example of untidy data:
+```{r}
+table2
+```
+```{r}
+table4a
+```
+
+The tidyr package provides functions to "reshape" data into tidy
+data.
+
+Usually this means rotating rows into columns, or columns into rows.
+
+Before you reshape, determine:
+
+* Identifiers: values that identify the subject of observation.
+
+* Measurements: values that were measured for the subject of
+  observation.
+
+For example:
+```{r}
+table1
+```
+
+The `country` and `year` columns identify the observation.
+
+The `cases` and `population` columns are measurements.
+
+
+
+Rotating Rows into Columns
+--------------------------
+
+When to rotate rows into columns?
+
+Measurements for one observation are split across several rows.
+
+We saw this earlier:
+```{r}
+table2
+```
+
+To make this data tidy:
+
+* Rotate the `count` row values into columns, by `type`.
+* New columns are `cases` and `population`.
+
+Tidying this data set makes it wider.
+
+
+Use `pivot_wider()` to rotate rows into columns:
+```{r}
+pivot_wider(table2, names_from = "type", values_from = "count")
+```
+
+Need to specify:
+
+* Column names to rotate as `names_from`.
+* Measurements to rotate as `values_from`.
+
+
+Rotating Columns into Rows
+--------------------------
+
+When to rotate columns into rows?
+
+Each row contains measurements for multiple observations.
+
+In this table, each row contains the measurements for two
+observations of the `cases` variable:
+```{r}
+table4a
+```
+
+To make this data tidy:
+
+* Rotate the `1999` and `2000` columns into rows.
+* New columns are `year` and `cases`.
+
+Tidying this data set makes it longer.
+
+
+Use `pivot_longer()` to rotate columns into rows:
+```{r}
+pivot_longer(table4a, -country, names_to = "year", values_to = "cases")
+```
+
+Need to specify:
+
+* Columns to rotate as `cols`.
+* Name(s) of new identifier column(s) as `names_to`.
+* Name(s) of new measuerment column(s) as `values_to`.
+
+
+See `vignette("pivot")` for more examples of using `tidyr`.
+
+
+Relational Data
+===============
+
+Data split across multiple tables are called _relational data_.
+
+A column shared by several tables is called a _key_.
+
+For example, a grocery store's inventory system might have:
+
+* A table that lists stores
+* A table that lists items (fruits, vegetables, etc)
+* A table that lists quantity of each item at each store
+
+The data set:
+```{r}
+stores = readRDS("data/grocery/stores.rds")
+stores
+
+items = readRDS("data/grocery/items.rds")
+items
+
+inv = readRDS("data/grocery/inventory.rds")
+inv
+```
+
+A "join" combines two separate tables by based on a common key.
+
+For each row in the first table, the key is compared against the rows
+in the second table.
+
+If the key matches, the rows are combined into a new row.
+
+Note that a join can duplicate rows!
+
+
+
+Joins with dplyr
+----------------
+
+The dplyr package provides several join functions.
+
+The `inner_join()` function only keeps rows where the key matched:
+```{r}
+library(dplyr)
+
+inner_join(items, inv)
+
+inner_join(items, inv, by = "ItemID")
+```
+
+Use the `by` parameter to specify the key:
+```{r}
+inner_join(stores, inv, by = c("store_id" = "StoreID"))
+```
+
+
+The `full_join()` function keeps all rows, regardless of whether the
+key matched.
+
+As a result, some rows will contain missing values:
+```{r}
+full_join(stores, inv, by = c("store_id" = "StoreID"))
+```
+
+The `left_join()` function keeps all rows in the "left" or first
+table.
+
+Rows in the right table are only kept if they match:
+```{r}
+left_join(stores, inv, by = c("store_id" = "StoreID"))
+
+left_join(inv, stores, by = c("StoreID" = "store_id")) # like a right join
+```
+
+Conversely, the `right_join()` function keeps all rows in the "right"
+or second table.
+
+```{r}
+right_join(stores, inv, by = c("store_id" = "StoreID"))
+```
+
+So the four kinds of joins are:
+
+* Inner: keep matches
+* Full: keep everything
+* Left: keep all left, keep matching right
+* Right: keep matching left, keep all right
+
+Joins are not just used in R!
+
+Especially important to understand for working with databases and
+SQL.
+
+
+The dplyr package also provides other kinds of joins that are not as
+common outside of R. See the docs for details.

@@ -1,0 +1,184 @@
+---
+title: "Stat 33A - Lecture 9"
+date: April 13, 2020
+output: pdf_document
+---
+
+
+Review: Vectorization
+=====================
+
+A "vectorized" function is one that automatically applies an
+operation to each element of a vector.
+
+We saw this earlier with arithmetic:
+```{r}
+
+```
+
+Important takeaway: vectorized functions provide a way to do the same
+operation repeatedly.
+
+
+
+Apply Functions
+===============
+
+Doing the same operation repeatedly is a common pattern in
+programming.
+
+Vectorization is one way, but not all functions are vectorized.
+
+In R, the "apply functions" are another way to do something
+repeatedly.
+
+The apply functions call a function on each element of a vector or
+list.
+
+
+The `lapply()` Function
+---------------------
+
+The first and most important apply function is `lapply()`. The syntax
+is:
+```
+lapply(X, FUN, ...)
+```
+The function `FUN` is called once for each element of `X`, with the
+element as the first argument. The `...` is for additional arguments
+to `FUN`, which are held constant across all calls.
+
+
+Examples:
+```{r}
+
+```
+
+`lapply()` always returns the result as a list.
+
+"l" for **list** result.
+
+
+
+The `sapply()` Function
+---------------------
+
+`sapply()` simplifies the result to a vector, when possible.
+
+"s" for **simplified** result.
+
+Examples:
+```{r}
+
+```
+
+The `sapply()` function is useful if you are working interactively.
+
+
+The `vapply()` Function
+---------------------
+
+`vapply()` simplifies the result to a vector of a specific data type.
+
+"v" for **vector** result.
+
+
+Examples:
+```{r}
+
+```
+
+The `vapply()` function is more robust than `sapply()` because the
+return type is guaranteed. Use `vapply()` when you write functions or
+other non-interactive code.
+
+
+The Split-Apply Pattern
+-----------------------
+
+The `split()` function splits a vector or data frame into groups
+based on some other vector.
+
+Split weight of dogs by the group column:
+```{r}
+
+```
+
+The `split()` function is especially useful when combined with
+`lapply()` or `sapply`().
+
+```{r}
+
+```
+This is an R idiom!
+
+
+The `tapply()` function is equivalent to the `split()` and `sapply()`
+idiom.
+
+"t" for **table**, because `tapply()` is a generalization of the
+frequency-counting function `table()`.
+
+
+Examples:
+```{r}
+
+```
+
+The split-apply pattern is the base R equivalent to dplyr's
+`group_by()` and `aggregate()` functions.
+
+Like joins, this technique is important for analyzing tabular data
+regardless of what programming language or packages you're using.
+
+
+Choosing An Apply Function
+--------------------------
+
+1. Is the function you want to apply vectorized?
+
+   If yes, use vectorization.
+
+   Otherwise, continue to #2.
+
+
+2. Do you want to apply the function to elements or to groups?
+
+   For elements, continue to #3.
+
+   For groups, use the split-apply pattern. Use `split()`, then
+   continue to #3 to choose an apply function.
+
+   Note `tapply()` is equivalent to `split()` and `sapply()`.
+
+
+3. Will the function return the same data type for each element?
+
+   If yes, continue to #4.
+
+   Otherwise, use `lapply()`.
+
+
+4. Are you working interactively?
+
+   If yes, use `sapply()`.
+
+   Otherwise, use `vapply()`.
+
+
+Other Apply Functions
+---------------------
+
+* `apply()` applies a function to rows, columns, or elements of a
+  matrix, and returns a matrix.
+* `eapply()` applies a function to the elements of an environment.
+* `mapply()` applies a function to each element of multiple vectors
+  or lists.
+* `rapply()` applies a function to all elements of a recursive list
+  (a list of lists).
+
+See this StackOverflow Post for a good summary:
+
+    https://stackoverflow.com/a/7141669
+
+

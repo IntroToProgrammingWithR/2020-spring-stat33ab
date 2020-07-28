@@ -1,0 +1,273 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R version 3.6.2 (2019-12-12) -- Dark and Stormy Night
+Type 'citation()', 'contributors()', or 'license()' for more information
+
+Libraries:
+* /home/nick/.config/R/library
+* /usr/lib/R/library
+
+> x = c(1, 7, 9)
+> y = c(2, 7, 9)
+> x == y
+[1] FALSE  TRUE  TRUE
+> x = c(1, 2, 3, 4)
+> y = c(1, 2)
+> x = c(1, 2, 1, 4)
+> y = c(1, 2)
+> x == y
+[1]  TRUE  TRUE  TRUE FALSE
+> x = c(1, 2, 1, 4)
+> y = c(2, 1)
+> x = c(1, 2, 1, 4)
+> y = c(2, 1)
+> x %in% y
+[1]  TRUE  TRUE  TRUE FALSE
+> x == y
+[1] FALSE FALSE FALSE FALSE
+> square = function(x) x^2
+> square(4)
+[1] 16
+> square = function(x) x^2 + 10
+> square(4)
+[1] 26
+> square(c(10, 3))
+[1] 110  19
+> square = function(x) x^2 #+ 10
+> square(4)
+[1] 16
+> square(c(10, 3))
+[1] 100   9
+> is_negative = function(x)
+.    x < 0
+> is_negative(-1)
+[1] TRUE
+> is_negative(12)
+[1] FALSE
+> line_axb = function(x, a, b) {
+.    a * x + b
+. }
+> line_axb = function(x, a, b) {
+.    result = a * x + b
+.    sqrt(result)
+. }
+> line_axb(0, 100, 4)
+[1] 2
+> line_axb(1, 100, 44)
+[1] 12
+> f = function() {
+.    x = sqrt(4 + 6)
+.    return(x)
+.    x + 10
+. }
+> f()
+[1] 3.162278
+> sqrt(10)
+[1] 3.162278
+> f = function(x, y) {
+.    c(x + y, x * y)
+. }
+> f(5, 6)
+[1] 11 30
+> mean(c(1, 2, 3, NA), na.rm = TRUE)
+[1] 2
+> tolerance_mean = function(x, tol) {
+.    mean(x[x > tol])
+. }
+> tolerance_mean(c(1, 2, 0.01), tol = 0.1)
+[1] 1.5
+> tolerance_mean(c(1, 2, 0.01), 0.1)
+[1] 1.5
+> tolerance_mean(tol = 0.1, x = c(1, 2, 0.01))
+[1] 1.5
+> tolerance_mean = function(x, tol = 0.01) {
+.    mean(x[x > tol])
+. }
+> tolerance_mean(c(1, 2, 0.015))
+[1] 1.005
+> tolerance_mean = function(x, tol = 0.1) {
+.    mean(x[x > tol])
+. }
+> tolerance_mean(c(1, 2, 0.015))
+[1] 1.5
+> tolerance_mean(c(1, 2, 0.015), tol = 0.01)
+[1] 1.005
+> x = 13
+> f = function() {
+.    z = 4
+. }
+> z
+Error: object 'z' not found
+> f = function() {
+.    z = 4
+. }
+> f()
+> z
+Error: object 'z' not found
+> f = function() {
+.    z = z + 1
+. }
+> f()
+Error in f() : object 'z' not found
+> f = function() {
+.    message(z)
+.    z = 4
+. }
+> f()
+Error in message(z) : object 'z' not found
+> x = 20
+> f = function() {
+.    x
+. }
+> f()
+[1] 20
+> x = 20
+> g = function() {
+.    x = 4
+.    x
+. }
+> g()
+[1] 4
+> x
+[1] 20
+> h = function(x) {
+.    mean = 0
+.    mean(x)
+. }
+> h(1:3)
+[1] 2
+> f = function() z
+> z
+Error: object 'z' not found
+> z = 4
+> f()
+[1] 4
+> z = 5
+> f()
+[1] 5
+> x > 5
+[1] TRUE
+> if (x > 5) {
+.    message("Hello")
+. } else {
+.    message("Goodbye")
+. }
+Hello
+> x = 2
+> if (x > 5) {
+.    message("Hello")
+. } else {
+.    message("Goodbye")
+. }
+Goodbye
+> x = 5
+> if (x > 5) {
+.    message("Hello")
+. } else if (x == 5) {
+.    message("x is 5")
+. } else {
+.    message("Goodbye")
+. }
+x is 5
+> if (x > 5) {
+.    message("Hello")
+. }
+> if (x > 5)
+.    message("Hello")
+> if (x > 5)
+.    message("Hello")
+> else
+Error: unexpected 'else' in "else"
+>    message("Goodbye")
+Goodbye
+> if (x > 5) message("Hello") else message("Goodbye")
+Goodbye
+> if (x == 5) 3 else x
+[1] 3
+> x
+[1] 5
+> x = 10
+> if (x == 5) 3 else x
+[1] 10
+> y = if (x == 5) 3 else x
+> y
+[1] 10
+> x = c(1, 2, 3)
+> if (x > 2) {
+.    message("Hello")
+. } else {
+.    message("Goodbye")
+. }
+the condition has length > 1 and only the first element will be usedGoodbye
+> x
+[1] 1 2 3
+> x > 2
+[1] FALSE FALSE  TRUE
+> x = c(-1, -3, 10, 4, -2)
+> x < 0
+[1]  TRUE  TRUE FALSE FALSE  TRUE
+> is_neg = x < 0
+> is_neg
+[1]  TRUE  TRUE FALSE FALSE  TRUE
+> x
+[1] -1 -3 10  4 -2
+> x[is_neg]
+[1] -1 -3 -2
+> x[is_neg] = 0
+> x
+[1]  0  0 10  4  0
+> is_neg
+[1]  TRUE  TRUE FALSE FALSE  TRUE
+> x[!is_neg]^2
+[1] 100  16
+> x[!is_neg] = x[!is_neg]^2
+> x
+[1]   0   0 100  16   0
+> colors = c("red", "blue", "green", "blue")
+> y = c(1, 2, 3, 4)
+> y[colors == "red"]
+[1] 1
+> y[colors == "red"] = y[colors == "red"]^2
+> y[colors == "blue"] = sqrt(y[colors == "blue"])
+> y[colors == "green"] = y[colors == "greeen"] + 1
+Error in y[colors == "green"] = y[colors == "greeen"] + 1 : 
+  replacement has length zero
+> y = c(1, 2, 3, 4)
+> colors = c("red", "blue", "green", "blue")
+> y[colors == "red"] = y[colors == "red"]^2
+> y[colors == "blue"] = sqrt(y[colors == "blue"])
+> y[colors == "green"] = y[colors == "greeen"] + 1
+Error in y[colors == "green"] = y[colors == "greeen"] + 1 : 
+  replacement has length zero
+> colors
+[1] "red"   "blue"  "green" "blue" 
+> y[colors == "green"]
+[1] 3
+> y = c(1, 2, 3, 4)
+> colors = c("red", "blue", "green", "blue")
+> y[colors == "red"] = y[colors == "red"]^2
+> y[colors == "blue"] = sqrt(y[colors == "blue"])
+> y[colors == "green"] = y[colors == "green"] + 1
+> y
+[1] 1.000000 1.414214 4.000000 2.000000
+> x = c(-1, -2, 3, 4)
+> ifelse(x < 0, x^2, x)
+[1] 1 4 3 4
+>

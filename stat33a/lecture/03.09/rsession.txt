@@ -1,0 +1,267 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R version 3.6.2 (2019-12-12) -- Dark and Stormy Night
+Type 'citation()', 'contributors()', or 'license()' for more information
+
+Libraries:
+* /home/nick/.config/R/library
+* /usr/lib/R/library
+
+> dogs = readRDS("data/dogs/dogs_full.rds")
+> library(ggplot2)
+Registered S3 method overwritten by 'dplyr':
+  method           from
+  print.rowwise_df     
+> ggplot(dogs)
+> ggplot(dogs) + geom_point()
+Error: geom_point requires the following missing aesthetics: x, y
+> ggplot(dogs, aes(x = datadog, y = popularity_all)) + geom_point()
+> ggplot(dogs, aes(datadog, popularity_all)) + geom_point()
+> ggplot(dogs) + geom_point(aes(datadog, popularity_all))
+> ggsave("myplot.png")
+Saving 7 x 7 in image
+> setwd()
+Error in setwd() : argument "dir" is missing, with no default
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> ggsave("myplot.jpeg")
+Saving 7 x 7 in image
+> ggplot(dogs, aes(datadog, popularity_all)) + geom_point() +
+.     geom_text()
+Error: geom_text requires the following missing aesthetics: label
+> head(dogs)
+# A tibble: 6 x 18
+  breed group datadog popularity_all popularity lifetime_cost intelligence_ra…
+  <chr> <fct>   <dbl>          <int>      <int>         <dbl>            <int>
+1 Bord… herd…    3.64             45         39         20143                1
+2 Bord… terr…    3.61             80         61         22638               30
+3 Brit… spor…    3.54             30         30         22589               19
+4 Cair… terr…    3.53             59         48         21992               35
+5 Wels… spor…    3.34            130         81         20224               31
+6 Engl… spor…    3.33             63         51         18993               18
+# … with 11 more variables: longevity <dbl>, ailments <int>, price <dbl>,
+#   food_cost <dbl>, grooming <fct>, kids <fct>, megarank_kids <int>,
+#   megarank <int>, size <fct>, weight <dbl>, height <dbl>
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text()
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 1)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 5)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 1.25)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 2)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 3)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 3, vjust = 1, hjust = 0)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 3, vjust = 0, hjust = 1)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = 0.05)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point() +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point(color = "blue") +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed, color = group)) +
+.     geom_point() +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point(aes(color = group)) +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05)
+> ggplot(dogs, aes(datadog, popularity_all)) +
+.     geom_point(aes(color = group))
+> ggplot(dogs, aes(datadog, popularity_all)) +
+.     geom_point(color = "blue")
+> ggplot(dogs, aes(datadog, popularity_all)) +
+.     geom_point(aes(color = "blue"))
+> dogs
+# A tibble: 172 x 18
+   breed group datadog popularity_all popularity lifetime_cost intelligence_ra…
+   <chr> <fct>   <dbl>          <int>      <int>         <dbl>            <int>
+ 1 Bord… herd…    3.64             45         39         20143                1
+ 2 Bord… terr…    3.61             80         61         22638               30
+ 3 Brit… spor…    3.54             30         30         22589               19
+ 4 Cair… terr…    3.53             59         48         21992               35
+ 5 Wels… spor…    3.34            130         81         20224               31
+ 6 Engl… spor…    3.33             63         51         18993               18
+ 7 Cock… spor…    3.3              27         27         24330               20
+ 8 Papi… toy      3.26             38         33         21001                8
+ 9 Aust… herd…    3.25             60         49         20395               10
+10 Shet… herd…    3.22             20         20         21006                6
+# … with 162 more rows, and 11 more variables: longevity <dbl>, ailments <int>,
+#   price <dbl>, food_cost <dbl>, grooming <fct>, kids <fct>,
+#   megarank_kids <int>, megarank <int>, size <fct>, weight <dbl>, height <dbl>
+> dogs$datadog
+  [1] 3.64 3.61 3.54 3.53 3.34 3.33 3.30 3.26 3.25 3.22 3.22 3.21 3.20 3.19 3.19
+ [16] 3.15 3.11 3.11 3.09 3.08 3.07 3.04 3.03 3.03 3.03 3.02 2.97 2.93 2.93 2.93
+ [31] 2.91 2.85 2.84 2.81 2.80 2.80 2.80 2.79 2.78 2.75 2.73 2.72 2.72 2.71 2.71
+ [46] 2.70 2.61 2.59 2.59 2.57 2.57 2.57 2.54 2.51 2.49 2.48 2.47 2.45 2.44 2.42
+ [61] 2.41 2.38 2.29 2.27 2.24 2.13 2.08 2.07 2.06 2.05 2.04 1.95 1.91 1.90 1.89
+ [76] 1.85 1.85 1.83 1.82 1.76 1.66 1.66 1.64 1.57 1.53 1.42 0.99   NA   NA   NA
+ [91]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[106]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[121]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[136]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[151]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[166]   NA   NA   NA   NA   NA   NA   NA
+> c(1, 2) + 1
+[1] 2 3
+> dogs$color = "blue"
+> dogs$color
+  [1] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [11] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [21] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [31] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [41] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [51] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [61] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [71] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [81] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+ [91] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+[101] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+[111] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+[121] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+[131] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+[141] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+[151] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+[161] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue"
+[171] "blue" "blue"
+> ggplot(dogs, aes(datadog, popularity_all)) +
+.     geom_point(aes(color = group), size = 10)
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point(aes(color = group)) +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05) +
+.     scale_y_reverse()
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point(aes(color = group)) +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05) +
+.     scale_y_reverse() +
+.     labs(x = "Datadog", y = "AKC Popularity Rank")
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point(aes(color = group)) +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05) +
+.     scale_y_reverse() +
+.     labs(x = "Datadog", y = "AKC Popularity Rank",
+.          title = "Best In Show")
+> ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+.     geom_point(aes(color = group)) +
+.     geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05) +
+.     scale_y_reverse() +
+.     labs(x = "Datadog", y = "AKC Popularity Rank",
+.          title = "Best In Show", color = "Dog Type")
+> str(dogs)
+Classes 'tbl_df', 'tbl' and 'data.frame':	172 obs. of  19 variables:
+ $ breed            : chr  "Border Collie" "Border Terrier" "Brittany" "Cairn Terrier" ...
+ $ group            : Factor w/ 7 levels "herding","hound",..: 1 5 4 5 4 4 4 6 1 1 ...
+ $ datadog          : num  3.64 3.61 3.54 3.53 3.34 3.33 3.3 3.26 3.25 3.22 ...
+ $ popularity_all   : int  45 80 30 59 130 63 27 38 60 20 ...
+ $ popularity       : int  39 61 30 48 81 51 27 33 49 20 ...
+ $ lifetime_cost    : num  20143 22638 22589 21992 20224 ...
+ $ intelligence_rank: int  1 30 19 35 31 18 20 8 10 6 ...
+ $ longevity        : num  12.5 14 12.9 13.8 12.5 ...
+ $ ailments         : int  2 0 0 2 1 0 2 5 1 5 ...
+ $ price            : num  623 833 618 435 750 800 465 740 530 465 ...
+ $ food_cost        : num  324 324 466 324 324 324 674 324 466 405 ...
+ $ grooming         : Factor w/ 3 levels "daily","weekly",..: 2 2 2 2 2 2 2 2 2 1 ...
+ $ kids             : Factor w/ 3 levels "high","medium",..: 3 1 2 1 1 1 1 2 3 1 ...
+ $ megarank_kids    : int  1 2 3 4 5 6 7 8 9 11 ...
+ $ megarank         : int  29 1 11 2 4 5 6 22 52 8 ...
+ $ size             : Factor w/ 3 levels "large","medium",..: 2 3 2 3 2 2 3 3 2 3 ...
+ $ weight           : num  NA 13.5 35 14 NA 30 25 NA NA 22 ...
+ $ height           : num  20 NA 19 10 18 16 14.5 9.5 18.5 14.5 ...
+ $ color            : chr  "blue" "blue" "blue" "blue" ...
+> class(dogs$group)
+[1] "factor"
+> dogs$group
+  [1] herding      terrier      sporting     terrier      sporting    
+  [6] sporting     sporting     toy          herding      herding     
+ [11] working      non-sporting toy          hound        terrier     
+ [16] toy          terrier      hound        sporting     terrier     
+ [21] terrier      non-sporting non-sporting sporting     sporting    
+ [26] non-sporting sporting     toy          toy          toy         
+ [31] herding      toy          sporting     hound        toy         
+ [36] sporting     working      hound        sporting     non-sporting
+ [41] sporting     sporting     toy          herding      terrier     
+ [46] sporting     non-sporting working      toy          herding     
+ [51] toy          non-sporting hound        hound        toy         
+ [56] terrier      herding      herding      sporting     terrier     
+ [61] hound        working      hound        terrier      working     
+ [66] terrier      hound        working      herding      toy         
+ [71] herding      working      hound        non-sporting hound       
+ [76] working      terrier      working      working      non-sporting
+ [81] hound        hound        working      working      working     
+ [86] working      non-sporting terrier      hound        non-sporting
+ [91] hound        terrier      sporting     working      herding     
+ [96] herding      herding      herding      hound        working     
+[101] hound        sporting     herding      working      herding     
+[106] terrier      toy          non-sporting herding      sporting    
+[111] hound        herding      sporting     herding      non-sporting
+[116] working      sporting     terrier      working      working     
+[121] hound        toy          hound        herding      sporting    
+[126] terrier      sporting     toy          non-sporting working     
+[131] working      terrier      working      non-sporting terrier     
+[136] terrier      toy          working      herding      hound       
+[141] non-sporting terrier      sporting     hound        terrier     
+[146] hound        hound        herding      working      herding     
+[151] herding      hound        non-sporting hound        terrier     
+[156] non-sporting toy          terrier      terrier      terrier     
+[161] sporting     working      sporting     herding      working     
+[166] toy          sporting     sporting     terrier      terrier     
+[171] sporting     non-sporting
+Levels: herding hound non-sporting sporting terrier toy working
+> levels(dogs$group)
+[1] "herding"      "hound"        "non-sporting" "sporting"    
+[5] "terrier"      "toy"          "working"     
+> library(dplyr)
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+> first(dogs$group)
+[1] herding
+Levels: herding hound non-sporting sporting terrier toy working
+> head(dogs$group, 1)
+[1] herding
+Levels: herding hound non-sporting sporting terrier toy working
+> subset = head(dogs$group, 1)
+> droplevels(subset)
+[1] herding
+Levels: herding
+> 

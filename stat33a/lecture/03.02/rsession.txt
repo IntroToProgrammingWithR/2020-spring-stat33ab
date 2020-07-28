@@ -1,0 +1,839 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R version 3.6.2 (2019-12-12) -- Dark and Stormy Night
+Type 'citation()', 'contributors()', or 'license()' for more information
+
+Libraries:
+* /home/nick/.config/R/library
+* /usr/lib/R/library
+
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> setwd("..")
+The working directory was changed to /home/nick/university/teach/stat33ab/stat33a inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks.> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> 
+> setwd("..")
+The working directory was changed to /home/nick/university/teach/stat33ab/stat33a inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks.> 
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a"
+> getwd()
+[1] "/home/nick/university/teach/stat33ab/stat33a/sandbox"
+> ?install.packges
+No documentation for 'install.packges' in specified packages and libraries:
+you could try '??install.packges'
+> ?install.packages
+> installed.packages()
+                 Package            LibPath                       
+CodeAnalysis     "CodeAnalysis"     "/home/nick/.config/R/library"
+lcap.sec2        "lcap.sec2"        "/home/nick/.config/R/library"
+Rcompression     "Rcompression"     "/home/nick/.config/R/library"
+RLLVMCompile     "RLLVMCompile"     "/home/nick/.config/R/library"
+RSQLiteUDF       "RSQLiteUDF"       "/home/nick/.config/R/library"
+rstatic          "rstatic"          "/home/nick/.config/R/library"
+RTypeInference   "RTypeInference"   "/home/nick/.config/R/library"
+typesys          "typesys"          "/home/nick/.config/R/library"
+withr            "withr"            "/home/nick/.config/R/library"
+zippopotamus     "zippopotamus"     "/home/nick/.config/R/library"
+abind            "abind"            "/usr/lib/R/library"          
+acepack          "acepack"          "/usr/lib/R/library"          
+acs              "acs"              "/usr/lib/R/library"          
+akima            "akima"            "/usr/lib/R/library"          
+allegRo          "allegRo"          "/usr/lib/R/library"          
+askpass          "askpass"          "/usr/lib/R/library"          
+assertthat       "assertthat"       "/usr/lib/R/library"          
+atomize          "atomize"          "/usr/lib/R/library"          
+audio            "audio"            "/usr/lib/R/library"          
+backports        "backports"        "/usr/lib/R/library"          
+base             "base"             "/usr/lib/R/library"          
+base64enc        "base64enc"        "/usr/lib/R/library"          
+BH               "BH"               "/usr/lib/R/library"          
+bibtex           "bibtex"           "/usr/lib/R/library"          
+bindr            "bindr"            "/usr/lib/R/library"          
+bindrcpp         "bindrcpp"         "/usr/lib/R/library"          
+binman           "binman"           "/usr/lib/R/library"          
+BiocGenerics     "BiocGenerics"     "/usr/lib/R/library"          
+BiocInstaller    "BiocInstaller"    "/usr/lib/R/library"          
+bit              "bit"              "/usr/lib/R/library"          
+bit64            "bit64"            "/usr/lib/R/library"          
+bitops           "bitops"           "/usr/lib/R/library"          
+blob             "blob"             "/usr/lib/R/library"          
+bmp              "bmp"              "/usr/lib/R/library"          
+boot             "boot"             "/usr/lib/R/library"          
+brew             "brew"             "/usr/lib/R/library"          
+broom            "broom"            "/usr/lib/R/library"          
+Cairo            "Cairo"            "/usr/lib/R/library"          
+callr            "callr"            "/usr/lib/R/library"          
+car              "car"              "/usr/lib/R/library"          
+carData          "carData"          "/usr/lib/R/library"          
+cartography      "cartography"      "/usr/lib/R/library"          
+caTools          "caTools"          "/usr/lib/R/library"          
+cba              "cba"              "/usr/lib/R/library"          
+cellranger       "cellranger"       "/usr/lib/R/library"          
+checkmate        "checkmate"        "/usr/lib/R/library"          
+chron            "chron"            "/usr/lib/R/library"          
+class            "class"            "/usr/lib/R/library"          
+classInt         "classInt"         "/usr/lib/R/library"          
+cli              "cli"              "/usr/lib/R/library"          
+clipr            "clipr"            "/usr/lib/R/library"          
+clisymbols       "clisymbols"       "/usr/lib/R/library"          
+cluster          "cluster"          "/usr/lib/R/library"          
+CodeDepends      "CodeDepends"      "/usr/lib/R/library"          
+codetools        "codetools"        "/usr/lib/R/library"          
+collections      "collections"      "/usr/lib/R/library"          
+colorspace       "colorspace"       "/usr/lib/R/library"          
+combinat         "combinat"         "/usr/lib/R/library"          
+commonmark       "commonmark"       "/usr/lib/R/library"          
+compiler         "compiler"         "/usr/lib/R/library"          
+covr             "covr"             "/usr/lib/R/library"          
+crayon           "crayon"           "/usr/lib/R/library"          
+                 Version       Priority     
+CodeAnalysis     "0.1-1"       NA           
+lcap.sec2        "0.1-1"       NA           
+Rcompression     "0.94-0"      NA           
+RLLVMCompile     "0.2-0"       NA           
+RSQLiteUDF       "0.2-0"       NA           
+rstatic          "0.1.0-0015"  NA           
+RTypeInference   "0.5.0-0028"  NA           
+typesys          "0.3.0-0036"  NA           
+withr            "2.1.2"       NA           
+zippopotamus     "1.0.1"       NA           
+abind            "1.4-5"       NA           
+acepack          "1.4.1"       NA           
+acs              "2.1.4"       NA           
+akima            "0.6-2"       NA           
+allegRo          "0.2.0"       NA           
+askpass          "1.1"         NA           
+assertthat       "0.2.1"       NA           
+atomize          "0.0.1.9000"  NA           
+audio            "0.1-6"       NA           
+backports        "1.1.5"       NA           
+base             "3.6.2"       "base"       
+base64enc        "0.1-3"       NA           
+BH               "1.72.0-3"    NA           
+bibtex           "0.4.2.2"     NA           
+bindr            "0.1.1"       NA           
+bindrcpp         "0.2.2"       NA           
+binman           "0.1.1"       NA           
+BiocGenerics     "0.16.1"      NA           
+BiocInstaller    "1.20.3"      NA           
+bit              "1.1-15.1"    NA           
+bit64            "0.9-7"       NA           
+bitops           "1.0-6"       NA           
+blob             "1.2.1"       NA           
+bmp              "0.3"         NA           
+boot             "1.3-24"      "recommended"
+brew             "1.0-6"       NA           
+broom            "0.5.3"       NA           
+Cairo            "1.5-10"      NA           
+callr            "3.4.1"       NA           
+car              "3.0-6"       NA           
+carData          "3.0-3"       NA           
+cartography      "2.2.1"       NA           
+caTools          "1.18.0"      NA           
+cba              "0.2-21"      NA           
+cellranger       "1.1.0"       NA           
+checkmate        "1.9.4"       NA           
+chron            "2.3-54"      NA           
+class            "7.3-15"      "recommended"
+classInt         "0.4-2"       NA           
+cli              "2.0.1"       NA           
+clipr            "0.7.0"       NA           
+clisymbols       "1.2.0"       NA           
+cluster          "2.1.0"       "recommended"
+CodeDepends      "0.6.5"       NA           
+codetools        "0.2-16"      "recommended"
+collections      "0.2.3"       NA           
+colorspace       "1.4-1"       NA           
+combinat         "0.0-8"       NA           
+commonmark       "1.7"         NA           
+compiler         "3.6.2"       "base"       
+covr             "3.4.0"       NA           
+crayon           "1.3.4"       NA           
+                 Depends                                                                                           
+CodeAnalysis     NA                                                                                                
+lcap.sec2        "\nR (>= 3.1.0),\ndplyr,\nstringr,\ntidyr,\nxml2"                                                 
+Rcompression     "methods, R (>= 1.0.0)"                                                                           
+RLLVMCompile     "Rllvm"                                                                                           
+RSQLiteUDF       NA                                                                                                
+rstatic          "R (>= 3.5.0)"                                                                                    
+RTypeInference   "R (>= 3.2.0), typesys (>= 0.3.0-0030)"                                                           
+typesys          "R (>= 3.2.0)"                                                                                    
+withr            "R (>= 3.0.2)"                                                                                    
+zippopotamus     "R (>= 3.3.2)"                                                                                    
+abind            "R (>= 1.5.0)"                                                                                    
+acepack          NA                                                                                                
+acs              "R (>= 2.10), stringr, methods, XML"                                                              
+akima            "R (>= 2.0.0)"                                                                                    
+allegRo          "httr,data.table"                                                                                 
+askpass          NA                                                                                                
+assertthat       NA                                                                                                
+atomize          NA                                                                                                
+audio            "R (>= 2.0.0)"                                                                                    
+backports        "R (>= 3.0.0)"                                                                                    
+base             NA                                                                                                
+base64enc        "R (>= 2.9.0)"                                                                                    
+BH               NA                                                                                                
+bibtex           "R (>= 3.0.2)"                                                                                    
+bindr            NA                                                                                                
+bindrcpp         NA                                                                                                
+binman           "R (>= 3.3)"                                                                                      
+BiocGenerics     "methods, utils, graphics, stats, parallel"                                                       
+BiocInstaller    "R (>= 3.2.0)"                                                                                    
+bit              "R (>= 2.9.2)"                                                                                    
+bit64            "R (>= 3.0.1), bit (>= 1.1-12), utils, methods, stats"                                            
+bitops           NA                                                                                                
+blob             NA                                                                                                
+bmp              NA                                                                                                
+boot             "R (>= 3.0.0), graphics, stats"                                                                   
+brew             NA                                                                                                
+broom            "R (>= 3.1)"                                                                                      
+Cairo            "R (>= 2.4.0)"                                                                                    
+callr            NA                                                                                                
+car              "R (>= 3.5.0), carData (>= 3.0-0)"                                                                
+carData          "R (>= 3.0)"                                                                                      
+cartography      "R (>= 3.3.0)"                                                                                    
+caTools          "R (>= 3.6.0)"                                                                                    
+cba              "R (>= 2.10), grid, proxy"                                                                        
+cellranger       "R (>= 3.0.0)"                                                                                    
+checkmate        "R (>= 3.0.0)"                                                                                    
+chron            "R (>= 2.12.0)"                                                                                   
+class            "R (>= 3.0.0), stats, utils"                                                                      
+classInt         "R (>= 2.2)"                                                                                      
+cli              "R (>= 2.10)"                                                                                     
+clipr            NA                                                                                                
+clisymbols       NA                                                                                                
+cluster          "R (>= 3.3.0)"                                                                                    
+CodeDepends      "methods"                                                                                         
+codetools        "R (>= 2.1)"                                                                                      
+collections      "R (>= 3.4.0)"                                                                                    
+colorspace       "R (>= 3.0.0), methods"                                                                           
+combinat         NA                                                                                                
+commonmark       NA                                                                                                
+compiler         NA                                                                                                
+covr             "R (>= 3.1.0), methods"                                                                           
+crayon           NA                                                                                                
+                 Imports                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+CodeAnalysis     "CodeDepends"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+lcap.sec2        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+Rcompression     NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+RLLVMCompile     "methods, CodeAnalysis, codetools"                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+RSQLiteUDF       "RSQLite"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+rstatic          "igraph, methods, R6, rlang, utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+RTypeInference   "methods, rstatic (>= 0.0.0.9059), R6, pryr"                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+typesys          "methods, R6"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+withr            "stats, graphics, grDevices"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+zippopotamus     "httr, tibble"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+abind            "methods, utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+acepack          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+acs              "graphics, stats, plyr, utils, httr"                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+akima            "sp"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+allegRo          "\njsonlite,\nstringr,\ntools"                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+askpass          "sys (>= 2.1)"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+assertthat       "tools"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+atomize          "functionMap,\ndevtools"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+audio            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+backports        "utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+base             NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+base64enc        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+BH               NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+bibtex           "stringr, utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+bindr            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+bindrcpp         "bindr (>= 0.1.1), Rcpp (>= 0.12.16)"                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+binman           "rappdirs, yaml, httr, jsonlite, xml2, utils, stats,\nassertthat, semver"                                                                                                                                                                                                                                                                                                                                                                                                                                   
+BiocGenerics     "methods, utils, graphics, stats, parallel"                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+BiocInstaller    NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+bit              NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+bit64            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+bitops           NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+blob             "methods, rlang, vctrs (>= 0.2.1)"                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+bmp              NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+boot             NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+brew             NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+broom            "backports, dplyr, generics (>= 0.0.2), methods, nlme, purrr,\nreshape2, stringr, tibble, tidyr"                                                                                                                                                                                                                                                                                                                                                                                                            
+Cairo            "grDevices, graphics"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+callr            "processx (>= 3.4.0), R6, utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+car              "abind, MASS, mgcv, nnet, pbkrtest (>= 0.4-4), quantreg,\ngrDevices, utils, stats, graphics, maptools, rio, lme4, nlme"                                                                                                                                                                                                                                                                                                                                                                                     
+carData          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+cartography      "classInt, stats, graphics, methods, rosm, raster, Rcpp, rgeos,\nsp (>= 1.2-4), sf (>= 0.6-4)"                                                                                                                                                                                                                                                                                                                                                                                                              
+caTools          "bitops"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+cba              "stats, graphics, grDevices, methods"                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+cellranger       "rematch, tibble"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+checkmate        "backports (>= 1.1.0), utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+chron            "graphics, stats"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+class            "MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+classInt         "grDevices, stats, graphics, e1071, class, KernSmooth"                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+cli              "assertthat, crayon (>= 1.3.4), glue, methods, utils, fansi"                                                                                                                                                                                                                                                                                                                                                                                                                                                
+clipr            "utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+clisymbols       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+cluster          "graphics, grDevices, stats, utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+CodeDepends      "codetools, graph, XML, utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+codetools        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+collections      "xptr"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+colorspace       "graphics, grDevices, stats"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+combinat         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+commonmark       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+compiler         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+covr             "digest, stats, utils, jsonlite, rex, httr, crayon, withr (>=\n1.0.2), yaml"                                                                                                                                                                                                                                                                                                                                                                                                                                
+crayon           "grDevices, methods, utils"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                 LinkingTo                                           
+CodeAnalysis     NA                                                  
+lcap.sec2        NA                                                  
+Rcompression     NA                                                  
+RLLVMCompile     NA                                                  
+RSQLiteUDF       NA                                                  
+rstatic          NA                                                  
+RTypeInference   NA                                                  
+typesys          NA                                                  
+withr            NA                                                  
+zippopotamus     NA                                                  
+abind            NA                                                  
+acepack          NA                                                  
+acs              NA                                                  
+akima            NA                                                  
+allegRo          NA                                                  
+askpass          NA                                                  
+assertthat       NA                                                  
+atomize          NA                                                  
+audio            NA                                                  
+backports        NA                                                  
+base             NA                                                  
+base64enc        NA                                                  
+BH               NA                                                  
+bibtex           NA                                                  
+bindr            NA                                                  
+bindrcpp         "plogr, Rcpp"                                       
+binman           NA                                                  
+BiocGenerics     NA                                                  
+BiocInstaller    NA                                                  
+bit              NA                                                  
+bit64            NA                                                  
+bitops           NA                                                  
+blob             NA                                                  
+bmp              NA                                                  
+boot             NA                                                  
+brew             NA                                                  
+broom            NA                                                  
+Cairo            NA                                                  
+callr            NA                                                  
+car              NA                                                  
+carData          NA                                                  
+cartography      "Rcpp"                                              
+caTools          NA                                                  
+cba              NA                                                  
+cellranger       NA                                                  
+checkmate        NA                                                  
+chron            NA                                                  
+class            NA                                                  
+classInt         NA                                                  
+cli              NA                                                  
+clipr            NA                                                  
+clisymbols       NA                                                  
+cluster          NA                                                  
+CodeDepends      NA                                                  
+codetools        NA                                                  
+collections      NA                                                  
+colorspace       NA                                                  
+combinat         NA                                                  
+commonmark       NA                                                  
+compiler         NA                                                  
+covr             NA                                                  
+crayon           NA                                                  
+                 Suggests                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+CodeAnalysis     NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+lcap.sec2        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+Rcompression     NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+RLLVMCompile     NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+RSQLiteUDF       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+rstatic          "testthat, knitr, rmarkdown"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+RTypeInference   "testthat, knitr, rmarkdown"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+typesys          "testthat, knitr, rmarkdown, rstatic"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+withr            "testthat, covr, lattice, DBI, RSQLite, methods, knitr,\nrmarkdown"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+zippopotamus     NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+abind            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+acepack          "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+acs              ""                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+akima            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+allegRo          "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+askpass          "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+assertthat       "testthat, covr"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+atomize          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+audio            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+backports        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+base             "methods"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+base64enc        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+BH               NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+bibtex           "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+bindr            "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+bindrcpp         "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+binman           "testthat, covr, knitr, rmarkdown"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+BiocGenerics     "Biobase, S4Vectors, IRanges, GenomicRanges, AnnotationDbi,\noligoClasses, oligo, affyPLM, flowClust, affy, DESeq2, MSnbase,\nannotate, RUnit"                                                                                                                                                                                                                                                                                                                                                                                                                                            
+BiocInstaller    "devtools, RUnit, BiocGenerics"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+bit              NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+bit64            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+bitops           NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+blob             "covr, crayon, pillar (>= 1.2.1), testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+bmp              "pixmap, testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+boot             "MASS, survival"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+brew             NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+broom            "AER, akima, AUC, bbmle, betareg, biglm, binGroup, boot, brms,\nbtergm, car, caret, coda, covr, e1071, emmeans, ergm, gam (>=\n1.15), gamlss, gamlss.data, gamlss.dist, geepack, ggplot2,\nglmnet, gmm, Hmisc, irlba, joineRML, Kendall, knitr, ks,\nLahman, lavaan, lfe, lme4, lmodel2, lmtest, lsmeans, maps,\nmaptools, MASS, Matrix, mclust, mgcv, muhaz, multcomp, network,\nnnet, orcutt (>= 2.2), ordinal, plm, plyr, poLCA, psych,\nquantreg, rgeos, rmarkdown, robust, rsample, rstan, rstanarm,\nsp, speedglm, statnet.common, survey, survival, testthat,\ntseries, xergm, zoo"
+Cairo            "png"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+callr            "cliapp, covr, crayon, fansi, pingr, ps, rprojroot, spelling,\ntestthat, tibble, withr"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+car              "alr4, boot, coxme, leaps, lmtest, Matrix, MatrixModels, rgl\n(>= 0.93.960), sandwich, SparseM, survival, survey"                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+carData          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+cartography      "SpatialPosition, knitr, rmarkdown, rgdal, testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+caTools          "MASS, rpart"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+cba              "gclus, colorspace"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+cellranger       "covr, testthat (>= 1.0.0), knitr, rmarkdown"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+checkmate        "R6, bit, fastmatch, data.table (>= 1.9.8), devtools, ggplot2,\nknitr, magrittr, microbenchmark, rmarkdown, testthat (>=\n0.11.0), tibble"                                                                                                                                                                                                                                                                                                                                                                                                                                                
+chron            "scales, ggplot2"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+class            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+classInt         "spData (>= 0.2.6.2), units"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+cli              "callr, covr, htmlwidgets, knitr, mockery, rmarkdown,\nrstudioapi, prettycode (>= 1.1.0), testthat, withr"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+clipr            "covr, knitr, rmarkdown, rstudioapi (>= 0.5), testthat (>=\n2.0.0)"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+clisymbols       "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+cluster          "MASS, Matrix"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+CodeDepends      "Rgraphviz, RUnit, knitr, highlight, RJSONIO, RCurl, Rcpp"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+codetools        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+collections      "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+colorspace       "datasets, utils, KernSmooth, MASS, kernlab, mvtnorm, vcd,\ntcltk, shiny, shinyjs, ggplot2, dplyr, scales, grid, png, jpeg,\nknitr, rmarkdown, RColorBrewer, rcartocolor, scico, viridis,\nwesanderson"                                                                                                                                                                                                                                                                                                                                                                                   
+combinat         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+commonmark       "curl, testthat, xml2"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+compiler         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+covr             "R6, knitr, rmarkdown, htmltools, DT (>= 0.2), testthat,\nrlang, rstudioapi (>= 0.2), xml2 (>= 1.0.0), parallel, memoise,\nmockery"                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+crayon           "mockery, rstudioapi, testthat, withr"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                 Enhances                                                     
+CodeAnalysis     NA                                                           
+lcap.sec2        NA                                                           
+Rcompression     NA                                                           
+RLLVMCompile     NA                                                           
+RSQLiteUDF       NA                                                           
+rstatic          NA                                                           
+RTypeInference   NA                                                           
+typesys          NA                                                           
+withr            NA                                                           
+zippopotamus     NA                                                           
+abind            NA                                                           
+acepack          NA                                                           
+acs              NA                                                           
+akima            NA                                                           
+allegRo          NA                                                           
+askpass          NA                                                           
+assertthat       NA                                                           
+atomize          NA                                                           
+audio            NA                                                           
+backports        NA                                                           
+base             NA                                                           
+base64enc        "png"                                                        
+BH               NA                                                           
+bibtex           NA                                                           
+bindr            NA                                                           
+bindrcpp         NA                                                           
+binman           NA                                                           
+BiocGenerics     NA                                                           
+BiocInstaller    NA                                                           
+bit              NA                                                           
+bit64            NA                                                           
+bitops           NA                                                           
+blob             NA                                                           
+bmp              NA                                                           
+boot             NA                                                           
+brew             NA                                                           
+broom            NA                                                           
+Cairo            "FastRWeb"                                                   
+callr            NA                                                           
+car              NA                                                           
+carData          NA                                                           
+cartography      NA                                                           
+caTools          NA                                                           
+cba              NA                                                           
+cellranger       NA                                                           
+checkmate        NA                                                           
+chron            "zoo"                                                        
+class            NA                                                           
+classInt         NA                                                           
+cli              NA                                                           
+clipr            NA                                                           
+clisymbols       NA                                                           
+cluster          NA                                                           
+CodeDepends      NA                                                           
+codetools        NA                                                           
+collections      NA                                                           
+colorspace       NA                                                           
+combinat         NA                                                           
+commonmark       NA                                                           
+compiler         NA                                                           
+covr             NA                                                           
+crayon           NA                                                           
+                 License                                 
+CodeAnalysis     "BSD_3_clause + file LICENSE"           
+lcap.sec2        NA                                      
+Rcompression     "zlib. See LICENSE."                    
+RLLVMCompile     "BSD_3_clause + file LICENSE"           
+RSQLiteUDF       "BSD_3_clause"                          
+rstatic          "GPL-3"                                 
+RTypeInference   "GPL-2"                                 
+typesys          "GPL-2"                                 
+withr            "GPL (>= 2)"                            
+zippopotamus     "MIT + file LICENSE"                    
+abind            "LGPL (>= 2)"                           
+acepack          "MIT + file LICENSE"                    
+acs              "GPL-3"                                 
+akima            "ACM | file LICENSE"                    
+allegRo          "GNU General Public License"            
+askpass          "MIT + file LICENSE"                    
+assertthat       "GPL-3"                                 
+atomize          "MIT + file LICENSE"                    
+audio            "MIT + file LICENSE"                    
+backports        "GPL-2 | GPL-3"                         
+base             "Part of R 3.6.2"                       
+base64enc        "GPL-2 | GPL-3"                         
+BH               "BSL-1.0"                               
+bibtex           "GPL (>= 2)"                            
+bindr            "MIT + file LICENSE"                    
+bindrcpp         "MIT + file LICENSE"                    
+binman           "MIT + file LICENSE"                    
+BiocGenerics     "Artistic-2.0"                          
+BiocInstaller    "Artistic-2.0"                          
+bit              "GPL-2"                                 
+bit64            "GPL-2"                                 
+bitops           "GPL (>= 2)"                            
+blob             "GPL-3"                                 
+bmp              "GPL (>= 2)"                            
+boot             "Unlimited"                             
+brew             "GPL-2"                                 
+broom            "MIT + file LICENSE"                    
+Cairo            "GPL-2"                                 
+callr            "MIT + file LICENSE"                    
+car              "GPL (>= 2)"                            
+carData          "GPL (>= 2)"                            
+cartography      "GPL-3"                                 
+caTools          "GPL-3"                                 
+cba              "GPL-2"                                 
+cellranger       "MIT + file LICENSE"                    
+checkmate        "BSD_3_clause + file LICENSE"           
+chron            "GPL-2"                                 
+class            "GPL-2 | GPL-3"                         
+classInt         "GPL (>= 2)"                            
+cli              "MIT + file LICENSE"                    
+clipr            "GPL-3"                                 
+clisymbols       "MIT + file LICENSE"                    
+cluster          "GPL (>= 2)"                            
+CodeDepends      "GPL"                                   
+codetools        "GPL"                                   
+collections      "MIT + file LICENSE"                    
+colorspace       "BSD_3_clause + file LICENSE"           
+combinat         "GPL-2"                                 
+commonmark       "BSD_2_clause + file LICENSE"           
+compiler         "Part of R 3.6.2"                       
+covr             "GPL-3"                                 
+crayon           "MIT + file LICENSE"                    
+                 License_is_FOSS License_restricts_use OS_type MD5sum
+CodeAnalysis     NA              NA                    NA      NA    
+lcap.sec2        NA              NA                    NA      NA    
+Rcompression     NA              NA                    NA      NA    
+RLLVMCompile     NA              NA                    NA      NA    
+RSQLiteUDF       NA              NA                    NA      NA    
+rstatic          NA              NA                    NA      NA    
+RTypeInference   NA              NA                    NA      NA    
+typesys          NA              NA                    NA      NA    
+withr            NA              NA                    NA      NA    
+zippopotamus     NA              NA                    NA      NA    
+abind            NA              NA                    NA      NA    
+acepack          NA              NA                    NA      NA    
+acs              NA              NA                    NA      NA    
+akima            NA              "yes"                 NA      NA    
+allegRo          NA              NA                    NA      NA    
+askpass          NA              NA                    NA      NA    
+assertthat       NA              NA                    NA      NA    
+atomize          NA              NA                    NA      NA    
+audio            NA              NA                    NA      NA    
+backports        NA              NA                    NA      NA    
+base             NA              NA                    NA      NA    
+base64enc        NA              NA                    NA      NA    
+BH               NA              NA                    NA      NA    
+bibtex           NA              NA                    NA      NA    
+bindr            NA              NA                    NA      NA    
+bindrcpp         NA              NA                    NA      NA    
+binman           NA              NA                    NA      NA    
+BiocGenerics     NA              NA                    NA      NA    
+BiocInstaller    NA              NA                    NA      NA    
+bit              NA              NA                    NA      NA    
+bit64            NA              NA                    NA      NA    
+bitops           NA              NA                    NA      NA    
+blob             NA              NA                    NA      NA    
+bmp              NA              NA                    NA      NA    
+boot             NA              NA                    NA      NA    
+brew             NA              NA                    NA      NA    
+broom            NA              NA                    NA      NA    
+Cairo            NA              NA                    NA      NA    
+callr            NA              NA                    NA      NA    
+car              NA              NA                    NA      NA    
+carData          NA              NA                    NA      NA    
+cartography      NA              NA                    NA      NA    
+caTools          NA              NA                    NA      NA    
+cba              NA              NA                    NA      NA    
+cellranger       NA              NA                    NA      NA    
+checkmate        NA              NA                    NA      NA    
+chron            NA              NA                    NA      NA    
+class            NA              NA                    NA      NA    
+classInt         NA              NA                    NA      NA    
+cli              NA              NA                    NA      NA    
+clipr            NA              NA                    NA      NA    
+clisymbols       NA              NA                    NA      NA    
+cluster          NA              NA                    NA      NA    
+CodeDepends      NA              NA                    NA      NA    
+codetools        NA              NA                    NA      NA    
+collections      NA              NA                    NA      NA    
+colorspace       NA              NA                    NA      NA    
+combinat         NA              NA                    NA      NA    
+commonmark       NA              NA                    NA      NA    
+compiler         NA              NA                    NA      NA    
+covr             NA              NA                    NA      NA    
+crayon           NA              NA                    NA      NA    
+                 NeedsCompilation Built  
+CodeAnalysis     NA               "3.2.3"
+lcap.sec2        NA               "3.3.1"
+Rcompression     NA               "3.4.4"
+RLLVMCompile     "yes"            "3.3.0"
+RSQLiteUDF       NA               "3.4.0"
+rstatic          "no"             "3.6.1"
+RTypeInference   "no"             "3.6.1"
+typesys          "no"             "3.6.1"
+withr            "no"             "3.5.1"
+zippopotamus     "no"             "3.3.2"
+abind            "no"             "3.4.0"
+acepack          "yes"            "3.5.1"
+acs              "no"             "3.6.2"
+akima            "yes"            "3.4.0"
+allegRo          NA               "3.3.2"
+askpass          "yes"            "3.6.2"
+assertthat       "no"             "3.6.2"
+atomize          NA               "3.5.0"
+audio            "yes"            "3.6.2"
+backports        "yes"            "3.6.2"
+base             NA               "3.6.2"
+base64enc        "yes"            "3.5.1"
+BH               "no"             "3.6.2"
+bibtex           "yes"            "3.6.2"
+bindr            "no"             "3.5.1"
+bindrcpp         "yes"            "3.5.1"
+binman           "no"             "3.5.1"
+BiocGenerics     "no"             "3.2.3"
+BiocInstaller    "no"             "3.5.1"
+bit              "yes"            "3.6.2"
+bit64            "yes"            "3.5.1"
+bitops           "yes"            "3.5.1"
+blob             "no"             "3.6.2"
+bmp              "no"             "3.4.4"
+boot             "no"             "3.6.2"
+brew             NA               "3.2.3"
+broom            "no"             "3.6.2"
+Cairo            "yes"            "3.6.2"
+callr            "no"             "3.6.2"
+car              "no"             "3.6.2"
+carData          "no"             "3.6.2"
+cartography      "yes"            "3.6.2"
+caTools          "yes"            "3.6.2"
+cba              "yes"            "3.6.2"
+cellranger       "no"             "3.4.0"
+checkmate        "yes"            "3.6.2"
+chron            "yes"            "3.6.2"
+class            "yes"            "3.6.2"
+classInt         "yes"            "3.6.2"
+cli              "no"             "3.6.2"
+clipr            "no"             "3.6.2"
+clisymbols       "no"             "3.5.0"
+cluster          "yes"            "3.6.2"
+CodeDepends      "no"             "3.5.1"
+codetools        "no"             "3.6.2"
+collections      "yes"            "3.6.2"
+colorspace       "yes"            "3.6.2"
+combinat         NA               "3.3.3"
+commonmark       "yes"            "3.6.2"
+compiler         NA               "3.6.2"
+covr             "yes"            "3.6.2"
+crayon           "no"             "3.5.1"
+ [ reached getOption("max.print") -- omitted 322 rows ]
+> library(dplyr)
+Registered S3 method overwritten by 'dplyr':
+  method           from
+  print.rowwise_df     
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+> library("dplyr")
+> dogs = readRDS("data/dogs/dogs_full.rds")
+> head(dogs)
+> slice(dogs, 4)
+> slice(dogs, c(1, 3, 3, 5))
+> slice(dogs, 6:9)
+> 5 < 6
+[1] TRUE
+> c(1, 3, 4) < c(5, 2, 1)
+[1]  TRUE FALSE FALSE
+> filter(dogs, group == "toy")
+> TRUE & TRUE
+[1] TRUE
+> TRUE & FALSE
+[1] FALSE
+> FALSE & TRUE
+[1] FALSE
+> FALSE & FALSE
+[1] FALSE
+> TRUE | TRUE
+[1] TRUE
+> TRUE | FALSE
+[1] TRUE
+> FALSE | FALSE
+[1] FALSE
+> filter(dogs, group == "toy" & group == "sporting")
+> filter(dogs, group = "toy" | group == "sporting") # this works
+Error: `group` (`group = "toy" | group == "sporting"`) must not be named, do you need `==`?
+> filter(dogs, group == "toy" | group == "sporting") # this works
+> filter(dogs, group == "toy" & weight < 10)
+> light_dogs = filter(dogs, group == "toy" & weight < 10)
+> light_dogs
+> light_dogs$weight
+[1] 5.5 5.0 5.0 5.5 9.0
+> class(light_dogs$weight)
+[1] "numeric"
+> dogs$group == "toy"
+  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE
+ [12] FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+ [23] FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
+ [34] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+ [45] FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE
+ [56] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [67] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [78] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [89] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[100] FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE
+[111] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[122]  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
+[133] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+[144] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[155] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[166]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+> select(dogs, c(weight, height))
+> class(select(dogs, c(weight, height)))
+[1] "tbl_df"     "tbl"        "data.frame"
+> select(dogs, weight)
+> class(select(dogs, weight))
+[1] "tbl_df"     "tbl"        "data.frame"
+> dogs$weight
+  [1]    NA  13.5  35.0  14.0    NA  30.0  25.0    NA    NA  22.0  47.5
+ [12]  15.0    NA  24.0  15.5   5.5    NA    NA  45.0    NA  20.0    NA
+ [23]    NA  62.5  59.5  12.0  67.5   5.0   5.0  12.5    NA   5.5  65.0
+ [34]    NA   9.0  60.0    NA    NA  67.5  24.0  62.5    NA  16.0    NA
+ [45]  12.0    NA    NA    NA  11.0    NA  15.5    NA    NA  23.0    NA
+ [56]  31.0    NA  26.0  70.0  21.0    NA  77.5  65.0  20.0    NA  36.5
+ [67]  55.0 125.0    NA  13.0    NA    NA  77.5  27.0  82.5    NA  60.0
+ [78]    NA  80.0    NA  85.0    NA 115.0 175.0    NA 155.0  45.0    NA
+ [89]    NA    NA    NA    NA  35.0 115.0    NA    NA    NA    NA    NA
+[100]    NA  62.5    NA  45.0    NA  31.5  19.0    NA  52.5  62.5    NA
+[111]    NA    NA    NA    NA    NA    NA    NA  35.0    NA    NA    NA
+[122]    NA    NA    NA    NA  26.0  55.0    NA    NA 100.0  92.5  17.0
+[133]    NA    NA  17.0    NA    NA 130.0  33.0  51.5    NA  12.0    NA
+[144]  97.5  15.0    NA  50.0    NA  47.5    NA    NA    NA    NA  92.5
+[155]  24.0  20.0  10.0  40.0  17.5  35.0    NA    NA  40.0    NA    NA
+[166]    NA    NA    NA  20.0  17.5    NA    NA
+> class(dogs$weight)
+[1] "numeric"
+> dogs$weight + dogs$height
+  [1]     NA     NA  54.00  24.00     NA  46.00  39.50     NA     NA
+ [10]  36.50  69.25  25.50     NA     NA  28.50  10.50     NA     NA
+ [19]  64.50     NA     NA     NA     NA  86.50  85.00  22.00  90.50
+ [28]  14.00     NA  22.25     NA     NA  91.00     NA     NA  82.75
+ [37]     NA     NA  91.00  39.50  87.50     NA  32.00     NA  21.50
+ [46]     NA     NA     NA  21.00     NA  28.00     NA     NA  39.50
+ [55]     NA  46.00     NA  37.00  88.50  30.00     NA 103.00     NA
+ [64]  30.00     NA  55.00  81.00 152.00     NA     NA     NA     NA
+ [73] 103.00     NA 110.50     NA  81.50     NA 104.00     NA 110.00
+ [82]     NA 140.50 205.00     NA 181.50     NA     NA     NA     NA
+ [91]     NA     NA  51.50 143.00     NA     NA     NA     NA     NA
+[100]     NA  86.50     NA  66.50     NA  43.00  30.50     NA  71.50
+[109]  86.50     NA     NA     NA     NA     NA     NA     NA     NA
+[118]  48.25     NA     NA     NA     NA     NA     NA     NA  44.00
+[127]  77.50     NA     NA 127.50 120.50  31.50     NA     NA     NA
+[136]     NA     NA 157.50  50.25  71.50     NA  22.00     NA 123.00
+[145]  28.50     NA  72.50     NA  67.50     NA     NA     NA     NA
+[154]     NA  34.50  35.00  19.50  49.75  32.50  53.00     NA     NA
+[163]  54.00     NA     NA     NA     NA     NA  35.00  32.50     NA
+[172]     NA
+> select(dogs, weight) + select(dogs, height)
+> names(dogs)
+ [1] "breed"             "group"             "datadog"          
+ [4] "popularity_all"    "popularity"        "lifetime_cost"    
+ [7] "intelligence_rank" "longevity"         "ailments"         
+[10] "price"             "food_cost"         "grooming"         
+[13] "kids"              "megarank_kids"     "megarank"         
+[16] "size"              "weight"            "height"           
+> select(dogs, 1)
+> select(dogs, 1:3)
+> select(dogs, price:kids)
+> slice(dogs, 1:3)
+> 1:3
+[1] 1 2 3
+> -1:3
+[1] -1  0  1  2  3
+> -(1:3)
+[1] -1 -2 -3
+> slice(dogs, -(1:3))
+> head(dogs)
+# A tibble: 6 x 18
+  breed group datadog popularity_all popularity lifetime_cost intelligence_ra…
+  <chr> <fct>   <dbl>          <int>      <int>         <dbl>            <int>
+1 Bord… herd…    3.64             45         39         20143                1
+2 Bord… terr…    3.61             80         61         22638               30
+3 Brit… spor…    3.54             30         30         22589               19
+4 Cair… terr…    3.53             59         48         21992               35
+5 Wels… spor…    3.34            130         81         20224               31
+6 Engl… spor…    3.33             63         51         18993               18
+# … with 11 more variables: longevity <dbl>, ailments <int>, price <dbl>,
+#   food_cost <dbl>, grooming <fct>, kids <fct>, megarank_kids <int>,
+#   megarank <int>, size <fct>, weight <dbl>, height <dbl>
+> select(dogs, -1)
+> select(dogs, -datadog)
+> filter(dogs, group != "toy")
+> filter(dogs, !(group == "toy"))
+> !c(FALSE, TRUE, TRUE)
+[1]  TRUE FALSE FALSE
+> ggplot(data)
+Error in ggplot(data) : could not find function "ggplot"
+> library(ggplot2)
+> ggplot(data)
+Error: You're passing a function as global data.
+Have you misspelled the `data` argument in `ggplot()`
+> ggplot(dogs)
+> ggplot(dogs) + geom_point()
+Error: geom_point requires the following missing aesthetics: x, y
+> ggplot(dogs, aes(x = datadog, y = popularity_all)) + geom_point()
+>

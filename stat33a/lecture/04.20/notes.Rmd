@@ -1,0 +1,225 @@
+---
+title: "Stat 33A - Lecture 10"
+date: April 20, 2020
+output: pdf_document
+---
+
+Loops
+=====
+
+
+For-loops
+---------
+
+```{r}
+message(1)
+message(2)
+message(3)
+```
+
+A for-loop iterates over a vector or list:
+```{r}
+for (i in 1:10) {
+  message(i)
+  message("Hello")
+}
+
+for (i in 1:10)
+  message(i)
+message("Hello")
+
+x = 1:5
+for (xvalue in x) {
+  message(xvalue)
+}
+
+x = 1:10
+for (i in x) {
+  i^2
+}
+```
+
+Use `next` to immediately skip to the next iteration:
+```{r}
+# Print even numbers from 1 to 10
+
+for (i in 1:10) {
+  if (i %% 2 == 0)
+    message(i)
+}
+
+for (i in 1:10) {
+  message("Hello")
+  
+  if (i %% 2 == 1)
+    next
+  
+  message(i)
+}
+```
+
+Use `break` to immediately exit the loop:
+```{r}
+# Find the first number divisible by 7:
+
+for (i in 20:30) {
+  message(i)
+  
+  if (i %% 7 == 0)
+    break
+  
+}
+```
+
+
+Preallocation
+-------------
+
+These functions allocate vectors:
+
+* `character()`
+* `complex()`
+* `numeric()`
+* `logical()`
+
+* `vector()`
+* `rep()`
+
+```{r}
+results = character(5)
+complex(3)
+numeric(10)
+logical(6)
+
+vector("logical", 9)
+vector("list", 3)
+
+rep(NA, 4)
+
+rep(-1, 5)
+
+rep("hi", 3)
+
+rep(c("hello", "Hi"), 4)
+```
+
+
+The bad way to store results from a loop:
+```{r}
+results = c()
+for (i in 1:10) {
+  results = c(results, i^2)
+}
+```
+
+Preallocate!
+
+If you know how many results a loop will produce, allocate the result
+vector BEFORE the loop:
+```{r}
+n = 1e5
+
+# BAD:
+results = c()
+for (i in 1:n) {
+  results = c(results, i^2)
+}
+
+# GOOD:
+results = numeric(n)
+for (i in 1:n) {
+  results[i] = i^2
+}
+
+x = c(-5, 6, 1, 3, 2.2)
+n = length(x)
+results = numeric(n)
+for (i in 1:n) {
+  message("New Iteration")
+  message(i)
+  message(x[i])
+  results[i] = x[i]^2
+}
+```
+
+
+Use `seq_along(x)` instead of `1:length(x)`:
+```{r}
+x
+results = numeric(length(x))
+for (i in seq_along(x)) {
+  results[i] = sin(x[i])
+}
+
+sin(x)
+x^2
+```
+
+Iterations can be dependent:
+```{r}
+# Cumulative sums of a vector.
+y = c(1, -3, 2, 3, 4)
+#     1  -2  0  3  7
+results = numeric(length(y))
+for (i in seq_along(y)) {
+  if (i == 1) {
+    results[i] = y[i]
+  } else {
+    results[i] = y[i] + results[i - 1]
+  }
+}
+```
+
+
+While-loops
+-----------
+
+A while-loop iterates while some condition is `TRUE`:
+```{r}
+i = 1
+while (i < 11) {
+  message(i)
+  i = i + 1
+}
+
+for (i in 1:10) {
+  message(i)
+}
+
+```
+
+The `next` and `break` commands also apply to while-loops.
+
+
+
+Recursion
+=========
+
+A recursive function is one that calls itself:
+```{r}
+fact = function(n) {
+  if (n == 1)
+    return (1)
+  
+  n * fact(n - 1) # n! = n (n - 1)!
+}
+```
+
+Also see `?Recall`.
+
+
+
+Additional Examples
+===================
+
+```{r}
+x = c(3, 6, 2, 4)
+
+# First iteration code:
+message(x[1])
+
+# Edit to iterate more than once:
+for (i in seq_along(x)) {
+  message(x[i])
+}
+```

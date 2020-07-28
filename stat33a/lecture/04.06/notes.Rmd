@@ -1,0 +1,417 @@
+---
+title: "Stat 33A - Lecture 8"
+date: April 6, 2020
+output: pdf_document
+---
+
+
+The `%in%` Operator
+===================
+
+The `==` operator compares equality elementwise:
+```{r}
+x = c(1, 7, 9)
+y = c(2, 7, 9)
+
+x == y
+```
+
+If the vectors have different lengths, one will be recycled:
+```{r}
+x = c(1, 2, 1, 4)
+y = c(1, 2)#1  2
+
+x == y
+```
+
+If you want to check whether the elements on the left-hand side are
+equal to ANY of the elements on the right-hand side, use `%in%`:
+```{r}
+x = c(1, 2, 1, 4)
+y = c(2, 1)#2  1
+
+x %in% y
+
+x == y
+
+# city %in% c("Oakland", "San Francisco")
+# 
+# city == "Oakland" | city == "San Francisco"
+```
+
+
+Writing Functions
+=================
+
+A function is like a factory: raw materials (inputs) go in, products
+(outputs) come out.
+
+```
+         +-------+
+-- in -->|   f   |-- out -->
+         +-------+
+```
+
+You can write your own function with the `function` command.
+
+The inputs to the function are called "parameters".
+
+The output is called the "return value".
+
+Just like any other object in R, you can assign functions to
+variables.
+
+```{r}
+square = function(x) x^2 #+ 10
+
+square(4)
+
+square(c(10, 3))
+
+is_negative = function(x)
+   x < 0
+
+is_negative(-1)
+
+is_negative(12)
+```
+
+The code inside the function is called the "body" of the function.
+
+Always indent the body by 2 spaces, so your code is easy to read!
+
+
+
+Use curly braces `{ }` to write a function that contains more than
+one line of code.
+
+The result of the last line is automatically returned:
+```{r}
+sqrt_line_axb = function(x, a, b) {
+   result = a * x + b
+   sqrt(result)
+}
+
+sqrt_line_axb(0, 100, 4)
+
+sqrt_line_axb(1, 100, 44)
+```
+
+Use `return()` to return a value early and IMMEDIATELY EXIT the
+function:
+```{r}
+f = function() {
+   x = sqrt(4 + 6)
+   return(x)
+   x + 10
+}
+
+f()
+sqrt(10)
+```
+More on why this is useful near the end of the lecture.
+
+To return multiple values, use a vector or list:
+```{r}
+f = function(x, y) {
+   c(x + y, x * y)
+}
+
+f(5, 6)
+```
+
+
+
+Arguments in a call get assigned to parameters.
+
+The order of the arguments matters:
+```{r}
+mean(c(1, 2, 3, NA), na.rm = TRUE)
+
+tolerance_mean = function(x, tol) {
+   mean(x[x > tol])
+}
+
+tolerance_mean(tol = 0.1, x = c(1, 2, 0.01))
+```
+
+Arguments can also be assigned to parameters by name.
+
+It's possible to set "default arguments" for parameters.
+
+Then the parameter is optional:
+```{r}
+tolerance_mean = function(x, tol = 0.1) {
+   mean(x[x > tol])
+}
+
+tolerance_mean(c(1, 2, 0.015), tol = 0.01)
+```
+
+How to Use Functions
+--------------------
+
+Functions are the building blocks for solving problems.
+
+Take a divide-and-conquer approach, breaking large problems into
+smaller steps.
+
+Use a short function for each step. Then it's easier to:
+
+* Test that each step works correctly.
+* Modify, reuse, or repurpose a step.
+
+Before you write a function, it's useful to go through several steps:
+
+1. Write down what you want to do, in detail. It can also help to
+   draw a picture of what needs to happen.
+
+2. Check whether there's already a built-in function. Google it!
+
+3. Write the code to handle a simple case first. For data science
+   problems, use a small dataset at this step.
+
+
+
+How R Finds Variables
+---------------------
+
+The "scope" of a variable is the section of a program where that
+variable exists and can be accessed.
+
+Variables defined inside of a function are "local" to that function.
+
+They cannot be accessed from outside the function:
+```{r}
+f = function() {
+   z = 4
+}
+
+f()
+z
+```
+
+Local variables reset each time a function is called:
+```{r}
+f = function() {
+   message(z)
+   z = 4
+}
+
+f()
+```
+
+A function can use variables defined outside (non-local), but only if
+those variables are in scope where the function was **defined**.
+
+This property is called "lexical scoping":
+```{r}
+x = 20
+f = function(y) {
+   y
+}
+
+f(x)
+```
+
+Variables defined directly in the R console are "global" and
+available to any function.
+
+
+Local variables "mask" or hide non-local variables with the same
+name:
+```{r}
+x = 20
+g = function() {
+   x = 4
+   x
+}
+
+g()
+```
+
+Locals get priority!
+
+EXCEPTION: R ignores non-functions when looking up the name of a
+called function.
+
+For example:
+```{r}
+
+h = function(x) {
+   mean = 0
+   mean(x)
+}
+
+h(1:3)
+```
+
+
+In summary:
+
+* A function's local variables are private.
+
+* A function's local variables get reset for each call.
+
+* A function can read non-local variables (in the scope where it was
+  defined).
+
+* Local variables mask non-local variables. Exception: calling
+  non-local functions.
+
+
+One final rule!
+
+Variables are only looked up when they are actually used.
+
+For a function, this means variables are only looked up when the
+function is called.
+
+This is called "dynamic lookup".
+
+For example:
+```{r}
+f = function() z
+
+z = 4
+f()
+
+z = 5
+f()
+```
+
+
+Conditionals
+============
+
+Sometimes we need code to do different things depending on a
+condition.
+
+If-statements provide a way to write conditional code.
+
+For example, suppose we want to print "Hello" if `x` is greater than
+5, and print "Goodbye" otherwise:
+```{r}
+x = 5
+
+if (x > 5) {
+   message("Hello")
+}
+
+# else if (x == 5) {
+#    message("x is 5")
+# } else {
+#    message("Goodbye")
+# }
+```
+
+As with functions, indent the body of the if-statement.
+
+
+Curly braces `{ }` are not strictly required in if-statements.
+
+But you have to be careful if you don't use them:
+```{r}
+if (x > 5) message("Hello") else message("Goodbye")
+```
+
+An if-statement returns the final value in each branch:
+```{r}
+x = 10
+if (x == 5) 3 else x
+```
+
+You can use this to do conditional assignment:
+```{r}
+y = if (x == 5) 3 else x
+
+if (x == 5) {
+   y = 3
+} else {
+   y = x
+}
+```
+
+The condition in the if-statement should be a scalar:
+```{r}
+x = c(1, 2, 3)
+
+if (x > 2) {
+   message("Hello")
+} else {
+   message("Goodbye")
+}
+```
+
+
+Parallel Vectors
+----------------
+
+Suppose we want to transform a vector `x` so that:
+
+* Negative elements are set to 0.
+* Positive elements are squared.
+
+This is hard to do with if-statements because they take a scalar
+condition.
+```{r}
+x = c(-1, -3, 10, 4, -2)
+
+is_neg = x < 0
+
+# NO GOOD:
+#if (x < 0) {
+#   
+#}
+```
+
+Instead, we can use a "parallel vectors" strategy.
+
+The idea is to work with two (or more) vectors:
+
+1. An input vector of values to transform.
+
+2. A group vector that identifies the different groups to transform
+   within the input vector.
+
+3. Optionally, an output or result vector to store the results.
+
+The vectors are "parallel" because they must have the same length and
+the elements must correspond.
+
+In the example:
+```{r}
+x[is_neg] = 0
+x[!is_neg] = x[!is_neg]^2
+```
+
+
+As another example, suppose we have two vectors:
+```{r}
+y = c(1, 2, 3, 4)
+colors = c("red", "blue", "green", "blue")
+
+# For y:
+# Square red values
+# Square root of blues
+# Add 1 to greens
+
+y[colors == "red"] = y[colors == "red"]^2
+y[colors == "blue"] = sqrt(y[colors == "blue"])
+y[colors == "green"] = y[colors == "green"] + 1
+```
+
+
+The `ifelse()` Function
+-----------------------
+
+R also has a vectorized `ifelse()` function.
+
+For example:
+```{r}
+x = c(-1, -2, 3, 4)
+ifelse(x < 0, x^2, x)
+```
+
+The `ifelse()` function is less efficient than a regular if-statement
+or the parallel vectors strategy!

@@ -1,0 +1,68 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R version 3.6.2 (2019-12-12) -- Dark and Stormy Night
+Type 'citation()', 'contributors()', or 'license()' for more information
+
+Libraries:
+* /home/nick/.config/R/library
+* /usr/lib/R/library
+
+> 3 + 5
+[1] 8
+> 3 - 5
+[1] -2
+> 3 * 2
+[1] 6
+> 4 / 6
+[1] 0.6666667
+> 2 * 20
+[1] 40
+> 5 * 6 - 3
+[1] 27
+> ?Syntax
+> sin(3)
+[1] 0.14112
+> cos(3)
+[1] -0.9899925
+> sqrt(5)
+[1] 2.236068
+> sum(1, 2, 3)
+[1] 6
+> 3 + 4
+[1] 7
+> ?sin
+> ?+
+. 
+
+> ?"+"
+> ?"sin"
+> "hello class"
+[1] "hello class"
+> x = 35
+> x
+[1] 35
+> y
+Error: object 'y' not found
+> 4ducks = 3
+Error: unexpected symbol in "4ducks"
+> ducks4 = 3
+> sin(sqrt(2)) + 3 ^ 2
+[1] 9.987766
+>

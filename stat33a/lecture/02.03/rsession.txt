@@ -1,0 +1,160 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R version 3.6.2 (2019-12-12) -- Dark and Stormy Night
+Type 'citation()', 'contributors()', or 'license()' for more information
+
+Libraries:
+* /home/nick/.config/R/library
+* /usr/lib/R/library
+
+> sum(1, 2, 3)
+[1] 6
+> x = 1
+> ?log
+> log(10, 2) # log of 10, base 2
+[1] 3.321928
+> log(x = 10, base = 2)
+[1] 3.321928
+> log(base = 2, x = 10)
+[1] 3.321928
+> log(base = 2, x = 10)
+[1] 3.321928
+> log(base = 2, 10)
+[1] 3.321928
+> log(bas = 2, x = 10)
+partial argument match of 'bas' to 'base'[1] 3.321928
+> class(5)
+[1] "numeric"
+> class("hi")
+[1] "character"
+> class(TRUE)
+[1] "logical"
+> class(cos)
+[1] "function"
+> class(x)
+[1] "numeric"
+> NA
+[1] NA
+> class(NA)
+[1] "logical"
+> 5 + NA
+[1] NA
+> dim(5)
+NULL
+> class(NULL)
+[1] "NULL"
+> 0 / 0
+[1] NaN
+> 5 / 0
+[1] Inf
+> - 5 / 0
+[1] -Inf
+> class(Inf)
+[1] "numeric"
+> class(NaN)
+[1] "numeric"
+> 1 == 2
+[1] FALSE
+> NA == 1
+[1] NA
+> is.na(3)
+[1] FALSE
+> is.na(NA)
+[1] TRUE
+> is.infinite(Inf)
+[1] TRUE
+> 4 <= 5
+[1] TRUE
+> c(1, 2, 3)
+[1] 1 2 3
+> c("hi", "hello", '33A')
+[1] "hi"    "hello" "33A"  
+> length(c(1, 2, 3))
+[1] 3
+> length(6)
+[1] 1
+> class(c(1, 2, 3))
+[1] "numeric"
+> x = c(1, 7, 9, 8)
+> x
+[1] 1 7 9 8
+> 1:5
+[1] 1 2 3 4 5
+> 7:20
+ [1]  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+> seq(1, 5, 0.5)
+[1] 1.0 1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0
+> ?seq
+> c(dogs = 3, cats = 4)
+dogs cats 
+   3    4 
+> x = c(dogs = 3, cats = 4)
+> names(x)
+[1] "dogs" "cats"
+> x = c(dogs = 3, 4)
+> names(x)
+[1] "dogs" ""    
+> x = c(dogs = 3, 2 = 4)
+Error: unexpected '=' in "x = c(dogs = 3, 2 ="
+> x = c(dogs = 3, "2" = 4)
+> names(x)
+[1] "dogs" "2"   
+> x = c(dogs2 = 3, cats2 = 4)
+> names(x)
+[1] "dogs2" "cats2"
+> names(x) = c("a", "b")
+> names(x)
+[1] "a" "b"
+> c(1, 2, 3) + c(4, 5, 6)
+[1] 5 7 9
+> sin(c(1, 2, 3))
+[1] 0.8414710 0.9092974 0.1411200
+> c(1, 2) == c(3, 2)
+[1] FALSE  TRUE
+> c(1, 2) + c(3, 4, 5)
+longer object length is not a multiple of shorter object length[1] 4 6 6
+> c(1, 2, 3) + 1
+[1] 2 3 4
+> c(1, "hi", TRUE)
+[1] "1"    "hi"   "TRUE"
+> class(c(1, "hi", TRUE))
+[1] "character"
+> 1 + 4i
+[1] 1+4i
+> class(1 + 4i)
+[1] "complex"
+> 1 + 0i
+[1] 1+0i
+> 5 + TRUE
+[1] 6
+> c(TRUE, 2.0)
+[1] 1 2
+> c(1, sin)
+[[1]]
+[1] 1
+
+[[2]]
+function (x)  .Primitive("sin")
+
+> class(c(1, sin))
+[1] "list"
+> class(sin)
+[1] "function"
+> 

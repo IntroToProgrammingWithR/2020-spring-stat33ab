@@ -1,0 +1,705 @@
+
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+R version 3.6.2 (2019-12-12) -- Dark and Stormy Night
+Type 'citation()', 'contributors()', or 'license()' for more information
+
+Libraries:
+* /home/nick/.config/R/library
+* /usr/lib/R/library
+
+> dogs = readRDS("data/dogs/dogs_full.rds")
+> str(dogs)
+Classes 'tbl_df', 'tbl' and 'data.frame':	172 obs. of  18 variables:
+ $ breed            : chr  "Border Collie" "Border Terrier" "Brittany" "Cairn Terrier" ...
+ $ group            : Factor w/ 7 levels "herding","hound",..: 1 5 4 5 4 4 4 6 1 1 ...
+ $ datadog          : num  3.64 3.61 3.54 3.53 3.34 3.33 3.3 3.26 3.25 3.22 ...
+ $ popularity_all   : int  45 80 30 59 130 63 27 38 60 20 ...
+ $ popularity       : int  39 61 30 48 81 51 27 33 49 20 ...
+ $ lifetime_cost    : num  20143 22638 22589 21992 20224 ...
+ $ intelligence_rank: int  1 30 19 35 31 18 20 8 10 6 ...
+ $ longevity        : num  12.5 14 12.9 13.8 12.5 ...
+ $ ailments         : int  2 0 0 2 1 0 2 5 1 5 ...
+ $ price            : num  623 833 618 435 750 800 465 740 530 465 ...
+ $ food_cost        : num  324 324 466 324 324 324 674 324 466 405 ...
+ $ grooming         : Factor w/ 3 levels "daily","weekly",..: 2 2 2 2 2 2 2 2 2 1 ...
+ $ kids             : Factor w/ 3 levels "high","medium",..: 3 1 2 1 1 1 1 2 3 1 ...
+ $ megarank_kids    : int  1 2 3 4 5 6 7 8 9 11 ...
+ $ megarank         : int  29 1 11 2 4 5 6 22 52 8 ...
+ $ size             : Factor w/ 3 levels "large","medium",..: 2 3 2 3 2 2 3 3 2 3 ...
+ $ weight           : num  NA 13.5 35 14 NA 30 25 NA NA 22 ...
+ $ height           : num  20 NA 19 10 18 16 14.5 9.5 18.5 14.5 ...
+> class(dogs$group)
+[1] "factor"
+> levels(dogs$group)
+[1] "herding"      "hound"        "non-sporting" "sporting"     "terrier"     
+[6] "toy"          "working"     
+> library(dplyr)
+Registered S3 method overwritten by 'dplyr':
+  method           from
+  print.rowwise_df     
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+> first(dogs$group)
+[1] herding
+Levels: herding hound non-sporting sporting terrier toy working
+> head(dogs$group, 1)
+[1] herding
+Levels: herding hound non-sporting sporting terrier toy working
+> subset = head(dogs$group, 1)
+> subset
+[1] herding
+Levels: herding hound non-sporting sporting terrier toy working
+> droplevels(subset)
+[1] herding
+Levels: herding
+> factor(c("red", "blue", "red", "blue", "blue"))
+[1] red  blue red  blue blue
+Levels: blue red
+> factor(c(1, 2, 2, 1))
+[1] 1 2 2 1
+Levels: 1 2
+> ?factor
+> factor(c(1, 2, 2, 1), levels = c(1, 2, 3))
+[1] 1 2 2 1
+Levels: 1 2 3
+> colors = factor(c("red", "blue", "red", "blue", "blue"))
+> colors
+[1] red  blue red  blue blue
+Levels: blue red
+> unclass(colors)
+[1] 2 1 2 1 1
+attr(,"levels")
+[1] "blue" "red" 
+> as.character(colors)
+[1] "red"  "blue" "red"  "blue" "blue"
+> dogs
+> dogs$group
+  [1] herding      terrier      sporting     terrier      sporting    
+  [6] sporting     sporting     toy          herding      herding     
+ [11] working      non-sporting toy          hound        terrier     
+ [16] toy          terrier      hound        sporting     terrier     
+ [21] terrier      non-sporting non-sporting sporting     sporting    
+ [26] non-sporting sporting     toy          toy          toy         
+ [31] herding      toy          sporting     hound        toy         
+ [36] sporting     working      hound        sporting     non-sporting
+ [41] sporting     sporting     toy          herding      terrier     
+ [46] sporting     non-sporting working      toy          herding     
+ [51] toy          non-sporting hound        hound        toy         
+ [56] terrier      herding      herding      sporting     terrier     
+ [61] hound        working      hound        terrier      working     
+ [66] terrier      hound        working      herding      toy         
+ [71] herding      working      hound        non-sporting hound       
+ [76] working      terrier      working      working      non-sporting
+ [81] hound        hound        working      working      working     
+ [86] working      non-sporting terrier      hound        non-sporting
+ [91] hound        terrier      sporting     working      herding     
+ [96] herding      herding      herding      hound        working     
+[101] hound        sporting     herding      working      herding     
+[106] terrier      toy          non-sporting herding      sporting    
+[111] hound        herding      sporting     herding      non-sporting
+[116] working      sporting     terrier      working      working     
+[121] hound        toy          hound        herding      sporting    
+[126] terrier      sporting     toy          non-sporting working     
+[131] working      terrier      working      non-sporting terrier     
+[136] terrier      toy          working      herding      hound       
+[141] non-sporting terrier      sporting     hound        terrier     
+[146] hound        hound        herding      working      herding     
+[151] herding      hound        non-sporting hound        terrier     
+[156] non-sporting toy          terrier      terrier      terrier     
+[161] sporting     working      sporting     herding      working     
+[166] toy          sporting     sporting     terrier      terrier     
+[171] sporting     non-sporting
+Levels: herding hound non-sporting sporting terrier toy working
+> table(dogs$group)
+
+     herding        hound non-sporting     sporting      terrier          toy 
+          25           26           19           28           28           19 
+     working 
+          27 
+> library(ggplot2)
+> ggplot(dogs) + geom_barplot()
+Error in geom_barplot() : could not find function "geom_barplot"
+> ggplot(dogs) + geom_bar()
+Error: stat_count requires the following missing aesthetics: x
+> ggplot(dogs, aes(x = group)) + geom_bar()
+> ggplot(dogs, aes(x = group)) + geom_bar() +
+.   labs(x = "Dog Type", y = "Frequencies")
+> dogs$datadog
+  [1] 3.64 3.61 3.54 3.53 3.34 3.33 3.30 3.26 3.25 3.22 3.22 3.21 3.20 3.19
+ [15] 3.19 3.15 3.11 3.11 3.09 3.08 3.07 3.04 3.03 3.03 3.03 3.02 2.97 2.93
+ [29] 2.93 2.93 2.91 2.85 2.84 2.81 2.80 2.80 2.80 2.79 2.78 2.75 2.73 2.72
+ [43] 2.72 2.71 2.71 2.70 2.61 2.59 2.59 2.57 2.57 2.57 2.54 2.51 2.49 2.48
+ [57] 2.47 2.45 2.44 2.42 2.41 2.38 2.29 2.27 2.24 2.13 2.08 2.07 2.06 2.05
+ [71] 2.04 1.95 1.91 1.90 1.89 1.85 1.85 1.83 1.82 1.76 1.66 1.66 1.64 1.57
+ [85] 1.53 1.42 0.99   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+ [99]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[113]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[127]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[141]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[155]   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA
+[169]   NA   NA   NA   NA
+> ggplot(dogs) + geom_density()
+Error: stat_density requires the following missing aesthetics: x
+> ggplot(dogs, aes(x = datadog)) + geom_density()
+> ggplot(dogs) + geom_boxplot()
+Error: stat_boxplot requires the following missing aesthetics: y
+> ggplot(dogs, aes(y = datadog)) + geom_boxplot()
+> ggplot(dogs, aes(y = datadog, x = group)) + geom_boxplot()
+> ggplot(dogs, aes(y = datadog)) + geom_boxplot()
+> dogs$height
+  [1] 20.00    NA 19.00 10.00 18.00 16.00 14.50  9.50 18.50 14.50 21.75 10.50
+ [13] 10.25    NA 13.00  5.00 10.50 20.00 19.50 10.50    NA 16.00 10.50 24.00
+ [25] 25.50 10.00 23.00  9.00    NA  9.75 20.50    NA 26.00 23.00    NA 22.75
+ [37] 21.25 14.00 23.50 15.50 25.00 24.50 16.00 24.50  9.50 23.25    NA 26.00
+ [49] 10.00 24.00 12.50 21.00 14.00 16.50 14.00 15.00 25.50 11.00 18.50  9.00
+ [61] 23.00 25.50    NA 10.00 24.50 18.50 26.00 27.00 24.00    NA 22.00 26.00
+ [73] 25.50    NA 28.00 25.25 21.50 23.25 24.00 18.50 25.00 32.00 25.50 30.00
+ [85] 30.00 26.50    NA 23.00 24.50 14.00 23.00 18.00 16.50 28.00 21.00 25.75
+ [97] 24.00 24.00 25.00 28.00 24.00 16.00 21.50 25.00 11.50 11.50 12.00 19.00
+[109] 24.00 25.00 24.00 18.50 17.50 18.50 17.75 18.50 24.00 13.25 28.50 26.00
+[121] 20.00  9.75 25.00 17.25 24.25 18.00 22.50  9.50 17.50 27.50 28.00 14.50
+[133] 28.50 13.00    NA 12.00 11.25 27.50 17.25 20.00 13.50 10.00 19.00 25.50
+[145] 13.50 14.00 22.50 18.50 20.00 16.50 18.00 24.00 11.50    NA 10.50 15.00
+[157]  9.50  9.75 15.00 18.00 24.50 18.50 14.00 12.50 25.00 10.00 22.50 25.00
+[169] 15.00 15.00 22.00 16.50
+> dogs$size
+  [1] medium small  medium small  medium medium small  small  medium small 
+ [11] medium small  small  small  small  small  small  medium medium small 
+ [21] small  medium small  large  large  small  medium small  small  small 
+ [31] medium small  large  medium small  medium medium small  large  small 
+ [41] large  large  medium large  small  medium medium large  small  large 
+ [51] small  medium small  medium small  medium large  small  medium small 
+ [61] medium large  large  small  large  medium large  large  large  small 
+ [71] medium large  large  medium large  large  medium medium large  medium
+ [81] large  large  large  large  large  large  medium medium large  small 
+ [91] medium medium medium large  medium large  large  large  large  large 
+[101] large  medium medium large  small  small  small  medium large  large 
+[111] large  medium medium medium medium medium large  small  large  large 
+[121] medium small  large  medium large  medium medium small  medium large 
+[131] large  small  large  small  small  small  small  large  medium medium
+[141] small  small  medium large  small  small  medium medium medium medium
+[151] medium large  small  large  small  small  small  small  small  medium
+[161] large  medium small  small  large  small  medium large  small  small 
+[171] medium medium
+Levels: large medium small
+> ggplot(dogs, aes(x = size, y = height)) + geom_boxplot()
+> ggplot(dogs, aes(x = height)) + geom_density()
+> ggplot(dogs, aes(x = height, color = size)) + geom_density()
+> x = c(4, 6, -1, NA, 7)
+> x[1]
+[1] 4
+> x[3]
+[1] -1
+> x[[2]]
+[1] 6
+> x[[4]]
+[1] NA
+> x[c(1, 3, 4)]
+[1]  4 -1 NA
+> x[c(1, 3, 4, 1)]
+[1]  4 -1 NA  4
+> x[[c(1, 3, 4)]]
+Error in x[[c(1, 3, 4)]] : 
+  attempt to select more than one element in vectorIndex
+> x[-1]
+[1]  6 -1 NA  7
+> x[[-1]]
+Error in x[[-1]] : 
+  attempt to select more than one element in get1index <real>
+> x[-c(1, 2)]
+[1] -1 NA  7
+> y = c(hi = 3, bye = 4)
+> y
+ hi bye 
+  3   4 
+> x["hi"]
+[1] NA
+> y["hi"]
+hi 
+ 3 
+> y[["hi"]]
+[1] 3
+> y["hi"]
+hi 
+ 3 
+> y[["hi"]]
+[1] 3
+> y[c("hi", "hi")]
+hi hi 
+ 3  3 
+> y[[c("hi", "hi")]]
+Error in y[[c("hi", "hi")]] : 
+  attempt to select more than one element in vectorIndex
+> x
+[1]  4  6 -1 NA  7
+> keep = c(TRUE, TRUE, FALSE, TRUE, FALSE)
+> x[keep]
+[1]  4  6 NA
+> x[keep]
+[1]  4  6 NA
+> keep = c(TRUE, FALSE)
+> keep = c(TRUE, FALSE)
+> x[keep]
+[1]  4 -1  7
+> x
+[1]  4  6 -1 NA  7
+> x
+[1]  4  6 -1 NA  7
+> x > 0
+[1]  TRUE  TRUE FALSE    NA  TRUE
+> x[x > 0]
+[1]  4  6 NA  7
+> x[x > 0 & x < 6]
+[1]  4 NA
+> x > 0
+[1]  TRUE  TRUE FALSE    NA  TRUE
+> which(x > 0)
+[1] 1 2 5
+> x > 0
+[1]  TRUE  TRUE FALSE    NA  TRUE
+> x[which(x > 0)]
+[1] 4 6 7
+> c(5, "hello")
+[1] "5"     "hello"
+> list(5, "hello")
+[[1]]
+[1] 5
+
+[[2]]
+[1] "hello"
+
+> class(list(5, "hello"))
+[1] "list"
+> ll = list(5, "hello")
+> class(ll)
+[1] "list"
+> ll[1]
+[[1]]
+[1] 5
+
+> ll[[1]]
+[1] 5
+> ll[1]
+[[1]]
+[1] 5
+
+> class(ll[1])
+[1] "list"
+> ll[c(1, 1, 2)]
+[[1]]
+[1] 5
+
+[[2]]
+[1] 5
+
+[[3]]
+[1] "hello"
+
+> ll[[1]]
+[1] 5
+> class(ll[[1]])
+[1] "numeric"
+> ll[[1]]
+[1] 5
+> ll2 = list(1, "hi", 1:3)
+> ll2
+[[1]]
+[1] 1
+
+[[2]]
+[1] "hi"
+
+[[3]]
+[1] 1 2 3
+
+> ll[[3]]
+Error in ll[[3]] : subscript out of bounds
+> ll2[[3]]
+[1] 1 2 3
+> ll[1]
+[[1]]
+[1] 5
+
+> ll[1][1]
+[[1]]
+[1] 5
+
+> ll[1][1][1]
+[[1]]
+[1] 5
+
+> ll[1][1][1][1]
+[[1]]
+[1] 5
+
+> ll2
+[[1]]
+[1] 1
+
+[[2]]
+[1] "hi"
+
+[[3]]
+[1] 1 2 3
+
+> ll2[[c(3, 2)]]
+[1] 2
+> ll2[[3]]
+[1] 1 2 3
+> ll2[[3]][[2]]
+[1] 2
+> ll2[[c(3, 2)]]
+[1] 2
+> ll2[[3]][[2]]
+[1] 2
+> ll3 = list(a = 1, b = 2)
+> ll3[["a"]]
+[1] 1
+> ll3["a"]
+$a
+[1] 1
+
+> ll3[c(TRUE, FALSE)]
+$a
+[1] 1
+
+> iris
+> iris[1]
+> iris[[1]]
+  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9 5.4 4.8 4.8 4.3 5.8 5.7 5.4 5.1
+ [19] 5.7 5.1 5.4 5.1 4.6 5.1 4.8 5.0 5.0 5.2 5.2 4.7 4.8 5.4 5.2 5.5 4.9 5.0
+ [37] 5.5 4.9 4.4 5.1 5.0 4.5 4.4 5.0 5.1 4.8 5.1 4.6 5.3 5.0 7.0 6.4 6.9 5.5
+ [55] 6.5 5.7 6.3 4.9 6.6 5.2 5.0 5.9 6.0 6.1 5.6 6.7 5.6 5.8 6.2 5.6 5.9 6.1
+ [73] 6.3 6.1 6.4 6.6 6.8 6.7 6.0 5.7 5.5 5.5 5.8 6.0 5.4 6.0 6.7 6.3 5.6 5.5
+ [91] 5.5 6.1 5.8 5.0 5.6 5.7 5.7 6.2 5.1 5.7 6.3 5.8 7.1 6.3 6.5 7.6 4.9 7.3
+[109] 6.7 7.2 6.5 6.4 6.8 5.7 5.8 6.4 6.5 7.7 7.7 6.0 6.9 5.6 7.7 6.3 6.7 7.2
+[127] 6.2 6.1 6.4 7.2 7.4 7.9 6.4 6.3 6.1 7.7 6.3 6.4 6.0 6.9 6.7 6.9 5.8 6.8
+[145] 6.7 6.7 6.3 6.5 6.2 5.9
+> class(iris[1])
+[1] "data.frame"
+> class(iris[[1]])
+[1] "numeric"
+> iris["Sepal.Length"]
+> iris
+> iris[1, ]
+> iris[1, 1:3]
+> iris[ , 2]
+  [1] 3.5 3.0 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 3.7 3.4 3.0 3.0 4.0 4.4 3.9 3.5
+ [19] 3.8 3.8 3.4 3.7 3.6 3.3 3.4 3.0 3.4 3.5 3.4 3.2 3.1 3.4 4.1 4.2 3.1 3.2
+ [37] 3.5 3.6 3.0 3.4 3.5 2.3 3.2 3.5 3.8 3.0 3.8 3.2 3.7 3.3 3.2 3.2 3.1 2.3
+ [55] 2.8 2.8 3.3 2.4 2.9 2.7 2.0 3.0 2.2 2.9 2.9 3.1 3.0 2.7 2.2 2.5 3.2 2.8
+ [73] 2.5 2.8 2.9 3.0 2.8 3.0 2.9 2.6 2.4 2.4 2.7 2.7 3.0 3.4 3.1 2.3 3.0 2.5
+ [91] 2.6 3.0 2.6 2.3 2.7 3.0 2.9 2.9 2.5 2.8 3.3 2.7 3.0 2.9 3.0 3.0 2.5 2.9
+[109] 2.5 3.6 3.2 2.7 3.0 2.5 2.8 3.2 3.0 3.8 2.6 2.2 3.2 2.8 2.8 2.7 3.3 3.2
+[127] 2.8 3.0 2.8 3.0 2.8 3.8 2.8 2.8 2.6 3.0 3.4 3.1 3.0 3.1 3.1 3.1 2.7 3.2
+[145] 3.3 3.0 2.5 3.0 3.4 3.0
+> iris[ , 2:3]
+> iris[ , 2]
+  [1] 3.5 3.0 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 3.7 3.4 3.0 3.0 4.0 4.4 3.9 3.5
+ [19] 3.8 3.8 3.4 3.7 3.6 3.3 3.4 3.0 3.4 3.5 3.4 3.2 3.1 3.4 4.1 4.2 3.1 3.2
+ [37] 3.5 3.6 3.0 3.4 3.5 2.3 3.2 3.5 3.8 3.0 3.8 3.2 3.7 3.3 3.2 3.2 3.1 2.3
+ [55] 2.8 2.8 3.3 2.4 2.9 2.7 2.0 3.0 2.2 2.9 2.9 3.1 3.0 2.7 2.2 2.5 3.2 2.8
+ [73] 2.5 2.8 2.9 3.0 2.8 3.0 2.9 2.6 2.4 2.4 2.7 2.7 3.0 3.4 3.1 2.3 3.0 2.5
+ [91] 2.6 3.0 2.6 2.3 2.7 3.0 2.9 2.9 2.5 2.8 3.3 2.7 3.0 2.9 3.0 3.0 2.5 2.9
+[109] 2.5 3.6 3.2 2.7 3.0 2.5 2.8 3.2 3.0 3.8 2.6 2.2 3.2 2.8 2.8 2.7 3.3 3.2
+[127] 2.8 3.0 2.8 3.0 2.8 3.8 2.8 2.8 2.6 3.0 3.4 3.1 3.0 3.1 3.1 3.1 2.7 3.2
+[145] 3.3 3.0 2.5 3.0 3.4 3.0
+> class(iris[ , 2])
+[1] "numeric"
+> iris[ , 2]
+  [1] 3.5 3.0 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 3.7 3.4 3.0 3.0 4.0 4.4 3.9 3.5
+ [19] 3.8 3.8 3.4 3.7 3.6 3.3 3.4 3.0 3.4 3.5 3.4 3.2 3.1 3.4 4.1 4.2 3.1 3.2
+ [37] 3.5 3.6 3.0 3.4 3.5 2.3 3.2 3.5 3.8 3.0 3.8 3.2 3.7 3.3 3.2 3.2 3.1 2.3
+ [55] 2.8 2.8 3.3 2.4 2.9 2.7 2.0 3.0 2.2 2.9 2.9 3.1 3.0 2.7 2.2 2.5 3.2 2.8
+ [73] 2.5 2.8 2.9 3.0 2.8 3.0 2.9 2.6 2.4 2.4 2.7 2.7 3.0 3.4 3.1 2.3 3.0 2.5
+ [91] 2.6 3.0 2.6 2.3 2.7 3.0 2.9 2.9 2.5 2.8 3.3 2.7 3.0 2.9 3.0 3.0 2.5 2.9
+[109] 2.5 3.6 3.2 2.7 3.0 2.5 2.8 3.2 3.0 3.8 2.6 2.2 3.2 2.8 2.8 2.7 3.3 3.2
+[127] 2.8 3.0 2.8 3.0 2.8 3.8 2.8 2.8 2.6 3.0 3.4 3.1 3.0 3.1 3.1 3.1 2.7 3.2
+[145] 3.3 3.0 2.5 3.0 3.4 3.0
+> iris[ , 2, drop = FALSE]
+> class(iris[ , 2, drop = FALSE])
+[1] "data.frame"
+> iris[, 2, drop = TRUE]
+  [1] 3.5 3.0 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 3.7 3.4 3.0 3.0 4.0 4.4 3.9 3.5
+ [19] 3.8 3.8 3.4 3.7 3.6 3.3 3.4 3.0 3.4 3.5 3.4 3.2 3.1 3.4 4.1 4.2 3.1 3.2
+ [37] 3.5 3.6 3.0 3.4 3.5 2.3 3.2 3.5 3.8 3.0 3.8 3.2 3.7 3.3 3.2 3.2 3.1 2.3
+ [55] 2.8 2.8 3.3 2.4 2.9 2.7 2.0 3.0 2.2 2.9 2.9 3.1 3.0 2.7 2.2 2.5 3.2 2.8
+ [73] 2.5 2.8 2.9 3.0 2.8 3.0 2.9 2.6 2.4 2.4 2.7 2.7 3.0 3.4 3.1 2.3 3.0 2.5
+ [91] 2.6 3.0 2.6 2.3 2.7 3.0 2.9 2.9 2.5 2.8 3.3 2.7 3.0 2.9 3.0 3.0 2.5 2.9
+[109] 2.5 3.6 3.2 2.7 3.0 2.5 2.8 3.2 3.0 3.8 2.6 2.2 3.2 2.8 2.8 2.7 3.3 3.2
+[127] 2.8 3.0 2.8 3.0 2.8 3.8 2.8 2.8 2.6 3.0 3.4 3.1 3.0 3.1 3.1 3.1 2.7 3.2
+[145] 3.3 3.0 2.5 3.0 3.4 3.0
+> iris[, 2]
+  [1] 3.5 3.0 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 3.7 3.4 3.0 3.0 4.0 4.4 3.9 3.5
+ [19] 3.8 3.8 3.4 3.7 3.6 3.3 3.4 3.0 3.4 3.5 3.4 3.2 3.1 3.4 4.1 4.2 3.1 3.2
+ [37] 3.5 3.6 3.0 3.4 3.5 2.3 3.2 3.5 3.8 3.0 3.8 3.2 3.7 3.3 3.2 3.2 3.1 2.3
+ [55] 2.8 2.8 3.3 2.4 2.9 2.7 2.0 3.0 2.2 2.9 2.9 3.1 3.0 2.7 2.2 2.5 3.2 2.8
+ [73] 2.5 2.8 2.9 3.0 2.8 3.0 2.9 2.6 2.4 2.4 2.7 2.7 3.0 3.4 3.1 2.3 3.0 2.5
+ [91] 2.6 3.0 2.6 2.3 2.7 3.0 2.9 2.9 2.5 2.8 3.3 2.7 3.0 2.9 3.0 3.0 2.5 2.9
+[109] 2.5 3.6 3.2 2.7 3.0 2.5 2.8 3.2 3.0 3.8 2.6 2.2 3.2 2.8 2.8 2.7 3.3 3.2
+[127] 2.8 3.0 2.8 3.0 2.8 3.8 2.8 2.8 2.6 3.0 3.4 3.1 3.0 3.1 3.1 3.1 2.7 3.2
+[145] 3.3 3.0 2.5 3.0 3.4 3.0
+> iris[[1, 1]]
+[1] 5.1
+> iris[[1, ]]
+Error in `[[.data.frame`(iris, 1, ) : 
+  argument "..2" is missing, with no default
+> class(dogs)
+[1] "tbl_df"     "tbl"        "data.frame"
+> dogs[, 1]
+> iris[, 1]
+  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9 5.4 4.8 4.8 4.3 5.8 5.7 5.4 5.1
+ [19] 5.7 5.1 5.4 5.1 4.6 5.1 4.8 5.0 5.0 5.2 5.2 4.7 4.8 5.4 5.2 5.5 4.9 5.0
+ [37] 5.5 4.9 4.4 5.1 5.0 4.5 4.4 5.0 5.1 4.8 5.1 4.6 5.3 5.0 7.0 6.4 6.9 5.5
+ [55] 6.5 5.7 6.3 4.9 6.6 5.2 5.0 5.9 6.0 6.1 5.6 6.7 5.6 5.8 6.2 5.6 5.9 6.1
+ [73] 6.3 6.1 6.4 6.6 6.8 6.7 6.0 5.7 5.5 5.5 5.8 6.0 5.4 6.0 6.7 6.3 5.6 5.5
+ [91] 5.5 6.1 5.8 5.0 5.6 5.7 5.7 6.2 5.1 5.7 6.3 5.8 7.1 6.3 6.5 7.6 4.9 7.3
+[109] 6.7 7.2 6.5 6.4 6.8 5.7 5.8 6.4 6.5 7.7 7.7 6.0 6.9 5.6 7.7 6.3 6.7 7.2
+[127] 6.2 6.1 6.4 7.2 7.4 7.9 6.4 6.3 6.1 7.7 6.3 6.4 6.0 6.9 6.7 6.9 5.8 6.8
+[145] 6.7 6.7 6.3 6.5 6.2 5.9
+> class(iris[, 1])
+[1] "numeric"
+> class(dogs[, 1])
+[1] "tbl_df"     "tbl"        "data.frame"
+> dogs[, 1, drop = TRUE]
+  [1] "Border Collie"                     
+  [2] "Border Terrier"                    
+  [3] "Brittany"                          
+  [4] "Cairn Terrier"                     
+  [5] "Welsh Springer Spaniel"            
+  [6] "English Cocker Spaniel"            
+  [7] "Cocker Spaniel"                    
+  [8] "Papillon"                          
+  [9] "Australian Cattle Dog"             
+ [10] "Shetland Sheepdog"                 
+ [11] "Siberian Husky"                    
+ [12] "Lhasa Apso"                        
+ [13] "Affenpinscher"                     
+ [14] "Dachshund"                         
+ [15] "Miniature Schnauzer"               
+ [16] "Chihuahua"                         
+ [17] "Australian Terrier"                
+ [18] "Whippet"                           
+ [19] "English Springer Spaniel"          
+ [20] "West Highland White Terrier"       
+ [21] "Bedlington Terrier"                
+ [22] "Poodle"                            
+ [23] "Bichon Frise"                      
+ [24] "German Shorthaired Pointer"        
+ [25] "Pointer"                           
+ [26] "Tibetan Spaniel"                   
+ [27] "Labrador Retriever"                
+ [28] "Maltese"                           
+ [29] "Pomeranian"                        
+ [30] "Shih Tzu"                          
+ [31] "Australian Shepherd"               
+ [32] "Yorkshire Terrier"                 
+ [33] "Irish Setter"                      
+ [34] "Pharaoh Hound"                     
+ [35] "Brussels Griffon"                  
+ [36] "Golden Retriever"                  
+ [37] "Samoyed"                           
+ [38] "Beagle"                            
+ [39] "Chesapeake Bay Retriever"          
+ [40] "Tibetan Terrier"                   
+ [41] "Gordon Setter"                     
+ [42] "English Setter"                    
+ [43] "Pug"                               
+ [44] "Briard"                            
+ [45] "Norfolk Terrier"                   
+ [46] "Flat-Coated Retriever"             
+ [47] "Boston Terrier"                    
+ [48] "Doberman Pinscher"                 
+ [49] "English Toy Spaniel"               
+ [50] "Belgian Tervuren"                  
+ [51] "Cavalier King Charles Spaniel"     
+ [52] "Dalmatian"                         
+ [53] "Basset Hound"                      
+ [54] "Basenji"                           
+ [55] "Italian Greyhound"                 
+ [56] "Staffordshire Bull Terrier"        
+ [57] "Bouvier des Flandres"              
+ [58] "Pembroke Welsh Corgi"              
+ [59] "Clumber Spaniel"                   
+ [60] "Dandie Dinmont Terrier"            
+ [61] "Saluki"                            
+ [62] "Giant Schnauzer"                   
+ [63] "Greyhound"                         
+ [64] "Scottish Terrier"                  
+ [65] "Rottweiler"                        
+ [66] "Kerry Blue Terrier"                
+ [67] "Afghan Hound"                      
+ [68] "Newfoundland"                      
+ [69] "German Shepherd"                   
+ [70] "Pekingese"                         
+ [71] "Old English Sheepdog"              
+ [72] "Akita"                             
+ [73] "Rhodesian Ridgeback"               
+ [74] "French Bulldog"                    
+ [75] "Borzoi"                            
+ [76] "Bernese Mountain Dog"              
+ [77] "Bull Terrier"                      
+ [78] "Boxer"                             
+ [79] "Alaskan Malamute"                  
+ [80] "Chow Chow"                         
+ [81] "Bloodhound"                        
+ [82] "Irish Wolfhound"                   
+ [83] "Bullmastiff"                       
+ [84] "Mastiff"                           
+ [85] "Great Dane"                        
+ [86] "Saint Bernard"                     
+ [87] "Bulldog"                           
+ [88] "Airedale Terrier"                  
+ [89] "American English Coonhound"        
+ [90] "American Eskimo Dog"               
+ [91] "American Foxhound"                 
+ [92] "American Staffordshire Terrier"    
+ [93] "American Water Spaniel"            
+ [94] "Anatolian Shepherd Dog"            
+ [95] "Bearded Collie"                    
+ [96] "Beauceron"                         
+ [97] "Belgian Malinois"                  
+ [98] "Belgian Sheepdog"                  
+ [99] "Black and Tan Coonhound"           
+[100] "Black Russian Terrier"             
+[101] "Bluetick Coonhound"                
+[102] "Boykin Spaniel"                    
+[103] "Canaan Dog"                        
+[104] "Cane Corso"                        
+[105] "Cardigan Welsh Corgi"              
+[106] "Cesky Terrier"                     
+[107] "Chinese Crested"                   
+[108] "Chinese Shar Pei"                  
+[109] "Collie"                            
+[110] "Curly Coated Retriever"            
+[111] "English Foxhound"                  
+[112] "Entlebucher Mountain Dog"          
+[113] "Field Spaniel"                     
+[114] "Finnish Lapphund"                  
+[115] "Finnish Spitz"                     
+[116] "German Pinscher"                   
+[117] "German Wirehaired Pointer"         
+[118] "Glen of Imaal Terrier"             
+[119] "Great Pyrenees"                    
+[120] "Greater Swiss Mountain Dog"        
+[121] "Harrier"                           
+[122] "Havanese"                          
+[123] "Ibizan Hound"                      
+[124] "Icelandic Sheepdog"                
+[125] "Irish Red and White Setter"        
+[126] "Irish Terrier"                     
+[127] "Irish Water Spaniel"               
+[128] "Japanese Chin"                     
+[129] "Keeshond"                          
+[130] "Komondor"                          
+[131] "Kuvasz"                            
+[132] "Lakeland Terrier"                  
+[133] "Leonberger"                        
+[134] "Löwchen"                           
+[135] "Manchester Terrier"                
+[136] "Miniature Bull Terrier"            
+[137] "Miniature Pinscher"                
+[138] "Neapolitan Mastiff"                
+[139] "Norwegian Buhund"                  
+[140] "Norwegian Elkhound"                
+[141] "Norwegian Lundehund"               
+[142] "Norwich Terrier"                   
+[143] "Nova Scotia Duck Tolling Retriever"
+[144] "Otterhound"                        
+[145] "Parson Russell Terrier"            
+[146] "Petit Basset Griffon Vendeen"      
+[147] "Plott"                             
+[148] "Polish Lowland Sheepdog"           
+[149] "Portuguese Water Dog"              
+[150] "Puli"                              
+[151] "Pyrenean Shepherd"                 
+[152] "Redbone Coonhound"                 
+[153] "Schipperke"                        
+[154] "Scottish Deerhound"                
+[155] "Sealyham Terrier"                  
+[156] "Shiba Inu"                         
+[157] "Silky Terrier"                     
+[158] "Skye Terrier"                      
+[159] "Smooth Fox Terrier"                
+[160] "Soft-Coated Wheaten Terrier"       
+[161] "Spinone Italiano"                  
+[162] "Standard Schnauzer"                
+[163] "Sussex Spaniel"                    
+[164] "Swedish Vallhund"                  
+[165] "Tibetan Mastiff"                   
+[166] "Toy Fox Terrier"                   
+[167] "Vizsla"                            
+[168] "Weimaraner"                        
+[169] "Welsh Terrier"                     
+[170] "Wire Fox Terrier"                  
+[171] "Wirehaired Pointing Griffon"       
+[172] "Xoloitzcuintli"                    
+> class(dogs[, 1, drop = TRUE])
+[1] "character"
+> dogs$grou
+Unknown or uninitialised column: 'grou'.NULL
+> iris$Sepal.L
+partial match of 'Sepal.L' to 'Sepal.Length'  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9 5.4 4.8 4.8 4.3 5.8 5.7 5.4 5.1
+ [19] 5.7 5.1 5.4 5.1 4.6 5.1 4.8 5.0 5.0 5.2 5.2 4.7 4.8 5.4 5.2 5.5 4.9 5.0
+ [37] 5.5 4.9 4.4 5.1 5.0 4.5 4.4 5.0 5.1 4.8 5.1 4.6 5.3 5.0 7.0 6.4 6.9 5.5
+ [55] 6.5 5.7 6.3 4.9 6.6 5.2 5.0 5.9 6.0 6.1 5.6 6.7 5.6 5.8 6.2 5.6 5.9 6.1
+ [73] 6.3 6.1 6.4 6.6 6.8 6.7 6.0 5.7 5.5 5.5 5.8 6.0 5.4 6.0 6.7 6.3 5.6 5.5
+ [91] 5.5 6.1 5.8 5.0 5.6 5.7 5.7 6.2 5.1 5.7 6.3 5.8 7.1 6.3 6.5 7.6 4.9 7.3
+[109] 6.7 7.2 6.5 6.4 6.8 5.7 5.8 6.4 6.5 7.7 7.7 6.0 6.9 5.6 7.7 6.3 6.7 7.2
+[127] 6.2 6.1 6.4 7.2 7.4 7.9 6.4 6.3 6.1 7.7 6.3 6.4 6.0 6.9 6.7 6.9 5.8 6.8
+[145] 6.7 6.7 6.3 6.5 6.2 5.9
+> dogs$grou
+Unknown or uninitialised column: 'grou'.NULL
+> ll4 = list("+" = 1, "a" = 2)
+> ll4$"+"
+[1] 1
+> dogs$group == "toy"
+  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
+ [13]  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [25] FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE
+ [37] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+ [49]  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+ [61] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE
+ [73] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [85] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [97] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+[109] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[121] FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
+[133] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[145] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+[157]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE
+[169] FALSE FALSE FALSE FALSE
+> dogs[dogs$group == "toy"]
+Error: Length of logical index vector for `[` must equal number of columns (or 1):
+* `.data` has 18 columns
+* Index vector has length 172
+> dogs[dogs$group == "toy", ]
+> dogs[dogs$group == "toy" & dogs$weight < 20, ]
+> subset(dogs, group == "toy" & weight < 20)
+> 

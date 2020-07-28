@@ -1,0 +1,284 @@
+---
+title: "Stat 33A - Lecture 8"
+date: April 6, 2020
+output: pdf_document
+---
+
+The `%in%` Operator
+===================
+
+The `==` operator compares equality elementwise:
+```{r}
+
+```
+
+If the vectors have different lengths, one will be recycled:
+```{r}
+
+```
+
+If you want to check whether the elements on the left-hand side are
+equal to ANY of the elements on the right-hand side, use `%in%`:
+```{r}
+
+```
+
+
+Writing Functions
+=================
+
+A function is like a factory: raw materials (inputs) go in, products
+(outputs) come out.
+
+```
+         +-------+
+-- in -->|   f   |-- out -->
+         +-------+
+```
+
+You can write your own function with the `function` command.
+
+The inputs to the function are called "parameters".
+
+The output is called the "return value".
+
+Just like any other object in R, you can assign functions to
+variables.
+
+```{r}
+
+```
+
+The code inside the function is called the "body" of the function.
+
+Always indent the body by 2 spaces, so your code is easy to read!
+
+
+
+Use curly braces `{ }` to write a function that contains more than
+one line of code.
+
+The result of the last line is automatically returned:
+```{r}
+
+```
+
+Use `return()` to return a value early and IMMEDIATELY EXIT the
+function:
+```{r}
+
+```
+More on why this is useful near the end of the lecture.
+
+
+Arguments in a call get assigned to parameters.
+
+The order of the arguments matters:
+```{r}
+
+```
+
+Arguments can also be assigned to parameters by name:
+```{r}
+
+```
+
+It's possible to set "default arguments" for parameters.
+
+Then the parameter is optional:
+```{r}
+
+```
+
+How to Use Functions
+--------------------
+
+Functions are the building blocks for solving problems.
+
+Take a divide-and-conquer approach, breaking large problems into
+smaller steps.
+
+Use a short function for each step. Then it's easier to:
+
+* Test that each step works correctly.
+* Modify, reuse, or repurpose a step.
+
+Before you write a function, it's useful to go through several steps:
+
+1. Write down what you want to do, in detail. It can also help to
+   draw a picture of what needs to happen.
+
+2. Check whether there's already a built-in function. Google it!
+
+3. Write the code to handle a simple case first. For data science
+   problems, use a small dataset at this step.
+
+
+
+How R Finds Variables
+---------------------
+
+The "scope" of a variable is the section of a program where that
+variable exists and can be accessed.
+
+Variables defined inside of a function are "local" to that function.
+
+They cannot be accessed from outside the function:
+```{r}
+
+```
+
+Local variables reset each time a function is called:
+```{r}
+
+```
+
+A function can use variables defined outside (non-local), but only if
+those variables are in scope where the function was **defined**.
+
+This property is called "lexical scoping":
+```{r}
+
+```
+
+Variables defined directly in the R console are "global" and
+available to any function.
+
+
+Local variables "mask" or hide non-local variables with the same
+name:
+```{r}
+
+```
+
+Locals get priority!
+
+EXCEPTION: R ignores non-functions when looking up the name of a
+called function.
+
+For example:
+```{r}
+
+```
+
+
+In summary:
+
+* A function's local variables are private.
+
+* A function's local variables get reset for each call.
+
+* A function can read non-local variables (in the scope where it was
+  defined).
+
+* Local variables mask non-local variables. Exception: calling
+  non-local functions.
+
+
+One final rule!
+
+Variables are only looked up when they are actually used.
+
+For a function, this means variables are only looked up when the
+function is called.
+
+This is called "dynamic lookup".
+
+For example:
+```{r}
+
+```
+
+
+Conditionals
+============
+
+Sometimes we need code to do different things depending on a
+condition.
+
+If-statements provide a way to write conditional code.
+
+For example, suppose we want to print "Hello" if `x` is greater than
+5, and print "Goodbye" otherwise:
+```{r}
+
+```
+
+As with functions, indent the body of the if-statement.
+
+
+Curly braces `{ }` are not strictly required in if-statements.
+
+But you have to be careful if you don't use them:
+```{r}
+
+```
+
+An if-statement returns the final value in each branch:
+```{r}
+
+```
+
+You can use this to do conditional assignment:
+```{r}
+
+```
+
+The condition in the if-statement should be a scalar:
+```{r}
+
+```
+
+
+Parallel Vectors
+----------------
+
+Suppose we want to transform a vector `x` so that:
+
+* Negative elements are set to 0.
+* Positive elements are squared.
+
+This is hard to do with if-statements because they take a scalar
+condition.
+```{r}
+
+```
+
+Instead, we can use a "parallel vectors" strategy.
+
+The idea is to work with two (or more) vectors:
+
+1. An input vector of values to transform.
+
+2. A group vector that identifies the different groups to transform
+   within the input vector.
+
+3. Optionally, an output or result vector to store the results.
+
+The vectors are "parallel" because they must have the same length and
+the elements must correspond.
+
+In the example:
+```{r}
+
+```
+
+
+As another example, suppose we have two vectors:
+```{r}
+
+```
+
+
+The `ifelse()` Function
+-----------------------
+
+R also has a vectorized `ifelse()` function.
+
+For example:
+```{r}
+
+```
+
+The `ifelse()` function is less efficient than a regular if-statement
+or the parallel vectors strategy!

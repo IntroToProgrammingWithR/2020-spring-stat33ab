@@ -1,0 +1,237 @@
+---
+title: "Stat 33A - Lecture 5"
+date: March 9, 2020
+output: pdf_document
+---
+
+
+Announcements
+=============
+
+
+Review
+======
+
+Last time:
+
+The fundamental idea of `ggplot2` is that all graphics are composed
+of layers.
+
+
+Documentation:
+
+    https://ggplot2.tidyverse.org/
+
+Cheat sheet:
+
+    https://github.com/rstudio/cheatsheets/raw/master/
+        data-visualization-2.1.pdf
+
+
+The Best in Show visualization:
+
+    https://informationisbeautiful.net/visualizations/
+        best-in-show-whats-the-top-data-dog/
+
+
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+```
+
+Layer 1: Data -- the data frame to plot.
+
+Call the `ggplot()` function to set the data layer:
+```{r}
+library(ggplot2)
+
+ggplot(dogs)
+```
+
+Layer 2: GEOMetry -- shapes to represent data.
+
+Add a `geom_` function to set the geometry layer:
+```{r}
+ggplot(dogs) + geom_point()
+```
+
+Layer 3: AESthetic -- "wires" between geometry and data
+
+Call the `aes()` function in `ggplot()` or the `geom_` to set the
+mapping between the data layer and geometry layer:
+```{r}
+ggplot(dogs, aes(datadog, popularity_all)) + geom_point()
+
+ggplot(dogs) + geom_point(aes(datadog, popularity_all))
+```
+
+Important layers in `ggplot2`:
+
+Layer       | Description
+----------  | -----------
+data        | A data frame to visualize
+aesthetics  | The map or "wires" between data and geometry
+geometry    | Geometry to represent the data visually
+statistics  | An alternative to geometry
+scales      | How numbers in data are converted to numbers on screen
+labels      | Titles and axis labels
+guides      | Legend settings
+annotations | Additional geoms that are not mapped to data
+coordinates | Coordinate systems (Cartesian, logarithmic, polar)
+facets      | Side-by-side panels
+
+
+Saving Your Plots
+-----------------
+
+Use `ggsave()` to save the last plot you created to a file:
+
+```{r}
+ggsave("myplot.jpeg")
+
+# The plot is saved in the notebook's working directory.
+# You can check the working directory with:
+getwd()
+```
+
+Building Up ggplot2 Plots
+=========================
+
+How else can we make our plot look more like the Best in Show plot?
+
+
+1. Add the dog breeds as text.
+
+Add more geometries to add additional details to a plot:
+```{r}
+ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+    geom_point() +
+    geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05)
+```
+
+See the `ggrepel` package for automatic label positioning.
+
+
+2. Color the points by type of dog.
+
+```{r}
+ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+    geom_point(aes(color = group)) +
+    geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05)
+```
+
+__NOTE:__ Where you set the aesthetics matters. In the code above,
+the `x` and `y` aesthetics apply to ALL geometries. The `color`
+aesthetic only applies to `geom_point`, and the `label` aesthetic
+only applies to `geom_text`. To make these aesthetics apply to
+everything, move them to the `aes` call in the data layer.
+
+
+We can also set parameters outside of the aesthetics.
+
+Doing so sets a constant value instead of mapping to a feature in the
+data.
+
+Set size to 10 for all points:
+```{r}
+ggplot(dogs, aes(datadog, popularity_all)) +
+    geom_point(aes(color = group), size = 10)
+```
+
+Note that if you want to set a constant color for all points, you need to do so
+outside of `aes()`:
+```{r}
+# Good
+ggplot(dogs, aes(datadog, popularity_all)) + geom_point(color = "blue")
+
+# Bad
+ggplot(dogs, aes(datadog, popularity_all)) + geom_point(aes(color = "blue"))
+```
+
+You can also use the scales layer to customize the color choices.
+
+Read the documentation for details about parameters.
+
+
+3. Reverse the y-axis.
+
+Use the scale layer to change axes.
+
+```{r}
+ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+    geom_point(aes(color = group)) +
+    geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05) +
+    scale_y_reverse()
+```
+
+
+4. Add titles and labels.
+
+```{r}
+ggplot(dogs, aes(datadog, popularity_all, label = breed)) +
+    geom_point(aes(color = group)) +
+    geom_text(size = 3, vjust = 0, hjust = 1, nudge_x = -0.05) +
+    scale_y_reverse() +
+    labs(x = "Datadog", y = "AKC Popularity Rank",
+         title = "Best In Show", color = "Dog Type")
+```
+
+Could use ggimage package to replace the points with images
+of dogs.
+
+
+Factors
+=======
+
+R represents categorical data using the class `factor`:
+```{r}
+str(dogs)
+
+class(dogs$group)
+```
+
+The categories of a factor are called "levels". You can list the
+levels with the `levels()` function:
+```{r}
+dogs$group
+
+levels(dogs$group)
+```
+
+
+Factors remember all possible levels even if you take a subset:
+```{r}
+library(dplyr)
+
+first(dogs$group)
+
+head(dogs$group, 1)
+```
+This is one of the ways factors are different from strings.
+
+You can make a factor forget levels that aren't present with
+`droplevels()`:
+```{r}
+subset = head(dogs$group, 1)
+droplevels(subset)
+```
+
+_The lecture ended here. I've included the notes below for completeness._
+
+---
+
+
+You can create a factor with the `factor()` function:
+```{r}
+factor(c("a", "b", "a"))
+```
+
+
+Internally, R represents factors as integer vectors:
+```{r}
+# unclass() returns R's internal representation of an object.
+unclass(dogs$group)
+```
+Each integer corresponds to one level of the factor.
+
+This representation uses less memory than repeating each level's
+name.

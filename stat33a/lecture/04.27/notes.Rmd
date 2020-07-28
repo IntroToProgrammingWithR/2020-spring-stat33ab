@@ -1,0 +1,172 @@
+---
+title: "Stat 33A - Lecture 11"
+date: April 27, 2020
+output: pdf_document
+---
+
+Code Style & Organization
+=========================
+
+
+Some code with unclear style and organization:
+```{r}
+f=function(x,xx)
+{if(!all(xx%in%c("celsius","fahrenheit")))
+stop("invalid units")
+x1=xx=="fahrenheit"
+x[x1]=(x[x1]-32)*5/9
+x+273.15}
+```
+
+
+A clearer version:
+```{r}
+to_kelvin = function(temp, unit) {
+  # Check unit because this function only handles Celsius and Fahrenheit.
+  if (!all(unit %in% c("celsius", "fahrenheit")))
+    stop("elements of unit must be celsius or fahrenheit")
+  
+  # Convert Fahrenheit to Celsius, then Celsius to Kelvin
+  is_fahren = unit == "fahrenheit"
+  temp[is_fahren] = (temp[is_fahren] - 32) * 5 / 9
+  temp + 273.15
+}
+```
+
+
+Preventing Bugs
+===============
+
+Defensive Programming
+---------------------
+
+
+Useful functions for testing assumptions:
+
+* `is()` to check data type
+
+* `length()` and `dim()` to check dimensions
+
+* `stop()` to print an error message and stop evalutation
+
+
+Examples:
+```{r}
+is(5, "character")
+
+is(5, "numeric")
+
+x = "hello"
+is(x, "logical")
+```
+
+R Pitfalls
+----------
+
+Advice based on what I've seen this semester.
+
+
+Don't mix up `==` and `%in%`:
+```{r}
+x = c(1, 2, 3)
+# Which are equal to 2 or 3?
+
+x %in% c(3, 2)
+
+x == c(3, 2)
+# 1 2 3
+# 3 2 3
+# F T T
+
+x == c(1, 3, 3)
+x == 5
+```
+
+Don't use `== TRUE`:
+```{r}
+x = c(1, 2, 3)
+
+x > 1
+```
+
+Don't use `== FALSE` to negate conditions:
+```{r}
+# BAD:
+(x < 1) == FALSE
+
+# GOOD:
+!(x < 1)
+
+x >= 1
+```
+
+
+Don't use `if (condition) TRUE else FALSE`:
+```{r}
+x = "hi"
+
+# BAD:
+if (x == "hello") TRUE else FALSE
+
+if (x == "hello") 1 else 0
+
+# GOOD:
+x == "hello"
+
+# TRUE is 1, FALSE is 0
+as.integer(x == "hello")
+```
+
+Don't use `print()` to print messages:
+```{r}
+# BAD:
+print("Hello\nClass")
+
+# GOOD:
+message("Hello\nClass")
+```
+
+Don't forget `library()`.
+
+
+
+
+
+Debugging
+=========
+
+The `browser()` function pauses the running code and starts R's
+interactive debugging system.
+
+For example:
+```{r}
+for (i in 1:10) {
+  browser()
+  message(i)
+}
+```
+
+The key debugger commands are:
+
+* `n` to run the next line
+* `s` to "step into" a call
+* `c` to continue running the code
+* `Q` to quit the debugger
+* `where` to print the call stack
+* `help` to print debugger help
+
+
+```{r}
+f = function(msg) {
+  message("Hello")
+  browser()
+  g()
+  message(msg)
+}
+
+g = function() {
+  message("The call to g() succeeded!")
+}
+
+f("Goodbye")
+```

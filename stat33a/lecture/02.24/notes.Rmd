@@ -1,0 +1,455 @@
+---
+title: "Stat 33A - Lecture 3"
+date: February 24, 2020
+output: pdf_document
+---
+
+Announcements
+=============
+
+Homework 2 will be posted later today.
+
+
+Review
+======
+
+## Implicit Coercion
+
+Last time we saw that R can automatically convert between ("coerce")
+types in one direction:
+
+    logical -> integer -> numeric -> complex -> character
+
+
+```{r}
+class(5.1)
+
+x = "hello"
+class(x)
+
+TRUE + 5
+
+c(6, 8, 1)
+
+c("hi", "hello")
+
+c(7, "hi")
+```
+
+## Lists
+
+In a vector, every element has to have the same type.
+
+A list is a container for elements with *different* types.
+
+If you use elements that can't be coerced to a common type, `c()`
+creates a list instead:
+
+```{r}
+class(sin)
+
+class(c(5, sin))
+```
+
+You can also directly create a list with the `list()` function:
+```{r}
+list(5, "hi", 6.1)
+
+x = list(5, 6)
+
+class(x)
+
+# Lists print with [[ to indicate element positions.
+x 
+
+
+# List elements can have names. Named elements print with $ instead:
+list(a = 1, 2)
+```
+
+Vectorized operations don't work for lists:
+```{r, error = TRUE}
+c(1, 2) + c(3, 4) # ok
+
+list(1, 2) + list(3, 4) # not ok
+```
+
+
+Projects and Files
+==================
+
+## Setting Up A Data Analysis
+
+1. Create a project directory.
+2. Download the data to the project directory.
+3. Read the data into R.
+
+For this class, think of each assignment as a new project.
+
+
+## The File System Tree
+
+In order to read a data set, you need to tell R where it is on your
+computer.
+
+Your computer's file system is like a tree.
+
+The root is at `/` (OS X, Linux) or `C:/` (Windows).
+
+Each directory is a branch.
+
+
+## Paths
+
+The "path" to a file is the sequence of directories it's in,
+separated by forward slashes `/`.
+
+For example, the file `dinosaur.csv`, in the directory `data,` in the
+directory `storage`, in the root directory:
+```
+/storage/data/dinosaur.csv
+```
+
+Windows traditionally uses backslashes instead. You can still use
+forward slashes in R.
+
+
+An "absolute path" is one that starts from the root directory.
+
+
+## Paths in R
+
+Absolute paths can be infuriatingly long to type.
+
+You can set a "working directory" in R and then use "relative paths"
+that start from the working directory.
+
+Use `getwd()` to check the working directory:
+```{r}
+getwd()
+# Check the PDF version of the notes if you want to see the output on
+# my computer.
+```
+
+The output on your computer will be different, because you have
+different files!
+
+
+__PITFALL__: RStudio maintains the working directory for your console
+independently of the working directory for each Rmd notebook. So:
+
+* Running `getwd()` from the notebook with `Ctrl + Enter` displays
+  the NOTEBOOK'S working directory.
+* Typing `getwd()` in the "Console" window and pressing `Enter`
+  displays the CONSOLE's working directory.
+
+In the console, you can use `setwd()` with a path to set the working
+directory.
+
+In the notebook, if you use `setwd()` it only lasts for __that
+chunk__ and is then reset:
+```{r}
+setwd("/home/nick/university/teach/stat33ab/stat33b")
+
+getwd()
+```
+
+So in subsequent chunks it looks like you didn't call `setwd()`:
+```{r}
+getwd()
+```
+
+Why does RStudio do this? It is a bad practice to include `setwd()`
+in your notebooks, because people you share the notebook with, like
+your colleagues, instructor, or employer, might not have the same
+directories on their computer as the ones you have on your computer.
+The next section has more details about this.
+
+By default, RStudio does the right thing and sets the notebook's
+working directory to the place where the notebook is saved. Then you
+can use relative paths (see below) to load and save files from the
+notebook.
+
+If you really want to set the working directory in a notebook, it is
+possible to override RStudio. See <https://yihui.org/knitr/options/>
+for details.
+
+Use `list.files()` to list files in a directory:
+```{r}
+list.files()
+```
+
+A "relative path" is one that starts from the working directory.
+```{r}
+# List the files in the "data" directory:
+list.files("data")
+
+# The relative path "data" stands for the absolute path
+#
+# "/home/nick/university/teach/stat33ab/stat33a/sandbox/data"
+#
+# So it saves a lot of typing!
+```
+
+If you see `character(0)` as the output from `list.files()`, that
+means one of:
+
+* The path you provided is incorrect.
+* The path you provided leads to a file, not a directory.
+* There are no files in the directory.
+
+For example, if we make a deliberate typo:
+```{r}
+list.files("dat") # no files, the path is incorrect
+```
+
+The path `..` is a shortcut for the directory above:
+```{r}
+getwd()
+
+list.files("..") # what's in the directory above
+
+# You can use .. more than once:
+list.files("../..") # what's in the directory two levels above
+
+# You can also use .. with regular directory names:
+list.files("../../stat33b") # two levels above, then back down
+```
+
+
+The path `~` means your personal directory:
+```{r}
+# `~` is `/home/nick` on my computer.
+#
+# It will be different on your computer.
+
+list.files("~") # lists files in /home/nick
+```
+
+You can convert a relative path to an absolute path with
+`normalizePath()`:
+```{r}
+# Where is `~`?
+normalizePath("~")
+```
+
+
+## Reproducible Analyses
+
+Plan ahead so that other people can run your code and reproduce your
+results.
+
+Good habits:
+
+* Putting your notebook(s) and data in the project directory.
+* Using paths relative to the project directory.
+
+Bad habits:
+
+* Calling `setwd()` in R notebooks and scripts.
+* Using absolute paths.
+
+It's okay to use `setwd()` in the *R console* to set the working
+directory to your project directory.
+
+
+
+Working with Tabular Data
+=========================
+
+## Data Frames
+
+In statistics, tabular data usually has:
+  * Observations as rows
+  * Features as columns
+
+R's data structure for tabular data is the "data frame".
+
+For the next few lectures, we'll use the Dogs Data Set, from:
+
+    https://informationisbeautiful.net/visualizations/
+        best-in-show-whats-the-top-data-dog/
+
+
+Also posted on the bCourse in RDS format.
+
+You can read an RDS file with `readRDS`:
+```{r}
+dogs = readRDS("data/dogs/dogs_full.rds")
+```
+
+Usually not a good idea to print an unfamiliar data set:
+```{r, eval = FALSE}
+# In the Rmd version of the notes, I've set eval = FALSE here so that
+# this chunk doesn't actually run or print anything.
+
+dogs # don't do this with unfamiliar data sets
+```
+Printing a large data set will also slow down knitting for R
+notebooks!
+
+Instead, inspect the data set with functions.
+
+We already saw one function for inspecting data:
+```{r}
+class(dogs) # note it is a data.frame
+```
+
+
+Use `head()` to print the first 6 rows (or elements):
+```{r}
+head(dogs, 4)
+```
+
+Use `tail()` for the last 6:
+```{r}
+tail(dogs)
+```
+
+Use `dim()` to print the dimensions:
+```{r}
+dim(dogs)
+```
+
+Alternatively, use `ncol()` and `nrow()`:
+```{r}
+ncol(dogs)
+
+nrow(dogs)
+```
+
+Use `names()` to print the column (or element) names:
+```{r}
+names(dogs)
+```
+
+Use `rownames()` to print the row names:
+```{r}
+rownames(dogs)
+```
+
+Use `str()` to print a structural summary:
+```{r}
+str(dogs)
+```
+
+Use `summary()` to print a statistical summary:
+```{r}
+summary(dogs)
+```
+
+In a data frame:
+
+* Every column must be the same length.
+* Every row must be the same length.
+* Each column must have homogeneous elements (like a vector).
+* Each row may have heterogeneous elements (like a list).
+
+---
+
+_This is where the lecture ended.
+
+I've included some additional notes to help you get started on the
+next homework assignment. These will also be covered in the lab and
+in the next lecture._
+
+## R Packages
+
+The Comprehensive R Archive Network (CRAN) is a repository of
+user-contributed packages for R.
+
+You can install packages from CRAN with `install.packages()`:
+```{r, eval = FALSE}
+install.packages("dplyr")
+```
+
+For maintaining your packages, there are also functions:
+
+* `remove.packages()` to remove a package
+* `update.packages()` to update ALL packages
+* `installed.packages()` to list installed packages
+
+You can load an installed package into your R session with the
+`library()` function:
+```{r}
+library(dplyr)
+```
+
+The process:
+
+* Use `install.packages()` to install a package the **first time**
+  you want to use the package, or if you want to update just one
+  package to the latest version.
+
+* Each time you start R, use `library()` to load the packages you
+  want to use. This includes right after installing a package.
+
+
+## dplyr
+
+The `dplyr` package provides functions for working with data frames.
+
+We'll use `dplyr` for now, and learn about R's built-in tools later.
+
+Cheat sheet:
+
+    https://github.com/rstudio/cheatsheets/raw/master/
+        data-transformation.pdf
+
+
+Use `slice()` to choose rows by position:
+```{r}
+slice(dogs, 1) # row 1
+
+slice(dogs, 2) # row 2
+```
+
+Use `filter()` to choose rows that satisfy a condition:
+```{r}
+# Dogs with weight greater than 60:
+filter(dogs, weight > 60)
+
+# Dogs with weight greater than mean weight:
+filter(dogs, weight > mean(weight, na.rm = TRUE))
+
+# Dogs with breed equal to Bulldog:
+filter(dogs, breed == "Bulldog")
+```
+
+Use `select()` to choose columns by name or position:
+```{r}
+# Get datadog column:
+select(dogs, datadog)
+```
+
+Use `:` to indicate a range of rows or columns:
+```{r}
+# Get first 3 rows:
+slice(dogs, 1:3)
+
+# Get columns 2 through 4:
+select(dogs, 2:4)
+
+# Get columns breed through popularity:
+select(dogs, breed:popularity)
+```
+
+Use `-` to exclude rows or columns:
+```{r}
+# Get all columns except breed:
+select(dogs, -breed)
+
+# Get all rows except 5 through 10:
+select(dogs, -(5:10))
+
+# Note that -5:10 is different from -(5:10) because of order of
+# operations!
+```
+
+
+Other useful `dplyr` functions:
+
+* `arrange()` changes the ordering of the rows.
+* `mutate()` adds new columns by transforming existing columns.
+* `summarise()` reduces multiple rows down to a single value.
+* `group_by()` splits rows into groups when summarizing.

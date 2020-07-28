@@ -1,0 +1,110 @@
+---
+title: "Stat 33A - Lecture 11"
+date: April 27, 2020
+output: pdf_document
+---
+
+Code Style & Organization
+=========================
+
+
+Some code with unclear style and organization:
+```{r}
+f=function(x,xx)
+{if(!all(xx%in%c("celsius","fahrenheit")))
+stop("invalid units")
+x1=xx=="fahrenheit"
+x[x1]=(x[x1]-32)*5/9
+x+273.15}
+```
+
+
+A clearer version:
+```{r}
+
+```
+
+
+Preventing Bugs
+===============
+
+Defensive Programming
+---------------------
+
+
+Useful functions for testing assumptions:
+
+* `is()` to check data type
+
+* `length()` and `dim()` to check dimensions
+
+* `stop()` to print an error message and stop evalutation
+
+
+Examples:
+```{r}
+
+```
+
+R Pitfalls
+----------
+
+Advice based on what I've seen this semester.
+
+
+Don't mix up `==` and `%in%`:
+```{r}
+
+```
+
+Don't use `== TRUE`:
+```{r}
+
+```
+
+Don't use `== FALSE` to negate conditions:
+```{r}
+
+```
+
+
+Don't use `if (condition) TRUE else FALSE`:
+```{r}
+
+```
+
+Don't use `print()` to print messages:
+```{r}
+
+```
+
+Don't forget `library()`.
+
+
+
+
+
+Debugging
+=========
+
+The `browser()` function pauses the running code and starts R's
+interactive debugging system.
+
+For example:
+```{r}
+
+```
+
+The key debugger commands are:
+
+* `n` to run the next line
+* `s` to "step into" a call
+* `c` to continue running the code
+* `Q` to quit the debugger
+* `where` to print the call stack
+* `help` to print debugger help
+
+
+```{r}
+
+```
